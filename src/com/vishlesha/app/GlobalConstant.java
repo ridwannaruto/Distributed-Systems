@@ -19,6 +19,9 @@ public class GlobalConstant {
     public static final int ERR_CODE_UNREG_INVALID = 20;
     public static final int ERR_CODE_JOIN = 30;
     public static final int ERR_CODE_LEAVE = 40;
+    public static final int ERR_CODE_SEARCH_GENERAL = 50;
+    public static final int ERR_CODE_SEARCH_UNREACHABLE = 51;
+
 
 
 
@@ -29,15 +32,21 @@ public class GlobalConstant {
     public static final String ERR_MSG_REG_USERNAME = "Username already registered";
     public static final String ERR_MSG_REG_IP_PORT = "IP and Port already registered";
     public static final String ERR_MSG_REG_BS_FULL = "Can't register. Server Full";
-
     public static final String ERR_MSG_UNREG_INVALID = "IP and Port not found or Incorrect Command";
     public static final String ERR_MSG_JOIN = "Error adding new node to routing table";
     public static final String ERR_MSG_LEAVE = "Error removing node from routing table";
+    public static final String ERR_MSG_SEARCH_GENERAL = "Error searching file";
+    public static final String ERR_MSG_SEARCH_UNREACHABLE = "Node not reachable";
+
+
 
     public static final String SUCCESS_MSG_REG = "Successfully registered to the system";
     public static final String SUCCESS_MSG_UNREG = "Successfully unregistered from the system";
     public static final String SUCCESS_MSG_JOIN = "Successfully joined server node";
     public static final String SUCCESS_MSG_LEAVE = "Successfully left server node";
+    public static final String SUCCESS_MSG_SEARCH = "Search returned with results";
+
+    public static final String MSG_SEARCH_NORESULT = "No matching result. Searched key not in key table";
 
 
 
