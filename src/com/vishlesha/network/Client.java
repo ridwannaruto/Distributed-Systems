@@ -13,44 +13,47 @@ public class Client extends Base {
     String sendAddress;
     int sendPortNumber;
 
-    public Socket getSocket(){
+    public Socket getSocket() {
         return socket;
     }
 
 
-    public Client(String sendAddress, int sendPortNumber){
+    public Client(String sendAddress, int sendPortNumber) {
         super();
         this.sendAddress = sendAddress;
         this.sendPortNumber = sendPortNumber;
-        try{
-            socket = new Socket(sendAddress,sendPortNumber);
-            setInputStream(socket);
-            setOutputStream(socket);
-        }catch (IOException ex){
-            System.out.println(ex);
-        }
     }
 
-
-    public String sendRequest(String requestMessage){
+    public String sendRequest(String requestMessage) {
         String responseLine = null;
-        if (socket != null && getOutputStream() != null && getInputStream() != null) {
-            try {
+        try {
+            socket = new Socket(sendAddress, sendPortNumber);
+            setInputStream(socket);
+            setOutputStream(socket);
+            if (socket != null && getOutputStream() != null && getInputStream() != null) {
                 getOutputStream().write(requestMessage);
                 getOutputStream().flush();
                 responseLine = getInputStream().readLine();
-                getInputStream().close();
-                getOutputStream().close();
-                socket.close();
-
-            } catch (UnknownHostException ex) {
-                System.out.println("Unknown Host");
-            } catch (IOException ex) {
-                System.out.println("IO exception: " + ex.getMessage());
-                ex.printStackTrace();
             }
+        } catch (UnknownHostException ex) {
+            System.out.println("Unknown Host");
+        } catch (IOException ex) {
+            System.out.println("IO exception: " + ex.getMessage());
+            ex.printStackTrace();
         }
+
         return responseLine;
+    }
+
+    public void stop() {
+        try {
+            getInputStream().close();
+            getOutputStream().close();
+            socket.close();
+
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
     }
 
 

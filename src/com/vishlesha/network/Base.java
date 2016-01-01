@@ -1,6 +1,6 @@
 package com.vishlesha.network;
 
-import com.vishlesha.app.Constant;
+import com.vishlesha.app.GlobalConstant;
 
 import java.io.*;
 import java.net.Socket;
@@ -12,10 +12,10 @@ abstract public class Base {
 
     private BufferedReader inputStream = null;
     private BufferedWriter outputStream = null;
-    Constant constant;
+    GlobalConstant globalConstant;
 
     public Base(){
-        constant = new Constant();
+        globalConstant = new GlobalConstant();
     }
 
     public void setInputStream(Socket socket){

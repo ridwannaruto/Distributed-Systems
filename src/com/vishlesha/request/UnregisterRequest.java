@@ -16,9 +16,7 @@ public class UnregisterRequest extends Request {
     }
 
     void setRequest(){
-        String currentTime = String.valueOf(new Date().getTime());
-        String userName = currentTime.substring(currentTime.length() - 8);
-        request = " UNREG " + getIpAddress() + " " + getPortNumber() + " " + userName;
+        request = " UNREG " + getIpAddress() + " " + getPortNumber() + " " + globalConstant.getUsername();
         appendMsgLength();
     }
 

@@ -1,6 +1,6 @@
 package com.vishlesha.response;
 
-import com.vishlesha.app.Constant;
+import com.vishlesha.app.GlobalConstant;
 
 /**
  * Created by ridwan on 1/1/16.
@@ -8,10 +8,10 @@ import com.vishlesha.app.Constant;
 
 abstract public class Response {
     protected String response;
-    protected Constant constant;
+    protected GlobalConstant globalConstant;
 
     public Response(){
-        constant = new Constant();
+        globalConstant = new GlobalConstant();
     }
 
     public String getResponse(){

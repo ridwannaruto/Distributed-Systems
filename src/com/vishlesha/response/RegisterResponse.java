@@ -18,8 +18,10 @@ public class RegisterResponse extends Response {
         String[] token = responseMessage.split(" ");
         noOfNodes = Integer.valueOf(token[2]);
 
-        if (token[1].equals("REGOK") && noOfNodes <9000)
-            System.out.println(constant.REGISTER_SUCCESS_RESPONSE);
+        if (token[1].equals("REGOK") && noOfNodes <9000){
+            System.out.println(globalConstant.REGISTER_SUCCESS_RESPONSE);
+        }
+
         nodeList = new ArrayList<Node>();
 
         for (int i=3; i< 3+ (noOfNodes*3); i+=3){

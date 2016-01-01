@@ -17,6 +17,7 @@ public class RegisterRequest extends Request {
     protected void setRequest(){
         String currentTime = String.valueOf(new Date().getTime());
         String userName = currentTime.substring(currentTime.length() - 8);
+        globalConstant.setUsername(userName);
         request = " REG " + getIpAddress() + " " + getPortNumber() + " " + userName;
         appendMsgLength();
 
