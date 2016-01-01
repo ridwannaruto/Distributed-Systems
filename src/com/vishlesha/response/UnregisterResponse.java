@@ -18,7 +18,7 @@ public class UnregisterResponse extends Response {
         if (token[1].equals("UNROK") && responseCode == 0){
             setError(false);
             if (!globalConstant.isTestMode())
-                System.out.println(globalConstant.UNREGISTER_SUCCESS_RESPONSE);
+                System.out.println(globalConstant.SUCCESS_MSG_UNREG);
         }
 
         else{

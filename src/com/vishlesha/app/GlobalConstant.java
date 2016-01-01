@@ -17,6 +17,7 @@ public class GlobalConstant {
     public static final int ERR_CODE_REG_FULL = 13;
 
     public static final int ERR_CODE_UNREG_INVALID = 20;
+    public static final int ERR_CODE_JOIN = 30;
 
 
 
@@ -29,10 +30,12 @@ public class GlobalConstant {
 
     public static final String ERR_MSG_UNREG_INVALID = "IP and Port not found or Incorrect Command";
 
+    public static final String ERR_MSG_JOIN = "Error adding new node to routing table";
 
-    public static final String REGISTER_SUCCESS_RESPONSE = "Successfully Registered";
-    public static final String UNREGISTER_SUCCESS_RESPONSE = "Successfully Unregistered";
-    public static final String UNREGISTER_ERROR_RESPONSE = "IP and Port not found in BS register";
+    public static final String SUCCESS_MSG_REG = "Successfully registered to the system";
+    public static final String SUCCESS_MSG_UNREG = "Successfully unregistered from the system";
+    public static final String SUCCESS_MSG_JOIN = "Successfully joined server node";
+
 
 
     private static String username;

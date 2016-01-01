@@ -22,7 +22,7 @@ public class RegisterResponse extends Response {
         if (token[1].equals("REGOK") && noOfNodes <9000){
             setError(false);
             if (!globalConstant.isTestMode())
-                System.out.println(globalConstant.REGISTER_SUCCESS_RESPONSE);
+                System.out.println(globalConstant.SUCCESS_MSG_REG);
 
             nodeList = new ArrayList<Node>();
 
