@@ -1,6 +1,6 @@
 package com.vishlesha.response;
 
-import com.vishlesha.Constant;
+import com.vishlesha.app.Constant;
 
 /**
  * Created by ridwan on 1/1/16.

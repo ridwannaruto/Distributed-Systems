@@ -1,7 +1,6 @@
-package com.vishlesha;
+package com.vishlesha.network;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 

@@ -1,18 +1,16 @@
-package com.vishlesha;
+package com.vishlesha.app;
 
 //product of Vishlesha
 //created by Ridwan
 
+import com.vishlesha.network.Client;
+import com.vishlesha.network.Server;
 import com.vishlesha.request.RegisterRequest;
 import com.vishlesha.request.Request;
 import com.vishlesha.response.RegisterResponse;
-import com.vishlesha.response.Response;
 
 import java.io.*;
-import java.util.Date;
 import java.util.Scanner;
-
-import javax.swing.JOptionPane;
 
 /*
     * Runs the interface for the client application
@@ -49,6 +47,9 @@ public class App {
         String responseMessage = client.sendRequest(regRequest.getRequest());
         //System.out.println("BootStrap Node: " + responseMessage);
         RegisterResponse serverResponse =  new RegisterResponse(responseMessage);
+
+
+
 
 
     }

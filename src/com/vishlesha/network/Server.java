@@ -1,4 +1,4 @@
-package com.vishlesha;
+package com.vishlesha.network;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -6,7 +6,7 @@ import java.net.ServerSocket;
 /**
  * Created by ridwan on 1/1/16.
  */
-public class Server extends Base{
+public class Server extends Base {
 
     ServerSocket socket;
 

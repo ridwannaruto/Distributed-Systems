@@ -1,4 +1,6 @@
-package com.vishlesha;
+package com.vishlesha.network;
+
+import com.vishlesha.app.Constant;
 
 import java.io.*;
 import java.net.Socket;
