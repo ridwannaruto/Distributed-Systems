@@ -1,6 +1,7 @@
 package com.vishlesha.test;
 
 import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.dataType.Node;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
 import com.vishlesha.request.RegisterRequest;
@@ -13,10 +14,10 @@ import com.vishlesha.response.UnregisterResponse;
  */
 public class OverlayNetworkTest {
 
-    String bootstrapAddress, localAddress, responseMessage;
-    int bootstrapPort, localPort;
+    String responseMessage;
+    Node bootstrapServer, localServer;
     GlobalConstant globalConstant;
-    Client client;
+    Client clientForBS;
     Server server;
 
     public void runTest() {
@@ -31,32 +32,36 @@ public class OverlayNetworkTest {
     }
 
     private void initialize(){
-        bootstrapAddress = "127.0.0.1";
-        bootstrapPort = 1122;
+        bootstrapServer = new Node();
+        localServer = new Node();
 
-        localAddress = "127.0.0.1";
-        localPort = globalConstant.PORT_LISTEN;
+        bootstrapServer.setIpaddress("127.0.0.1");
+        bootstrapServer.setPortNumber(1122);
 
-        client = new Client(bootstrapAddress,bootstrapPort);
+        localServer.setIpaddress("127.0.0.1");
+        localServer.setPortNumber(globalConstant.PORT_LISTEN);
+
+
+        clientForBS = new Client(bootstrapServer);
         server = new Server();
     }
 
     private void testRegisterSuccess(){
-        RegisterRequest registerRequest = new RegisterRequest(localAddress,localPort);
-        responseMessage = client.sendRequest(registerRequest.getRequest());
+        RegisterRequest registerRequest = new RegisterRequest(localServer);
+        responseMessage = clientForBS.sendRequest(registerRequest.getRequest());
         RegisterResponse registerResponse = new RegisterResponse(responseMessage);
 
     }
 
     private void testRegisterSameUserName(){
-        RegisterRequest registerRequest = new RegisterRequest(localAddress,localPort);
-        responseMessage = client.sendRequest(registerRequest.getRequest());
+        RegisterRequest registerRequest = new RegisterRequest(localServer);
+        responseMessage = clientForBS.sendRequest(registerRequest.getRequest());
         RegisterResponse registerResponse = new RegisterResponse(responseMessage);
     }
 
     private void testUnregisterSuccess(){
-        UnregisterRequest unregisterRequest = new UnregisterRequest(localAddress,localPort);
-        responseMessage = client.sendRequest(unregisterRequest.getRequest());
+        UnregisterRequest unregisterRequest = new UnregisterRequest(localServer);
+        responseMessage = clientForBS.sendRequest(unregisterRequest.getRequest());
         UnregisterResponse unregisterResponse = new UnregisterResponse(responseMessage);
     }
 }

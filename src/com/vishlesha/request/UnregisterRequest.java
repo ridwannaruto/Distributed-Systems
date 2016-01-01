@@ -1,5 +1,7 @@
 package com.vishlesha.request;
 
+import com.vishlesha.dataType.Node;
+
 import java.util.Date;
 
 /**
@@ -9,8 +11,8 @@ import java.util.Date;
 public class UnregisterRequest extends Request {
 
 
-    public UnregisterRequest(String address, int port){
-        super(address,port);
+    public UnregisterRequest(Node node){
+        super(node);
         setRequest();
 
     }

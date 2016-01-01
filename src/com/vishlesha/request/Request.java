@@ -1,6 +1,7 @@
 package com.vishlesha.request;
 
 import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.dataType.Node;
 
 /**
  * Created by ridwan on 1/1/16.
@@ -11,9 +12,9 @@ public class Request {
     protected String request;
     protected GlobalConstant globalConstant;
 
-    public Request(String address, int port){
-        setIpAddress(address);
-        setPortNumber(port);
+    public Request(Node node){
+        setIpAddress(node.getIpaddress());
+        setPortNumber(node.getPortNumber());
         globalConstant = new GlobalConstant();
     }
     public int getPortNumber() {

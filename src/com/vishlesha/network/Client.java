@@ -1,5 +1,7 @@
 package com.vishlesha.network;
 
+import com.vishlesha.dataType.Node;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -18,10 +20,10 @@ public class Client extends Base {
     }
 
 
-    public Client(String sendAddress, int sendPortNumber) {
+    public Client(Node node) {
         super();
-        this.sendAddress = sendAddress;
-        this.sendPortNumber = sendPortNumber;
+        this.sendAddress = node.getIpaddress();
+        this.sendPortNumber = node.getPortNumber();
     }
 
     public String sendRequest(String requestMessage) {

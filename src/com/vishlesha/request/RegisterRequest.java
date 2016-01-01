@@ -1,5 +1,7 @@
 package com.vishlesha.request;
 
+import com.vishlesha.dataType.Node;
+
 import java.util.Date;
 
 /**
@@ -8,8 +10,8 @@ import java.util.Date;
 
 public class RegisterRequest extends Request {
 
-    public RegisterRequest(String address, int port){
-        super(address,port);
+    public RegisterRequest(Node node){
+        super(node);
         setRequest();
 
     }

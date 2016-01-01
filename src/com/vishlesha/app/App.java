@@ -3,6 +3,7 @@ package com.vishlesha.app;
 //product of Vishlesha
 //created by Ridwan
 
+import com.vishlesha.dataType.Node;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
 import com.vishlesha.request.RegisterRequest;
@@ -37,12 +38,18 @@ public class App {
         System.out.print("\nBootstrap Node port: ");
         bootstrapPort = scanner.nextInt();
 
+        Node clientForBS = new Node();
+        clientForBS.setIpaddress(bootstrapAddress);
+        clientForBS.setPortNumber(bootstrapPort);
 
+        Node localServer = new Node();
+        localServer.setIpaddress("127.0.0.1");
+        localServer.setPortNumber(globalConstant.PORT_LISTEN);
 
-        Client client = new Client(bootstrapAddress,bootstrapPort);
+        Client client = new Client(clientForBS);
         Server server = new Server();
         server.Start();
-        Request regRequest = new RegisterRequest(client.getSocket().getLocalAddress().toString().substring(1), globalConstant.PORT_LISTEN);
+        Request regRequest = new RegisterRequest(localServer);
         String responseMessage = client.sendRequest(regRequest.getRequest());
         //System.out.println("BootStrap Node: " + responseMessage);
         RegisterResponse serverResponse =  new RegisterResponse(responseMessage);

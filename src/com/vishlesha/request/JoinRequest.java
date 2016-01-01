@@ -1,13 +1,15 @@
 package com.vishlesha.request;
 
+import com.vishlesha.dataType.Node;
+
 /**
  * Created by ridwan on 1/1/16.
  */
 public class JoinRequest extends Request {
 
 
-    public JoinRequest(String address, int port){
-        super(address,port);
+    public JoinRequest(Node node){
+        super(node);
         setRequest();
     }
 

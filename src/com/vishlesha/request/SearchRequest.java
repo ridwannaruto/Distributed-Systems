@@ -1,5 +1,7 @@
 package com.vishlesha.request;
 
+import com.vishlesha.dataType.Node;
+
 /**
  * Created by ridwan on 1/1/16.
  */
@@ -24,8 +26,8 @@ public class SearchRequest extends Request {
         this.noOfHops = noOfHops;
     }
 
-    public SearchRequest(String address, int port, String searchFileName, int numberOfHops){
-        super(address,port);
+    public SearchRequest(Node node, String searchFileName, int numberOfHops){
+        super(node);
         setFileName(searchFileName);
         setNoOfHops(numberOfHops);
         setRequest();
