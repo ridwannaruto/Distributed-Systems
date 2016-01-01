@@ -3,6 +3,11 @@ package com.vishlesha;
 //product of Vishlesha
 //created by Ridwan
 
+import com.vishlesha.request.RegisterRequest;
+import com.vishlesha.request.Request;
+import com.vishlesha.response.RegisterResponse;
+import com.vishlesha.response.Response;
+
 import java.io.*;
 import java.util.Date;
 import java.util.Scanner;
@@ -28,24 +33,23 @@ public class App {
         System.out.println("Vishlesha Distributed System");
         System.out.println("----------------------------");
 
-        System.out.println("Please enter the details of the bootstrap server");
-       // System.out.print("Bootstrap Server IP address: ");
+        //System.out.println("Please enter the details of the bootstrap server");
+       // System.out.print("Bootstrap Node IP address: ");
        // bootstrapAddress = scanner.next();
-        //System.out.print("\nBootstrap Server port: ");
+        //System.out.print("\nBootstrap Node port: ");
         //bootstrapPort = scanner.nextInt();
 
         bootstrapAddress = "127.0.0.1";
         bootstrapPort = 1122;
-        String currentTime = String.valueOf(new Date().getTime());
-        userName = currentTime.substring(currentTime.length()-8);
 
         Client client = new Client(bootstrapAddress,bootstrapPort);
         Server server = new Server();
         server.Start();
-        String registerRequest = " REG " + client.getSocket().getLocalAddress().toString().substring(1) + " " + constant.LISTEN_PORT + " " + userName;
-        registerRequest = String.format("%04d",registerRequest.length()+4) +  registerRequest;
-        String serverResponse = client.sendRequest(registerRequest);
-        System.out.println("BS Server: " + serverResponse);
+        Request regRequest = new RegisterRequest(client.getSocket().getLocalAddress().toString().substring(1), constant.LISTEN_PORT);
+        String responseMessage = client.sendRequest(regRequest.getRequest());
+        //System.out.println("BootStrap Node: " + responseMessage);
+        RegisterResponse serverResponse =  new RegisterResponse(responseMessage);
+
 
     }
 }
