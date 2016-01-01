@@ -42,7 +42,7 @@ public class App {
         Client client = new Client(bootstrapAddress,bootstrapPort);
         Server server = new Server();
         server.Start();
-        Request regRequest = new RegisterRequest(client.getSocket().getLocalAddress().toString().substring(1), globalConstant.LISTEN_PORT);
+        Request regRequest = new RegisterRequest(client.getSocket().getLocalAddress().toString().substring(1), globalConstant.PORT_LISTEN);
         String responseMessage = client.sendRequest(regRequest.getRequest());
         //System.out.println("BootStrap Node: " + responseMessage);
         RegisterResponse serverResponse =  new RegisterResponse(responseMessage);

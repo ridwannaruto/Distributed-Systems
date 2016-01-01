@@ -9,6 +9,7 @@ import com.vishlesha.app.GlobalConstant;
 abstract public class Response {
     protected String response;
     protected GlobalConstant globalConstant;
+    protected boolean error;
 
     public Response(){
         globalConstant = new GlobalConstant();
@@ -16,6 +17,14 @@ abstract public class Response {
 
     public String getResponse(){
         return response;
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
     }
 
 }

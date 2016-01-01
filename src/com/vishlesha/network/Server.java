@@ -18,7 +18,7 @@ public class Server extends Base {
 
     public void Start(){
         try{
-            socketService = new ServerSocket(globalConstant.LISTEN_PORT);
+            socketService = new ServerSocket(globalConstant.PORT_LISTEN);
             socket = socketService.accept();
             setInputStream(socket);
             setOutputStream(socket);

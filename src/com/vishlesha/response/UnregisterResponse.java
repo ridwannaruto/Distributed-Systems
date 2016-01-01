@@ -1,5 +1,7 @@
 package com.vishlesha.response;
 
+import com.vishlesha.error.UnregisterError;
+
 /**
  * Created by ridwan on 1/1/16.
  */
@@ -13,10 +15,19 @@ public class UnregisterResponse extends Response {
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
-        if (token[1].equals("UNROK") && responseCode == 0)
-            System.out.println(globalConstant.UNREGISTER_SUCCESS_RESPONSE);
-        else
-            System.out.println(globalConstant.UNREGISTER_ERROR_RESPONSE);
+        if (token[1].equals("UNROK") && responseCode == 0){
+            setError(false);
+            if (!globalConstant.isTestMode())
+                System.out.println(globalConstant.UNREGISTER_SUCCESS_RESPONSE);
+        }
+
+        else{
+            setError(true);
+            UnregisterError unregisterError = new UnregisterError(responseMessage);
+            if (!globalConstant.isTestMode())
+                System.out.println("Unregister Error: " + unregisterError.getErrorMessage());
+        }
+
     }
 
 }

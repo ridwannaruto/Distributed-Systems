@@ -8,8 +8,6 @@ import com.vishlesha.request.UnregisterRequest;
 import com.vishlesha.response.RegisterResponse;
 import com.vishlesha.response.UnregisterResponse;
 
-import java.io.IOException;
-
 /**
  * Created by ridwan on 1/1/16.
  */
@@ -24,8 +22,10 @@ public class OverlayNetworkTest {
     public void runTest() {
 
         globalConstant = new GlobalConstant();
+        globalConstant.setTestMode(false);
         initialize();
         testRegisterSuccess();
+        testRegisterSameUserName();
         testUnregisterSuccess();
 
     }
@@ -35,7 +35,7 @@ public class OverlayNetworkTest {
         bootstrapPort = 1122;
 
         localAddress = "127.0.0.1";
-        localPort = globalConstant.LISTEN_PORT;
+        localPort = globalConstant.PORT_LISTEN;
 
         client = new Client(bootstrapAddress,bootstrapPort);
         server = new Server();
@@ -46,6 +46,12 @@ public class OverlayNetworkTest {
         responseMessage = client.sendRequest(registerRequest.getRequest());
         RegisterResponse registerResponse = new RegisterResponse(responseMessage);
 
+    }
+
+    private void testRegisterSameUserName(){
+        RegisterRequest registerRequest = new RegisterRequest(localAddress,localPort);
+        responseMessage = client.sendRequest(registerRequest.getRequest());
+        RegisterResponse registerResponse = new RegisterResponse(responseMessage);
     }
 
     private void testUnregisterSuccess(){
