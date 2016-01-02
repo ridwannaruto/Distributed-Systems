@@ -1,6 +1,6 @@
 package com.vishlesha.request;
 
-import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 
 import java.util.Date;
@@ -11,17 +11,23 @@ import java.util.Date;
 
 public class RegisterRequest extends Request {
 
-    public RegisterRequest(Node node){
+    public RegisterRequest(Node node, String ... params){
         super(node);
-        setRequest();
+        setRequest(params);
 
     }
 
-    protected void setRequest(){
-        String currentTime = String.valueOf(new Date().getTime());
-        String userName = currentTime.substring(currentTime.length() - 8);
-        GlobalConstant.setUsername(userName);
-        request = " REG " + getIpAddress() + " " + getPortNumber() + " " + userName;
+    protected void setRequest(String ... params){
+        String userName;
+        if (params.length > 0){
+            userName =  params[0];
+        }else{
+            String currentTime = String.valueOf(new Date().getTime());
+            userName = currentTime.substring(currentTime.length() - 8);
+        }
+
+        GlobalState.setUsername(userName);
+        requestMessage = " REG " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + userName;
         appendMsgLength();
 
     }

@@ -1,6 +1,8 @@
 package com.vishlesha.response;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.error.RegisterError;
 
@@ -15,15 +17,14 @@ public class RegisterResponse extends Response {
     ArrayList<Node> nodeList;
     int noOfNodes;
 
-    public RegisterResponse(String responseMessage){
-
+    public RegisterResponse(String responseMessage, Node respondNode){
+        super(respondNode);
         String[] token = responseMessage.split(" ");
         noOfNodes = Integer.valueOf(token[2]);
-        RegisterError registerError;
 
         if (token[1].equals("REGOK") && noOfNodes <9000){
-            setError(false);
-            if (!GlobalConstant.isTestMode())
+            setFail(false);
+            if (!GlobalState.isTestMode())
                 System.out.println(GlobalConstant.SUCCESS_MSG_REG);
 
             nodeList = new ArrayList<Node>();
@@ -35,9 +36,10 @@ public class RegisterResponse extends Response {
                 nodeList.add(node);
             }
         }else{
-            setError(true);
-            registerError = new RegisterError(responseMessage);
-            if (!GlobalConstant.isTestMode())
+            setFail(true);
+            RegisterError registerError = new RegisterError(responseMessage,respondNode);
+            setError(registerError);
+            if (!GlobalState.isTestMode())
                 System.out.println("Register Error: " + registerError.getErrorMessage());
         }
 

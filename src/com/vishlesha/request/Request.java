@@ -1,42 +1,32 @@
 package com.vishlesha.request;
 
-import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.dataType.Node;
 
 /**
  * Created by ridwan on 1/1/16.
  */
 public class Request {
-    private String ipAddress;
-    private int portNumber;
-    protected String request;
+    protected Node recepientNode;
+    protected String requestMessage;
 
     public Request(Node node){
-        setIpAddress(node.getIpaddress());
-        setPortNumber(node.getPortNumber());
-    }
-    public int getPortNumber() {
-        return portNumber;
+        setRecepientNode(node);
     }
 
-    protected void setPortNumber(int portNumber) {
-        this.portNumber = portNumber;
+    public Node getRecepientNode() {
+        return recepientNode;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
+    public void setRecepientNode(Node recepientNode) {
+        this.recepientNode = recepientNode;
     }
 
-    protected void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
-    public String getRequest(){
-        return request;
+    public String getRequestMessage(){
+        return requestMessage;
     }
 
     protected void appendMsgLength(){
-        request = String.format("%04d",request.length()+4) +  request;
+        requestMessage = String.format("%04d", requestMessage.length()+4) + requestMessage;
     }
 
 

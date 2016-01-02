@@ -1,5 +1,7 @@
 package com.vishlesha.app;
 
+import com.vishlesha.dataType.Node;
+
 /**
  * Created by ridwan on 1/1/16.
  */
@@ -23,12 +25,15 @@ public class GlobalConstant {
     public static final int ERR_CODE_SEARCH_UNREACHABLE = 51;
 
 
-    public static final int NUM_THREADS_CLIENT_SERVICE = 100;
+    public static final int NUM_THREADS_CLIENT_WORKER_POOL = 100;
+    public static final int NUM_THREADS_SERVER_WORKER_POOL = 100;
+    public static final int PORT_MIN = 1050;
+    public static final int PORT_RANGE = 5000;
 
 
     //Error Message
     public static final String ERR_MSG_GENERAL = "Generic Error Message: Command not Understood";
-    public static final String ERR_MSG_REG_COMMAND = "Some error in Command";
+    public static final String ERR_MSG_REG_COMMAND = "Some fail in Command";
     public static final String ERR_MSG_REG_USERNAME = "Username already registered";
     public static final String ERR_MSG_REG_IP_PORT = "IP and Port already registered";
     public static final String ERR_MSG_REG_BS_FULL = "Can't register. Server Full";
@@ -37,6 +42,10 @@ public class GlobalConstant {
     public static final String ERR_MSG_LEAVE = "Error removing node from routing table";
     public static final String ERR_MSG_SEARCH_GENERAL = "Error searching file";
     public static final String ERR_MSG_SEARCH_UNREACHABLE = "Node not reachable";
+
+    //Error Handler
+    public static final String ERR_HANDLE_REG_FULL = "Bootstrap server is full. Try again later.";
+    public static final String ERR_HANDLE_REG_DEFAULT = "Some fail in command";
 
 
 
@@ -49,23 +58,4 @@ public class GlobalConstant {
     public static final String MSG_SEARCH_NORESULT = "No matching result. Searched key not in key table";
 
 
-
-    private static String username;
-    private static boolean testMode;
-
-    public static String getUsername() {
-        return username;
-    }
-
-    public static void setUsername(String username) {
-        GlobalConstant.username = username;
-    }
-
-    public static boolean isTestMode() {
-        return testMode;
-    }
-
-    public static void setTestMode(boolean testMode) {
-        GlobalConstant.testMode = testMode;
-    }
 }

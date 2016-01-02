@@ -1,7 +1,8 @@
 package com.vishlesha.response;
 
 import com.vishlesha.app.GlobalConstant;
-import com.vishlesha.error.JoinError;
+import com.vishlesha.app.GlobalState;
+import com.vishlesha.dataType.Node;
 import com.vishlesha.error.LeaveError;
 
 /**
@@ -11,21 +12,21 @@ public class LeaveResponse extends Response {
 
     int responseCode;
 
-    public LeaveResponse(String responseMessage){
-
+    public LeaveResponse(String responseMessage, Node respondNode){
+        super(respondNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
         if (token[1].equals("LEAVEOK") && responseCode == 0){
-            setError(false);
-            if (!GlobalConstant.isTestMode())
+            setFail(false);
+            if (!GlobalState.isTestMode())
                 System.out.println(GlobalConstant.SUCCESS_MSG_LEAVE);
         }
 
         else{
-            setError(true);
-            LeaveError leaveError = new LeaveError(responseMessage);
-            if (!GlobalConstant.isTestMode())
+            setFail(true);
+            LeaveError leaveError = new LeaveError(responseMessage,respondNode);
+            if (!GlobalState.isTestMode())
                 System.out.println("Leave Error: " + leaveError.getErrorMessage());
         }
 

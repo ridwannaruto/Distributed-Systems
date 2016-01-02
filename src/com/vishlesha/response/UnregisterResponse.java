@@ -1,6 +1,8 @@
 package com.vishlesha.response;
 
 import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.app.GlobalState;
+import com.vishlesha.dataType.Node;
 import com.vishlesha.error.UnregisterError;
 
 /**
@@ -11,21 +13,21 @@ public class UnregisterResponse extends Response {
 
     int responseCode;
 
-    public UnregisterResponse(String responseMessage){
-
+    public UnregisterResponse(String responseMessage, Node respondNode){
+        super(respondNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
         if (token[1].equals("UNROK") && responseCode == 0){
-            setError(false);
-            if (!GlobalConstant.isTestMode())
+            setFail(false);
+            if (!GlobalState.isTestMode())
                 System.out.println(GlobalConstant.SUCCESS_MSG_UNREG);
         }
 
         else{
-            setError(true);
-            UnregisterError unregisterError = new UnregisterError(responseMessage);
-            if (!GlobalConstant.isTestMode())
+            setFail(true);
+            UnregisterError unregisterError = new UnregisterError(responseMessage,respondNode);
+            if (!GlobalState.isTestMode())
                 System.out.println("Unregister Error: " + unregisterError.getErrorMessage());
         }
 

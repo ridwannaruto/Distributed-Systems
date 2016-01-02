@@ -1,5 +1,6 @@
 package com.vishlesha.request;
 
+import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 
 /**
@@ -14,7 +15,7 @@ public class LeaveRequest extends Request {
     }
 
     void setRequest(){
-        request = " LEAVE " + getIpAddress() + " " + getPortNumber();
+        requestMessage = " LEAVE " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber();
         appendMsgLength();
     }
 

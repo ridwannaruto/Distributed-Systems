@@ -10,37 +10,6 @@ import java.net.Socket;
  */
 abstract public class Base {
 
-    private BufferedReader inputStream = null;
-    private BufferedWriter outputStream = null;
-    GlobalConstant globalConstant;
-
-    public Base(){
-        globalConstant = new GlobalConstant();
-    }
-
-    public void setInputStream(Socket socket){
-        try {
-            inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-    }
-
-    public void setOutputStream(Socket socket){
-        try {
-            outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-    }
-
-    public BufferedReader getInputStream(){
-        return inputStream;
-    }
-
-    public BufferedWriter getOutputStream(){
-        return outputStream;
-    }
 
 
 }

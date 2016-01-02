@@ -1,8 +1,9 @@
 package com.vishlesha.network;
 
-import com.vishlesha.dataType.Node;
+import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.request.Request;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
@@ -14,9 +15,7 @@ import java.util.concurrent.Executors;
 public class Client extends Base {
 
     Socket socket = null;
-    String sendAddress;
-    int sendPortNumber;
-    ExecutorService clientService = Executors.newFixedThreadPool(globalConstant.NUM_THREADS_CLIENT_SERVICE);
+    ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_CLIENT_WORKER_POOL);
 
 
     public Socket getSocket() {
@@ -24,26 +23,27 @@ public class Client extends Base {
     }
 
 
-    public Client(Node node) {
-        super();
-        this.sendAddress = node.getIpaddress();
-        this.sendPortNumber = node.getPortNumber();
-    }
-
-    public void sendRequest(String requestMessage, CallBack callBack) {
-        clientService.submit(new Runnable() {
+    public void sendRequest(Request request, CallBack callBack) {
+        workerPool.submit(new Runnable() {
             @Override
             public void run() {
-                String responseLine = null;
+
                 try {
-                    socket = new Socket(sendAddress, sendPortNumber);
-                    setInputStream(socket);
-                    setOutputStream(socket);
-                    if (socket != null && getOutputStream() != null && getInputStream() != null) {
-                        getOutputStream().write(requestMessage);
-                        getOutputStream().flush();
-                        responseLine = getInputStream().readLine();
+                    String responseLine = null;
+                    socket = new Socket(request.getRecepientNode().getIpaddress(), request.getRecepientNode().getPortNumber());
+                    BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    BufferedWriter outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                    if (socket != null && outputStream != null && inputStream != null) {
+                        outputStream.write(request.getRequestMessage());
+                        outputStream.flush();
+                        responseLine = inputStream.readLine();
                     }
+
+                    inputStream.close();
+                    outputStream.close();
+                    socket.close();
+                    callBack.run(responseLine, request.getRecepientNode());
+
                 } catch (UnknownHostException ex) {
                     System.out.println("Unknown Host");
                 } catch (IOException ex) {
@@ -51,21 +51,17 @@ public class Client extends Base {
                     ex.printStackTrace();
                 }
 
-                callBack.run(responseLine);
+
             }
+
+
         });
 
     }
 
-    public void stop() {
-        try {
-            getInputStream().close();
-            getOutputStream().close();
-            socket.close();
-
-        } catch (IOException ex) {
-            System.out.println(ex);
-        }
+    public void stop(){
+        workerPool.shutdown();
     }
+
 
 }

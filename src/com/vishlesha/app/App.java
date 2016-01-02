@@ -47,15 +47,15 @@ public class App {
         localServer.setIpaddress("127.0.0.1");
         localServer.setPortNumber(globalConstant.PORT_LISTEN);
 
-        Client client = new Client(clientForBS);
+        Client client = new Client();
         Server server = new Server();
         server.run();
         Request regRequest = new RegisterRequest(localServer);
-        client.sendRequest(regRequest.getRequest(), new CallBack(){
-            public void run(String responseMessage){
+        client.sendRequest(regRequest, new CallBack(){
+            public void run(String responseMessage, Node respondNode){
                 System.out.println("BootStrap Node: " + responseMessage);
-                RegisterResponse serverResponse = new RegisterResponse(responseMessage);
-                if (serverResponse.isError()){
+                RegisterResponse serverResponse = new RegisterResponse(responseMessage,respondNode);
+                if (serverResponse.isFail()){
 
                 }
 

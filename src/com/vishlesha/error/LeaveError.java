@@ -1,13 +1,15 @@
 package com.vishlesha.error;
 
 import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.dataType.Node;
 
 /**
  * Created by ridwan on 1/1/16.
  */
 public class LeaveError extends Error {
 
-    public LeaveError (String errorMessage){
+    public LeaveError (String errorMessage, Node errorNode){
+        super(errorNode);
         String[] token = errorMessage.split(" ");
 
         if (token[1].equals("ERROR")){

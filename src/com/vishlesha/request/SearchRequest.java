@@ -1,5 +1,6 @@
 package com.vishlesha.request;
 
+import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 
 /**
@@ -34,7 +35,7 @@ public class SearchRequest extends Request {
     }
 
     private void setRequest(){
-        request = " SER " + getIpAddress() + " " + getPortNumber() + " " + getFileName() + " " + getNoOfHops();
+        requestMessage = " SER " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
         appendMsgLength();
     }
 }

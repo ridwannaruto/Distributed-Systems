@@ -1,8 +1,9 @@
 package com.vishlesha.response;
 
 import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.app.GlobalState;
+import com.vishlesha.dataType.Node;
 import com.vishlesha.error.JoinError;
-import com.vishlesha.error.UnregisterError;
 
 /**
  * Created by ridwan on 1/1/16.
@@ -10,21 +11,21 @@ import com.vishlesha.error.UnregisterError;
 public class JoinResponse extends Response{
     int responseCode;
 
-    public JoinResponse(String responseMessage){
-
+    public JoinResponse(String responseMessage, Node respondNode){
+        super(respondNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
         if (token[1].equals("JOINOK") && responseCode == 0){
-            setError(false);
-            if (!GlobalConstant.isTestMode())
+            setFail(false);
+            if (!GlobalState.isTestMode())
                 System.out.println(GlobalConstant.SUCCESS_MSG_JOIN);
         }
 
         else{
-            setError(true);
-            JoinError joinError = new JoinError(responseMessage);
-            if (!GlobalConstant.isTestMode())
+            setFail(true);
+            JoinError joinError = new JoinError(responseMessage,respondNode);
+            if (!GlobalState.isTestMode())
                 System.out.println("Join Error: " + joinError.getErrorMessage());
         }
 

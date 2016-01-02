@@ -1,13 +1,15 @@
 package com.vishlesha.error;
 
 import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.dataType.Node;
 
 /**
  * Created by ridwan on 1/1/16.
  */
 public class UnregisterError extends Error{
 
-    public UnregisterError (String errorMessage){
+    public UnregisterError (String errorMessage, Node errorNode){
+        super(errorNode);
         String[] token = errorMessage.split(" ");
 
         if (token[1].equals("ERROR")){
