@@ -11,15 +11,12 @@ public class UnregisterRequest extends Request {
 
 
     public UnregisterRequest(Node node){
-        super(node);
-        setRequest();
-
-    }
-
-    void setRequest(){
+        setRecepientNode(node);
         requestMessage = " UNREG " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + GlobalState.getUsername();
         appendMsgLength();
+
     }
+
 
 
 

@@ -17,7 +17,7 @@ import java.util.Scanner;
 /*
     * Runs the interface for the client application
     * Displays the dialog box asking for connection details and query commands
-    * Connects to server and displays the response
+    * Connects to server and displays the responseMessage
 
 */
 

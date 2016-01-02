@@ -29,7 +29,7 @@ public class Client extends Base {
                 try {
                     DatagramSocket clientSocket = new DatagramSocket();
                     InetAddress IPAddress = InetAddress.getByName(request.getRecepientNode().getIpaddress());
-                    byte[] sendData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
+                    byte[] sendData;
                     byte[] receiveData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
 
                     sendData = request.getRequestMessage().getBytes();

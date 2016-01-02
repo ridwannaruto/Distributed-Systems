@@ -2,6 +2,7 @@ package com.vishlesha.network;
 
 import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
+import com.vishlesha.request.handler.RequestHandler;
 
 import java.io.*;
 import java.net.*;
@@ -26,8 +27,9 @@ public class Server extends Base implements Runnable {
     public void run() {
 
         try {
-
-            serverSocket = new DatagramSocket(GlobalConstant.PORT_LISTEN);
+            int serverPort = GlobalConstant.PORT_MIN + (int)(Math.random() * GlobalConstant.PORT_RANGE);
+            GlobalState.getLocalServerNode().setPortNumber(serverPort);
+            serverSocket = new DatagramSocket(serverPort);
             System.out.println("Server socket created and waiting for requests..");
             while (!serverSocket.isClosed()) {
                 try {
@@ -36,7 +38,7 @@ public class Server extends Base implements Runnable {
                     DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     serverSocket.receive(receivePacket);
                     String requestMessage = new String(receivePacket.getData(),0, receivePacket.getLength());
-                    if (GlobalState.isTestMode())
+                    if (!GlobalState.isTestMode())
                     System.out.println("Server Received: " + requestMessage);
 
                     workerPool.submit(new Runnable() {
@@ -44,10 +46,11 @@ public class Server extends Base implements Runnable {
                         public void run() {
 
                             try {
-                                byte[] sendData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
+                                byte[] sendData;
                                 InetAddress IPAddress = receivePacket.getAddress();
                                 int port = receivePacket.getPort();
-                                sendData = "Server Received".getBytes();
+                                RequestHandler requestHandler = new RequestHandler(requestMessage);
+                                sendData = requestHandler.getResponse().getResponseMessage().getBytes();
                                 DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
                                 serverSocket.send(sendPacket);
                             } catch (IOException ex) {

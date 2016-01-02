@@ -5,6 +5,8 @@ import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.error.SearchError;
 
+import java.util.ArrayList;
+
 /**
  * Created by ridwan on 1/1/16.
  */
@@ -13,7 +15,7 @@ public class SearchResponse extends Response {
     int responseCode;
 
     public SearchResponse (String responseMessage, Node respondNode){
-        super(respondNode);
+        setRespondNode(respondNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
@@ -36,5 +38,14 @@ public class SearchResponse extends Response {
                 System.out.println("Search Error: " + searchError.getErrorMessage());
         }
 
+    }
+
+    public SearchResponse(int responseCode, int noOfHops, ArrayList<String> fileList){
+        String fileNameList ="";
+        for (int i=0; i<fileList.size(); i++)
+            fileNameList += " " + fileList.get(i);
+        String responseMessage = " SEROK " + responseCode + " " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + noOfHops + fileList;
+        setResponseMessage(responseMessage);
+        appendMsgLength();
     }
 }

@@ -12,12 +12,7 @@ import java.util.Date;
 public class RegisterRequest extends Request {
 
     public RegisterRequest(Node node, String ... params){
-        super(node);
-        setRequest(params);
-
-    }
-
-    protected void setRequest(String ... params){
+        setRecepientNode(node);
         String userName;
         if (params.length > 0){
             userName =  params[0];
@@ -29,6 +24,7 @@ public class RegisterRequest extends Request {
         GlobalState.setUsername(userName);
         requestMessage = " REG " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + userName;
         appendMsgLength();
+
 
     }
 

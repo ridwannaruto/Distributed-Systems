@@ -7,10 +7,9 @@ import com.vishlesha.errorHandler.RegisterErrorHandler;
 import com.vishlesha.network.CallBack;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
-import com.vishlesha.request.JoinRequest;
-import com.vishlesha.request.RegisterRequest;
-import com.vishlesha.request.Request;
-import com.vishlesha.request.UnregisterRequest;
+import com.vishlesha.request.*;
+import com.vishlesha.response.JoinResponse;
+import com.vishlesha.response.LeaveResponse;
 import com.vishlesha.response.RegisterResponse;
 import com.vishlesha.response.UnregisterResponse;
 
@@ -35,13 +34,15 @@ public class OverlayNetworkTest {
         GlobalState.setTestMode(true);
         initialize();
         System.out.println("Running register user test");
-        testRegisterSuccess();
+        testRegister();
         System.out.println("Running register same user test");
         testRegisterSameUserName();
         System.out.println("Running unregister user test");
-        testUnregisterSuccess();
-        System.out.println("Running server test");
-        testServer();
+        testUnregister();
+        System.out.println("Running join server test");
+        testJoinServer();
+        System.out.println("Running leave server test");
+        testLeaveServer();
         terminate();
 
 
@@ -72,7 +73,7 @@ public class OverlayNetworkTest {
         serverInstance.start();
     }
 
-    private void testRegisterSuccess(){
+    private void testRegister (){
         RegisterRequest registerRequest = new RegisterRequest(bootstrapServer);
         clientInstance.sendTCPRequest(registerRequest, new CallBack() {
             @Override
@@ -109,7 +110,7 @@ public class OverlayNetworkTest {
         sleep(shortSleepDuration);
     }
 
-    private void testUnregisterSuccess(){
+    private void testUnregister(){
 
         UnregisterRequest unregisterRequest = new UnregisterRequest(bootstrapServer);
         clientInstance.sendTCPRequest(unregisterRequest, new CallBack() {
@@ -126,17 +127,41 @@ public class OverlayNetworkTest {
         sleep(shortSleepDuration);
     }
 
-    private void testServer(){
+    private void testJoinServer(){
         JoinRequest joinRequest = new JoinRequest(localServer);
         clientInstance.sendUDPRequest(joinRequest, new CallBack() {
             @Override
-            public void run(String message, Node node) {
-                System.out.println("Server Test: Success");
+            public void run(String responseMessage, Node respondNode) {
+                JoinResponse joinResponse = new JoinResponse(responseMessage, respondNode);
+                if (!joinResponse.isFail()) {
+                    System.out.println("Join Server Test: Success");
+                } else
+                    System.out.println("Join Server Test: Fail");
             }
         });
 
         sleep(shortSleepDuration);
     }
+
+
+
+    private void testLeaveServer(){
+        LeaveRequest leaveRequest = new LeaveRequest(localServer);
+        clientInstance.sendUDPRequest(leaveRequest, new CallBack() {
+            @Override
+            public void run(String responseMessage, Node respondNode) {
+                LeaveResponse leaveResponse = new LeaveResponse(responseMessage, respondNode);
+                if (!leaveResponse.isFail()) {
+                    System.out.println("Leave Server Test: Success");
+                } else
+                    System.out.println("Leave Server Test: Fail");
+            }
+        });
+
+        sleep(shortSleepDuration);
+    }
+
+
     public void sleep(int duratrion){
         try{
             Thread.sleep(duratrion);

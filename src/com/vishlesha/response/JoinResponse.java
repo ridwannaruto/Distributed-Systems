@@ -12,7 +12,7 @@ public class JoinResponse extends Response{
     int responseCode;
 
     public JoinResponse(String responseMessage, Node respondNode){
-        super(respondNode);
+        setRespondNode(respondNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
@@ -30,4 +30,12 @@ public class JoinResponse extends Response{
         }
 
     }
+
+    public JoinResponse(int responseCode){
+        String responseMessage = " JOINOK " + responseCode;
+        setResponseMessage(responseMessage);
+        appendMsgLength();
+    }
+
+
 }

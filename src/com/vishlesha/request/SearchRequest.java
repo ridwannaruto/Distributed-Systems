@@ -28,14 +28,19 @@ public class SearchRequest extends Request {
     }
 
     public SearchRequest(Node node, String searchFileName, int numberOfHops){
-        super(node);
+        setRecepientNode(node);
         setFileName(searchFileName);
         setNoOfHops(numberOfHops);
-        setRequest();
-    }
-
-    private void setRequest(){
         requestMessage = " SER " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
         appendMsgLength();
     }
+
+    public SearchRequest (String requestMessage){
+        String[] token = requestMessage.split(" ");
+        Node node = new Node();
+        node.setIpaddress(token[KEY_IP_ADDRESS]);
+        node.setPortNumber(Integer.valueOf(token[KEY_PORT_NUM]));
+        setRecepientNode(node);
+    }
+
 }

@@ -14,7 +14,7 @@ public class UnregisterResponse extends Response {
     int responseCode;
 
     public UnregisterResponse(String responseMessage, Node respondNode){
-        super(respondNode);
+        setRespondNode(respondNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 

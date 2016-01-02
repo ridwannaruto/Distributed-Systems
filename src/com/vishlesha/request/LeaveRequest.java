@@ -10,13 +10,17 @@ public class LeaveRequest extends Request {
 
 
     public LeaveRequest(Node node){
-        super(node);
-        setRequest();
-    }
-
-    void setRequest(){
+        setRecepientNode(node);
         requestMessage = " LEAVE " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber();
         appendMsgLength();
+    }
+
+    public LeaveRequest (String requestMessage){
+        String[] token = requestMessage.split(" ");
+        Node node = new Node();
+        node.setIpaddress(token[KEY_IP_ADDRESS]);
+        node.setPortNumber(Integer.valueOf(token[KEY_PORT_NUM]));
+        setRecepientNode(node);
     }
 
 

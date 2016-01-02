@@ -13,7 +13,7 @@ public class LeaveResponse extends Response {
     int responseCode;
 
     public LeaveResponse(String responseMessage, Node respondNode){
-        super(respondNode);
+        setRespondNode(respondNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
@@ -32,4 +32,9 @@ public class LeaveResponse extends Response {
 
     }
 
+    public LeaveResponse(int responseCode){
+        String responseMessage = " LEAVEOK " + responseCode;
+        setResponseMessage(responseMessage);
+        appendMsgLength();
+    }
 }

@@ -18,7 +18,7 @@ public class RegisterResponse extends Response {
     int noOfNodes;
 
     public RegisterResponse(String responseMessage, Node respondNode){
-        super(respondNode);
+        setRespondNode(respondNode);
         String[] token = responseMessage.split(" ");
         noOfNodes = Integer.valueOf(token[2]);
 

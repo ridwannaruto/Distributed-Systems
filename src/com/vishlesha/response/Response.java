@@ -1,7 +1,6 @@
 package com.vishlesha.response;
 
 import com.vishlesha.dataType.Node;
-import com.vishlesha.error.*;
 import com.vishlesha.error.Error;
 
 /**
@@ -10,9 +9,18 @@ import com.vishlesha.error.Error;
 
 abstract public class Response {
     protected Node respondNode;
-    protected String response;
+    protected String responseMessage;
+    protected int responseCode;
     protected boolean fail;
     protected Error error;
+
+    public int getResponseCode() {
+        return responseCode;
+    }
+
+    public void setResponseCode(int responseCode) {
+        this.responseCode = responseCode;
+    }
 
     public Error getError() {
         return error;
@@ -20,10 +28,6 @@ abstract public class Response {
 
     public void setError(Error error) {
         this.error = error;
-    }
-
-    public Response(Node node){
-        setRespondNode(node);
     }
 
     public Node getRespondNode() {
@@ -34,8 +38,8 @@ abstract public class Response {
         this.respondNode = respondNode;
     }
 
-    public String getResponse(){
-        return response;
+    public String getResponseMessage(){
+        return responseMessage;
     }
 
     public boolean isFail() {
@@ -46,4 +50,11 @@ abstract public class Response {
         this.fail = fail;
     }
 
+    protected void appendMsgLength(){
+        responseMessage = String.format("%04d", responseMessage.length()+4) + responseMessage;
+    }
+
+    public void setResponseMessage(String responseMessage) {
+        this.responseMessage = responseMessage;
+    }
 }
