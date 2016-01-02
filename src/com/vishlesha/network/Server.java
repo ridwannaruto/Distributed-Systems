@@ -1,10 +1,10 @@
 package com.vishlesha.network;
 
 import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.app.GlobalState;
 
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,7 +15,7 @@ public class Server extends Base implements Runnable {
 
 
     ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_SERVER_WORKER_POOL);
-    ServerSocket socketService;
+    DatagramSocket serverSocket;
 
     public void start() {
         Thread t = new Thread(this);
@@ -25,47 +25,56 @@ public class Server extends Base implements Runnable {
 
     public void run() {
 
-
         try {
-            socketService = new ServerSocket(GlobalConstant.PORT_LISTEN);
-            while (!socketService.isClosed()) {
+
+            serverSocket = new DatagramSocket(GlobalConstant.PORT_LISTEN);
+            System.out.println("Server socket created and waiting for requests..");
+            while (!serverSocket.isClosed()) {
                 try {
 
-                    final Socket socket = socketService.accept();
+                    byte[] receiveData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
+                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+                    serverSocket.receive(receivePacket);
+                    String requestMessage = new String(receivePacket.getData(),0, receivePacket.getLength());
+                    if (GlobalState.isTestMode())
+                    System.out.println("Server Received: " + requestMessage);
 
                     workerPool.submit(new Runnable() {
                         @Override
                         public void run() {
 
                             try {
-                                BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                                BufferedWriter outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                                String serverRequest = inputStream.readLine();
-                                System.out.println("Local Server Node Received: " + serverRequest);
+                                byte[] sendData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
+                                InetAddress IPAddress = receivePacket.getAddress();
+                                int port = receivePacket.getPort();
+                                sendData = "Server Received".getBytes();
+                                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
+                                serverSocket.send(sendPacket);
                             } catch (IOException ex) {
-                                System.out.println("Server:" + ex);
+                                System.out.println("Server Exception: " + ex);
                             }
                         }
 
                     });
 
                 } catch (IOException ex) {
-                    System.out.println("Server: " + ex);
+                    System.out.println("Server Exception:  " + ex);
                 }
 
             }
+
         } catch (IOException ex) {
-            System.out.println("Server: " + ex);
+            System.out.println("Server Exception:  " + ex);
         }
+
     }
 
+
     public void Stop() {
-        try {
-            workerPool.shutdown();
-            socketService.close();
-        } catch (IOException ex) {
-            System.out.println(ex);
-        }
+
+        workerPool.shutdown();
+        serverSocket.close();
+
     }
 
 

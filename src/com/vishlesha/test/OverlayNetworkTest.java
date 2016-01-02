@@ -7,11 +7,14 @@ import com.vishlesha.errorHandler.RegisterErrorHandler;
 import com.vishlesha.network.CallBack;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
+import com.vishlesha.request.JoinRequest;
 import com.vishlesha.request.RegisterRequest;
 import com.vishlesha.request.Request;
 import com.vishlesha.request.UnregisterRequest;
 import com.vishlesha.response.RegisterResponse;
 import com.vishlesha.response.UnregisterResponse;
+
+import java.net.InetAddress;
 
 /**
  * Created by ridwan on 1/1/16.
@@ -20,8 +23,12 @@ public class OverlayNetworkTest {
 
     String responseMessage;
     Node bootstrapServer, localServer;
-    Client clientForBS;
-    Server server;
+    Client clientInstance;
+    Server serverInstance;
+
+    String bootstrapIP = "127.0.0.1";
+    int bootstrapPort = 1040;
+    int shortSleepDuration = 3000, longSleepDuration = 10000;
 
     public void runTest() {
 
@@ -33,39 +40,41 @@ public class OverlayNetworkTest {
         testRegisterSameUserName();
         System.out.println("Running unregister user test");
         testUnregisterSuccess();
+        System.out.println("Running server test");
+        testServer();
         terminate();
+
 
     }
 
     private void terminate(){
-        server.Stop();
-        clientForBS.stop();
+        serverInstance.Stop();
+        clientInstance.stop();
 
     }
 
     private void initialize(){
         bootstrapServer = new Node();
-        bootstrapServer.setIpaddress("127.0.0.1");
-        bootstrapServer.setPortNumber(1040);
+        bootstrapServer.setIpaddress(bootstrapIP);
+        bootstrapServer.setPortNumber(bootstrapPort);
 
-        localServer = new Node();
-        localServer.setIpaddress("127.0.0.1");
-        localServer.setPortNumber(GlobalConstant.PORT_LISTEN);
+        try{
+            localServer = new Node();
+            localServer.setIpaddress(InetAddress.getLocalHost().getHostAddress());
+            localServer.setPortNumber(GlobalConstant.PORT_LISTEN);
+        }catch (Exception ex){
+            System.out.println(ex);
+        }
 
         GlobalState.setLocalServerNode(localServer);
-
-
-
-        clientForBS = new Client();
-        server = new Server();
-        server.start();
-
-
+        clientInstance = new Client();
+        serverInstance = new Server();
+        serverInstance.start();
     }
 
     private void testRegisterSuccess(){
         RegisterRequest registerRequest = new RegisterRequest(bootstrapServer);
-        clientForBS.sendTCPRequest(registerRequest, new CallBack() {
+        clientInstance.sendTCPRequest(registerRequest, new CallBack() {
             @Override
             public void run(String responseMessage, Node respondNode) {
                 RegisterResponse serverResponse = new RegisterResponse(responseMessage, respondNode);
@@ -75,13 +84,13 @@ public class OverlayNetworkTest {
                     System.out.println("Register User Test: Fail");
             }
         });
-        sleep();
+        sleep(shortSleepDuration);
 
     }
 
     private void testRegisterSameUserName(){
         RegisterRequest registerRequest = new RegisterRequest(bootstrapServer, GlobalState.getUsername());
-        clientForBS.sendTCPRequest(registerRequest, new CallBack() {
+        clientInstance.sendTCPRequest(registerRequest, new CallBack() {
             @Override
             public void run(String responseMessage, Node respondNode) {
                 RegisterResponse serverResponse = new RegisterResponse(responseMessage, respondNode);
@@ -90,20 +99,20 @@ public class OverlayNetworkTest {
                     RegisterErrorHandler registerErrorHandler = new RegisterErrorHandler(serverResponse.getError());
                     if (registerErrorHandler.isRetry()) {
                         Request newRegisterRequest = registerErrorHandler.getRequest();
-                        clientForBS.sendTCPRequest(newRegisterRequest, this);
+                        clientInstance.sendTCPRequest(newRegisterRequest, this);
                     }
                 } else {
                     System.out.println("Register Same  User Error Handle Test: Success");
                 }
             }
         });
-        sleep();
+        sleep(shortSleepDuration);
     }
 
     private void testUnregisterSuccess(){
 
         UnregisterRequest unregisterRequest = new UnregisterRequest(bootstrapServer);
-        clientForBS.sendTCPRequest(unregisterRequest, new CallBack() {
+        clientInstance.sendTCPRequest(unregisterRequest, new CallBack() {
             @Override
             public void run(String responseMessage, Node respondNode) {
                 UnregisterResponse serverResponse = new UnregisterResponse(responseMessage, respondNode);
@@ -114,12 +123,23 @@ public class OverlayNetworkTest {
             }
         });
 
-        sleep();
+        sleep(shortSleepDuration);
     }
 
-    public void sleep(){
+    private void testServer(){
+        JoinRequest joinRequest = new JoinRequest(localServer);
+        clientInstance.sendUDPRequest(joinRequest, new CallBack() {
+            @Override
+            public void run(String message, Node node) {
+                System.out.println("Server Test: Success");
+            }
+        });
+
+        sleep(shortSleepDuration);
+    }
+    public void sleep(int duratrion){
         try{
-            Thread.sleep(3000);
+            Thread.sleep(duratrion);
         }catch (Exception ex){
 
         }

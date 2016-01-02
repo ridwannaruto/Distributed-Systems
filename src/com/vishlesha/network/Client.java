@@ -29,8 +29,8 @@ public class Client extends Base {
                 try {
                     DatagramSocket clientSocket = new DatagramSocket();
                     InetAddress IPAddress = InetAddress.getByName(request.getRecepientNode().getIpaddress());
-                    byte[] sendData = new byte[1024];
-                    byte[] receiveData = new byte[1024];
+                    byte[] sendData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
+                    byte[] receiveData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
 
                     sendData = request.getRequestMessage().getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, request.getRecepientNode().getPortNumber());
@@ -38,7 +38,7 @@ public class Client extends Base {
 
                     DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     clientSocket.receive(receivePacket);
-                    String responseLine = new String(receivePacket.getData());
+                    String responseLine = new String(receivePacket.getData(),0, receivePacket.getLength());
                     clientSocket.close();
                     callBack.run(responseLine, request.getRecepientNode());
 

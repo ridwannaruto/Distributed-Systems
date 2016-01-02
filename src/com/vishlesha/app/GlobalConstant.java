@@ -30,6 +30,7 @@ public class GlobalConstant {
     public static final int PORT_MIN = 1050;
     public static final int PORT_RANGE = 5000;
 
+    public static final int MSG_BYTE_MAX_LENGTH = 1024;
 
     //Error Message
     public static final String ERR_MSG_GENERAL = "Generic Error Message: Command not Understood";
