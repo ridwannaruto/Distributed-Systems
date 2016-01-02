@@ -1,5 +1,6 @@
 package com.vishlesha.response;
 
+import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.error.JoinError;
 import com.vishlesha.error.LeaveError;
 
@@ -17,14 +18,14 @@ public class LeaveResponse extends Response {
 
         if (token[1].equals("LEAVEOK") && responseCode == 0){
             setError(false);
-            if (!globalConstant.isTestMode())
-                System.out.println(globalConstant.SUCCESS_MSG_LEAVE);
+            if (!GlobalConstant.isTestMode())
+                System.out.println(GlobalConstant.SUCCESS_MSG_LEAVE);
         }
 
         else{
             setError(true);
             LeaveError leaveError = new LeaveError(responseMessage);
-            if (!globalConstant.isTestMode())
+            if (!GlobalConstant.isTestMode())
                 System.out.println("Leave Error: " + leaveError.getErrorMessage());
         }
 

@@ -7,7 +7,7 @@ import java.net.Socket;
 /**
  * Created by ridwan on 1/1/16.
  */
-public class Server extends Base {
+public class Server extends Base implements Runnable {
 
     ServerSocket socketService;
     Socket socket;
@@ -16,12 +16,18 @@ public class Server extends Base {
         return socket;
     }
 
-    public void Start(){
+    public void run(){
         try{
             socketService = new ServerSocket(globalConstant.PORT_LISTEN);
             socket = socketService.accept();
             setInputStream(socket);
             setOutputStream(socket);
+
+            while(true){
+                String serverRequest = getInputStream().readLine();
+                System.out.println("Local Server Node Received: " + serverRequest);
+            }
+
         }catch (IOException ex){
             System.out.println(ex);
         }

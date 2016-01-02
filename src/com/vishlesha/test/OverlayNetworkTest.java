@@ -16,14 +16,12 @@ public class OverlayNetworkTest {
 
     String responseMessage;
     Node bootstrapServer, localServer;
-    GlobalConstant globalConstant;
     Client clientForBS;
     Server server;
 
     public void runTest() {
 
-        globalConstant = new GlobalConstant();
-        globalConstant.setTestMode(false);
+        GlobalConstant.setTestMode(false);
         initialize();
         testRegisterSuccess();
         testRegisterSameUserName();
@@ -39,29 +37,30 @@ public class OverlayNetworkTest {
         bootstrapServer.setPortNumber(1122);
 
         localServer.setIpaddress("127.0.0.1");
-        localServer.setPortNumber(globalConstant.PORT_LISTEN);
+        localServer.setPortNumber(GlobalConstant.PORT_LISTEN);
 
 
         clientForBS = new Client(bootstrapServer);
         server = new Server();
+        server.run();
     }
 
     private void testRegisterSuccess(){
         RegisterRequest registerRequest = new RegisterRequest(localServer);
-        responseMessage = clientForBS.sendRequest(registerRequest.getRequest());
-        RegisterResponse registerResponse = new RegisterResponse(responseMessage);
+        //responseMessage = clientForBS.sendRequest(registerRequest.getRequest());
+       // RegisterResponse registerResponse = new RegisterResponse(responseMessage);
 
     }
 
     private void testRegisterSameUserName(){
         RegisterRequest registerRequest = new RegisterRequest(localServer);
-        responseMessage = clientForBS.sendRequest(registerRequest.getRequest());
-        RegisterResponse registerResponse = new RegisterResponse(responseMessage);
+       // responseMessage = clientForBS.sendRequest(registerRequest.getRequest());
+        //RegisterResponse registerResponse = new RegisterResponse(responseMessage);
     }
 
     private void testUnregisterSuccess(){
         UnregisterRequest unregisterRequest = new UnregisterRequest(localServer);
-        responseMessage = clientForBS.sendRequest(unregisterRequest.getRequest());
-        UnregisterResponse unregisterResponse = new UnregisterResponse(responseMessage);
+       // responseMessage = clientForBS.sendRequest(unregisterRequest.getRequest());
+        //UnregisterResponse unregisterResponse = new UnregisterResponse(responseMessage);
     }
 }

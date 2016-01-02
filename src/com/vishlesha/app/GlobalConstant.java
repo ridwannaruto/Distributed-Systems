@@ -23,7 +23,7 @@ public class GlobalConstant {
     public static final int ERR_CODE_SEARCH_UNREACHABLE = 51;
 
 
-
+    public static final int NUM_THREADS_CLIENT_SERVICE = 100;
 
 
     //Error Message

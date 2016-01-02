@@ -8,11 +8,6 @@ public class Error {
 
     protected int errorCode;
     protected String errorMessage;
-    protected GlobalConstant globalConstant;
-
-    public Error(){
-        globalConstant = new GlobalConstant();
-    }
 
 
     public int getErrorCode() {

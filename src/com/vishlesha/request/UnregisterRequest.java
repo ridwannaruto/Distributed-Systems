@@ -1,5 +1,6 @@
 package com.vishlesha.request;
 
+import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.dataType.Node;
 
 import java.util.Date;
@@ -18,7 +19,7 @@ public class UnregisterRequest extends Request {
     }
 
     void setRequest(){
-        request = " UNREG " + getIpAddress() + " " + getPortNumber() + " " + globalConstant.getUsername();
+        request = " UNREG " + getIpAddress() + " " + getPortNumber() + " " + GlobalConstant.getUsername();
         appendMsgLength();
     }
 

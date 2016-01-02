@@ -10,12 +10,10 @@ public class Request {
     private String ipAddress;
     private int portNumber;
     protected String request;
-    protected GlobalConstant globalConstant;
 
     public Request(Node node){
         setIpAddress(node.getIpaddress());
         setPortNumber(node.getPortNumber());
-        globalConstant = new GlobalConstant();
     }
     public int getPortNumber() {
         return portNumber;

@@ -1,5 +1,6 @@
 package com.vishlesha.response;
 
+import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.error.RegisterError;
 
@@ -18,11 +19,12 @@ public class RegisterResponse extends Response {
 
         String[] token = responseMessage.split(" ");
         noOfNodes = Integer.valueOf(token[2]);
+        RegisterError registerError;
 
         if (token[1].equals("REGOK") && noOfNodes <9000){
             setError(false);
-            if (!globalConstant.isTestMode())
-                System.out.println(globalConstant.SUCCESS_MSG_REG);
+            if (!GlobalConstant.isTestMode())
+                System.out.println(GlobalConstant.SUCCESS_MSG_REG);
 
             nodeList = new ArrayList<Node>();
 
@@ -34,8 +36,8 @@ public class RegisterResponse extends Response {
             }
         }else{
             setError(true);
-            RegisterError registerError = new RegisterError(responseMessage);
-            if (!globalConstant.isTestMode())
+            registerError = new RegisterError(responseMessage);
+            if (!GlobalConstant.isTestMode())
                 System.out.println("Register Error: " + registerError.getErrorMessage());
         }
 

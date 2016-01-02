@@ -1,5 +1,6 @@
 package com.vishlesha.response;
 
+import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.error.JoinError;
 import com.vishlesha.error.UnregisterError;
 
@@ -16,14 +17,14 @@ public class JoinResponse extends Response{
 
         if (token[1].equals("JOINOK") && responseCode == 0){
             setError(false);
-            if (!globalConstant.isTestMode())
-                System.out.println(globalConstant.SUCCESS_MSG_JOIN);
+            if (!GlobalConstant.isTestMode())
+                System.out.println(GlobalConstant.SUCCESS_MSG_JOIN);
         }
 
         else{
             setError(true);
             JoinError joinError = new JoinError(responseMessage);
-            if (!globalConstant.isTestMode())
+            if (!GlobalConstant.isTestMode())
                 System.out.println("Join Error: " + joinError.getErrorMessage());
         }
 

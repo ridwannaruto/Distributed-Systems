@@ -8,12 +8,7 @@ import com.vishlesha.app.GlobalConstant;
 
 abstract public class Response {
     protected String response;
-    protected GlobalConstant globalConstant;
     protected boolean error;
-
-    public Response(){
-        globalConstant = new GlobalConstant();
-    }
 
     public String getResponse(){
         return response;

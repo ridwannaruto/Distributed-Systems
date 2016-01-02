@@ -1,5 +1,6 @@
 package com.vishlesha.response;
 
+import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.error.SearchError;
 import com.vishlesha.error.UnregisterError;
 
@@ -17,20 +18,20 @@ public class SearchResponse extends Response {
 
         if (token[1].equals("SEROK") && responseCode == 0){
             setError(false);
-            if (!globalConstant.isTestMode())
-                System.out.println(globalConstant.MSG_SEARCH_NORESULT);
+            if (!GlobalConstant.isTestMode())
+                System.out.println(GlobalConstant.MSG_SEARCH_NORESULT);
         }
 
         else if (token[1].equals("SEROK") && responseCode < 9000){
             setError(false);
-            if (!globalConstant.isTestMode())
-                System.out.println(globalConstant.SUCCESS_MSG_SEARCH);
+            if (!GlobalConstant.isTestMode())
+                System.out.println(GlobalConstant.SUCCESS_MSG_SEARCH);
         }
 
         else{
             setError(true);
             SearchError searchError = new SearchError(responseMessage);
-            if (!globalConstant.isTestMode())
+            if (!GlobalConstant.isTestMode())
                 System.out.println("Search Error: " + searchError.getErrorMessage());
         }
 

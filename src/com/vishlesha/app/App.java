@@ -4,6 +4,7 @@ package com.vishlesha.app;
 //created by Ridwan
 
 import com.vishlesha.dataType.Node;
+import com.vishlesha.network.CallBack;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
 import com.vishlesha.request.RegisterRequest;
@@ -48,11 +49,20 @@ public class App {
 
         Client client = new Client(clientForBS);
         Server server = new Server();
-        server.Start();
+        server.run();
         Request regRequest = new RegisterRequest(localServer);
-        String responseMessage = client.sendRequest(regRequest.getRequest());
+        client.sendRequest(regRequest.getRequest(), new CallBack(){
+            public void run(String responseMessage){
+                System.out.println("BootStrap Node: " + responseMessage);
+                RegisterResponse serverResponse = new RegisterResponse(responseMessage);
+                if (serverResponse.isError()){
+
+                }
+
+            }
+        });
         //System.out.println("BootStrap Node: " + responseMessage);
-        RegisterResponse serverResponse =  new RegisterResponse(responseMessage);
+
 
 
 
