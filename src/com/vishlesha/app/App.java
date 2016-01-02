@@ -51,11 +51,11 @@ public class App {
         Server server = new Server();
         server.run();
         Request regRequest = new RegisterRequest(localServer);
-        client.sendRequest(regRequest, new CallBack(){
-            public void run(String responseMessage, Node respondNode){
+        client.sendTCPRequest(regRequest, new CallBack() {
+            public void run(String responseMessage, Node respondNode) {
                 System.out.println("BootStrap Node: " + responseMessage);
-                RegisterResponse serverResponse = new RegisterResponse(responseMessage,respondNode);
-                if (serverResponse.isFail()){
+                RegisterResponse serverResponse = new RegisterResponse(responseMessage, respondNode);
+                if (serverResponse.isFail()) {
 
                 }
 

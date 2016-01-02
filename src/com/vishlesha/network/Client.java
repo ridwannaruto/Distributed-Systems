@@ -4,8 +4,7 @@ import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.request.Request;
 
 import java.io.*;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,13 +21,50 @@ public class Client extends Base {
         return socket;
     }
 
-
-    public void sendRequest(Request request, CallBack callBack) {
+    public void sendUDPRequest(Request request, CallBack callBack) {
         workerPool.submit(new Runnable() {
             @Override
             public void run() {
 
                 try {
+                    DatagramSocket clientSocket = new DatagramSocket();
+                    InetAddress IPAddress = InetAddress.getByName(request.getRecepientNode().getIpaddress());
+                    byte[] sendData = new byte[1024];
+                    byte[] receiveData = new byte[1024];
+
+                    sendData = request.getRequestMessage().getBytes();
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, request.getRecepientNode().getPortNumber());
+                    clientSocket.send(sendPacket);
+
+                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+                    clientSocket.receive(receivePacket);
+                    String responseLine = new String(receivePacket.getData());
+                    clientSocket.close();
+                    callBack.run(responseLine, request.getRecepientNode());
+
+
+                } catch (UnknownHostException ex) {
+                    System.out.println("Unknown Host");
+                } catch (IOException ex) {
+                    System.out.println("IO exception: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+
+
+            }
+
+
+        });
+
+    }
+
+    public void sendTCPRequest(Request request, CallBack callBack) {
+        workerPool.submit(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+
                     String responseLine = null;
                     socket = new Socket(request.getRecepientNode().getIpaddress(), request.getRecepientNode().getPortNumber());
                     BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -43,6 +79,7 @@ public class Client extends Base {
                     outputStream.close();
                     socket.close();
                     callBack.run(responseLine, request.getRecepientNode());
+
 
                 } catch (UnknownHostException ex) {
                     System.out.println("Unknown Host");

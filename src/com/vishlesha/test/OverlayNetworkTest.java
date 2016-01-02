@@ -65,13 +65,13 @@ public class OverlayNetworkTest {
 
     private void testRegisterSuccess(){
         RegisterRequest registerRequest = new RegisterRequest(bootstrapServer);
-        clientForBS.sendRequest(registerRequest, new CallBack() {
+        clientForBS.sendTCPRequest(registerRequest, new CallBack() {
             @Override
             public void run(String responseMessage, Node respondNode) {
-                RegisterResponse serverResponse = new RegisterResponse(responseMessage,respondNode);
-                if (!serverResponse.isFail()){
+                RegisterResponse serverResponse = new RegisterResponse(responseMessage, respondNode);
+                if (!serverResponse.isFail()) {
                     System.out.println("Register User Test: Success");
-                }else
+                } else
                     System.out.println("Register User Test: Fail");
             }
         });
@@ -81,18 +81,18 @@ public class OverlayNetworkTest {
 
     private void testRegisterSameUserName(){
         RegisterRequest registerRequest = new RegisterRequest(bootstrapServer, GlobalState.getUsername());
-        clientForBS.sendRequest(registerRequest, new CallBack() {
+        clientForBS.sendTCPRequest(registerRequest, new CallBack() {
             @Override
             public void run(String responseMessage, Node respondNode) {
-                RegisterResponse serverResponse = new RegisterResponse(responseMessage,respondNode);
-                if (serverResponse.isFail() && serverResponse.getError().getErrorCode() == GlobalConstant.ERR_CODE_REG_USERNAME){
+                RegisterResponse serverResponse = new RegisterResponse(responseMessage, respondNode);
+                if (serverResponse.isFail() && serverResponse.getError().getErrorCode() == GlobalConstant.ERR_CODE_REG_USERNAME) {
                     System.out.println("Register Same User Test: Success");
                     RegisterErrorHandler registerErrorHandler = new RegisterErrorHandler(serverResponse.getError());
-                    if (registerErrorHandler.isRetry()){
+                    if (registerErrorHandler.isRetry()) {
                         Request newRegisterRequest = registerErrorHandler.getRequest();
-                        clientForBS.sendRequest(newRegisterRequest,this);
+                        clientForBS.sendTCPRequest(newRegisterRequest, this);
                     }
-                }else{
+                } else {
                     System.out.println("Register Same  User Error Handle Test: Success");
                 }
             }
@@ -103,13 +103,13 @@ public class OverlayNetworkTest {
     private void testUnregisterSuccess(){
 
         UnregisterRequest unregisterRequest = new UnregisterRequest(bootstrapServer);
-        clientForBS.sendRequest(unregisterRequest, new CallBack() {
+        clientForBS.sendTCPRequest(unregisterRequest, new CallBack() {
             @Override
             public void run(String responseMessage, Node respondNode) {
-                UnregisterResponse serverResponse = new UnregisterResponse(responseMessage,respondNode);
-                if (!serverResponse.isFail()){
+                UnregisterResponse serverResponse = new UnregisterResponse(responseMessage, respondNode);
+                if (!serverResponse.isFail()) {
                     System.out.println("Unregister User Test: Success");
-                }else
+                } else
                     System.out.println("Unregister User Test: Fail");
             }
         });
