@@ -18,9 +18,7 @@ import java.util.Scanner;
     * Runs the interface for the client application
     * Displays the dialog box asking for connection details and query commands
     * Connects to server and displays the responseMessage
-
 */
-
 
 public class App {
 
@@ -46,10 +44,13 @@ public class App {
         Node localServer = new Node();
         localServer.setIpaddress("127.0.0.1");
         localServer.setPortNumber(globalConstant.PORT_LISTEN);
+//        GlobalState.setLocalServerNode(localServer);
 
         Client client = new Client();
+        GlobalState.setClient(client);
+
         Server server = new Server();
-        server.run();
+        server.start();
         Request regRequest = new RegisterRequest(localServer);
         client.sendTCPRequest(regRequest, new CallBack() {
             public void run(String responseMessage, Node respondNode) {
@@ -62,12 +63,6 @@ public class App {
             }
         });
         //System.out.println("BootStrap Node: " + responseMessage);
-
-
-
-
-
-
     }
 }
 

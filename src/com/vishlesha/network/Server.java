@@ -27,7 +27,7 @@ public class Server extends Base implements Runnable {
     public void run() {
 
         try {
-            int serverPort = GlobalConstant.PORT_MIN + (int)(Math.random() * GlobalConstant.PORT_RANGE);
+            int serverPort = GlobalConstant.PORT_MIN + (int) (Math.random() * GlobalConstant.PORT_RANGE);
             GlobalState.getLocalServerNode().setPortNumber(serverPort);
             serverSocket = new DatagramSocket(serverPort);
             System.out.println("Server socket created and waiting for requests..");
@@ -37,9 +37,9 @@ public class Server extends Base implements Runnable {
                     byte[] receiveData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
                     final DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     serverSocket.receive(receivePacket);
-                    final String requestMessage = new String(receivePacket.getData(),0, receivePacket.getLength());
+                    final String requestMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
                     if (!GlobalState.isTestMode())
-                    System.out.println("Server Received: " + requestMessage);
+                        System.out.println("Server Received: " + requestMessage);
 
                     workerPool.submit(new Runnable() {
                         @Override

@@ -16,7 +16,6 @@ public class Client extends Base {
     Socket socket = null;
     ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_CLIENT_WORKER_POOL);
 
-
     public Socket getSocket() {
         return socket;
     }
@@ -25,7 +24,6 @@ public class Client extends Base {
         workerPool.submit(new Runnable() {
             @Override
             public void run() {
-
                 try {
                     DatagramSocket clientSocket = new DatagramSocket();
                     InetAddress IPAddress = InetAddress.getByName(request.getRecepientNode().getIpaddress());
@@ -42,29 +40,23 @@ public class Client extends Base {
                     clientSocket.close();
                     callBack.run(responseLine, request.getRecepientNode());
 
-
                 } catch (UnknownHostException ex) {
                     System.out.println("Unknown Host");
                 } catch (IOException ex) {
                     System.out.println("IO exception: " + ex.getMessage());
                     ex.printStackTrace();
                 }
-
-
             }
 
 
         });
-
     }
 
     public void sendTCPRequest(final Request request, final CallBack callBack) {
         workerPool.submit(new Runnable() {
             @Override
             public void run() {
-
                 try {
-
                     String responseLine = null;
                     socket = new Socket(request.getRecepientNode().getIpaddress(), request.getRecepientNode().getPortNumber());
                     BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -80,25 +72,17 @@ public class Client extends Base {
                     socket.close();
                     callBack.run(responseLine, request.getRecepientNode());
 
-
                 } catch (UnknownHostException ex) {
                     System.out.println("Unknown Host");
                 } catch (IOException ex) {
                     System.out.println("IO exception: " + ex.getMessage());
                     ex.printStackTrace();
                 }
-
-
             }
-
-
         });
-
     }
 
     public void stop(){
         workerPool.shutdown();
     }
-
-
 }
