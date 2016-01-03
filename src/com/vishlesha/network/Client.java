@@ -21,11 +21,10 @@ public class Client extends Base {
         return socket;
     }
 
-    public void sendUDPRequest(Request request, CallBack callBack) {
+    public void sendUDPRequest(final Request request, final CallBack callBack) {
         workerPool.submit(new Runnable() {
             @Override
             public void run() {
-
                 try {
                     DatagramSocket clientSocket = new DatagramSocket();
                     InetAddress IPAddress = InetAddress.getByName(request.getRecepientNode().getIpaddress());
@@ -58,7 +57,7 @@ public class Client extends Base {
 
     }
 
-    public void sendTCPRequest(Request request, CallBack callBack) {
+    public void sendTCPRequest(final Request request, final CallBack callBack) {
         workerPool.submit(new Runnable() {
             @Override
             public void run() {
@@ -74,7 +73,6 @@ public class Client extends Base {
                         outputStream.flush();
                         responseLine = inputStream.readLine();
                     }
-
                     inputStream.close();
                     outputStream.close();
                     socket.close();

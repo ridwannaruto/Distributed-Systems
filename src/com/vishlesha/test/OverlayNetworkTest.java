@@ -24,13 +24,12 @@ public class OverlayNetworkTest {
     Node bootstrapServer, localServer;
     Client clientInstance;
     Server serverInstance;
-
     String bootstrapIP = "127.0.0.1";
     int bootstrapPort = 1040;
+
     int shortSleepDuration = 3000, longSleepDuration = 10000;
 
     public void runTest() {
-
         GlobalState.setTestMode(true);
         initialize();
         System.out.println("Running register user test");
@@ -44,9 +43,9 @@ public class OverlayNetworkTest {
         System.out.println("Running leave server test");
         testLeaveServer();
         terminate();
-
-
     }
+
+
 
     private void terminate(){
         serverInstance.Stop();
@@ -70,7 +69,7 @@ public class OverlayNetworkTest {
         GlobalState.setLocalServerNode(localServer);
         clientInstance = new Client();
         serverInstance = new Server();
-        serverInstance.start();
+        serverInstance.start(null,0);
     }
 
     private void testRegister (){
