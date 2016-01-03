@@ -35,9 +35,9 @@ public class Server extends Base implements Runnable {
                 try {
 
                     byte[] receiveData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
-                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+                    final DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     serverSocket.receive(receivePacket);
-                    String requestMessage = new String(receivePacket.getData(),0, receivePacket.getLength());
+                    final String requestMessage = new String(receivePacket.getData(),0, receivePacket.getLength());
                     if (!GlobalState.isTestMode())
                     System.out.println("Server Received: " + requestMessage);
 
