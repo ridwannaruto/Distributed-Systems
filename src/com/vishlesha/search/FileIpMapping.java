@@ -23,25 +23,19 @@ public class FileIpMapping {
          wordsMap.put(wordsList,newlist);
       }
 
-
    }
 
    public List<String> searchForFile(String query) {
       String tempString = query.toLowerCase();
       String[] queryWordsArr = tempString.split(" ");
       List<String> queryWords = Arrays.asList(queryWordsArr);
-
-      for (String word : queryWords){
-         System.out.println(word);
-      }
-
       Set<List<String>> keySet = wordsMap.keySet();
-      System.out.println(keySet.size());
+      //System.out.println(keySet.size());
 
       List<String> resultIps = new ArrayList<>();
       for (List<String> key : keySet){
          Boolean  b = key.containsAll(queryWords);
-         System.out.println(b);
+        // System.out.println(b);
          if(b){
             resultIps.addAll(wordsMap.get(key));
          }
@@ -49,19 +43,4 @@ public class FileIpMapping {
        return  resultIps;
    }
 
-
-   public static void  main(String[] arg){
-      FileIpMapping fim = new FileIpMapping();
-      fim.addFile("Lord of the rings", "10.1.1.1");
-      fim.addFile("Home Alone 1", "1.1.1.2");
-      fim.addFile("12 years of a Slave", "1.3.2.1");
-      fim.addFile("Home Alone 4", "2.1.1.3");
-      fim.addFile("Home Alone 4", "2.3.3.3");
-
-      List<String> ips = fim.searchForFile("Home Alone");
-      System.out.println(ips.size());
-      for(String ip : ips){
-         System.out.println(ip);
-      }
-   }
 }
