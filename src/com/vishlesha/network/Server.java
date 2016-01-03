@@ -17,8 +17,12 @@ public class Server extends Base implements Runnable {
 
     ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_SERVER_WORKER_POOL);
     DatagramSocket serverSocket;
+    int listenPort;
+    String ip;
 
-    public void start() {
+    public void start(String ip,int listenPort) {
+        this.listenPort=listenPort;
+        this.ip=ip;
         Thread t = new Thread(this);
         t.setDaemon(true);
         t.start();
@@ -27,9 +31,7 @@ public class Server extends Base implements Runnable {
     public void run() {
 
         try {
-            int serverPort = GlobalConstant.PORT_MIN + (int) (Math.random() * GlobalConstant.PORT_RANGE);
-            GlobalState.getLocalServerNode().setPortNumber(serverPort);
-            serverSocket = new DatagramSocket(serverPort);
+            serverSocket = new DatagramSocket(listenPort);
             System.out.println("Server socket created and waiting for requests..");
             while (!serverSocket.isClosed()) {
                 try {

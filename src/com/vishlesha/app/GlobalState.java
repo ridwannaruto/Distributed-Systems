@@ -52,6 +52,10 @@ public class GlobalState {
         neighbors.put(node, new ArrayList<String>());
     }
 
+    public static void removeNeighbor(Node n){
+        neighbors.remove(n);
+    }
+
     public static void addNeighborFile(Node node, List<String> files) {
         List<String> availableFiles = neighbors.get(node);
         if (availableFiles == null) {

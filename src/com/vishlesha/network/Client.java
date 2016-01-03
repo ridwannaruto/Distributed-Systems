@@ -66,7 +66,6 @@ public class Client extends Base {
                         outputStream.flush();
                         responseLine = inputStream.readLine();
                     }
-
                     inputStream.close();
                     outputStream.close();
                     socket.close();
