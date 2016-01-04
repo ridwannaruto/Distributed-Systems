@@ -57,23 +57,30 @@ public class SearchRequestHandler {
                setResponse(new SearchResponse(RESPOND_CODE_SEARCH_SUCCESS, request.getNoOfHops(),files));
                }else { //Forward the request to all neighbours with a result for the query
                   forwardCount++;
-                  SearchRequest newRequest = request;
+                  final SearchRequest newRequest = request;
                   newRequest.setNoOfHops(newNoOfHops);
                   Node newNode = new Node(node.getIpaddress(),node.getPortNumber());
-                  node.setPortNumber(SEARCH_REQUEST_PORT); //Todo change port
+                  //node.setPortNumber(SEARCH_REQUEST_PORT); //Todo change port
 
                   newRequest.setRecepientNode(newNode);
+                  CallBack callBack = new CallBack() {
+                     @Override public void run(String message, Node node) {
+                        new SearchRequestHandler(newRequest);
+                     }
+                  };
 
-                  client.sendUDPRequest(newRequest, CallBack.emptyCallback);// Change callback?
+                  client.sendUDPRequest(newRequest, callBack );// Change callback?
                }
             }
             // If already sent to 3 or more neighbors, this will  terminate
+            // TODO sort neighbors based on NumberoFNeigbors
             for(Node neighbor : neighbors.keySet()){
                if (forwardCount >= Number_OF_FORWARDS ){
+                  System.out.println("Forward count reached...");
                   break;
                }else{
                   forwardCount++;
-                  SearchRequest newRequest = request;
+                  final SearchRequest newRequest = request;
                   newRequest.setNoOfHops(newNoOfHops);
                   Node node = new Node();
                   node.setIpaddress(neighbor.getIpaddress());
@@ -81,9 +88,17 @@ public class SearchRequestHandler {
 
                   newRequest.setRecepientNode(node);
 
-                  client.sendUDPRequest(request, CallBack.emptyCallback);
+                  CallBack callBack = new CallBack() {
+                     @Override public void run(String message, Node node) {
+                        new SearchRequestHandler(newRequest);
+                     }
+                  };
+                  System.out.println("Forwarding to : " + neighbor);
+                  client.sendUDPRequest(request, callBack);
                }
             }
+      }else{
+         System.out.println("Reached Hops limit");
       }
     }
 
