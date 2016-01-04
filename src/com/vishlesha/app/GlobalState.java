@@ -56,7 +56,7 @@ public class GlobalState {
         neighbors.remove(n);
     }
 
-    public static void addNeighborFile(Node node, List<String> files) {
+    public static void addNeighborFiles(Node node, List<String> files) {
         List<String> availableFiles = neighbors.get(node);
         if (availableFiles == null) {
             throw new IllegalStateException("Files from unknown neighbor");

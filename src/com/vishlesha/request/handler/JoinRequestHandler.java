@@ -2,8 +2,6 @@ package com.vishlesha.request.handler;
 
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
-import com.vishlesha.network.CallBack;
-import com.vishlesha.request.FileListShareRequest;
 import com.vishlesha.request.JoinRequest;
 import com.vishlesha.response.JoinResponse;
 
@@ -21,13 +19,6 @@ public class JoinRequestHandler {
         // add as neighbor
         Node neighbor = request.getRecepientNode();
         GlobalState.addNeighbor(neighbor);
-
-        // send file list to new neighbor
-        // TODO may cause "Files from unknown neighbor" exception on recipient node!
-        FileListShareRequest fileRequest = new FileListShareRequest(neighbor, GlobalState.getLocalFiles());
-        GlobalState.getClient().sendUDPRequest(fileRequest, CallBack.emptyCallback);
-
-        // TODO try to avoid blocking this before file list is sent
         setResponse(new JoinResponse(RESPOND_CODE_JOIN_SUCCESS));
     }
 

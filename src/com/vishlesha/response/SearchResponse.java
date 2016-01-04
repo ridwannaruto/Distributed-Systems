@@ -14,6 +14,7 @@ public class SearchResponse extends Response {
 
     int responseCode;
 
+    // decoding response sent from another node
     public SearchResponse (String responseMessage, Node respondNode){
         setRespondNode(respondNode);
         String[] token = responseMessage.split(" ");
@@ -40,6 +41,7 @@ public class SearchResponse extends Response {
 
     }
 
+    // responding with files on local node
     public SearchResponse(int responseCode, int noOfHops, ArrayList<String> fileList){
         String fileNameList ="";
         for (int i=0; i<fileList.size(); i++)
