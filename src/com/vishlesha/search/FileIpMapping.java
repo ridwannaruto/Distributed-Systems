@@ -1,5 +1,7 @@
 package com.vishlesha.search;
 
+import com.vishlesha.dataType.Node;
+
 import java.util.*;
 
 /**
@@ -7,37 +9,48 @@ import java.util.*;
  */
 public class FileIpMapping {
 
-   private Map<List<String>, List<String>> wordsMap =  new HashMap<List<String>, List<String>>();
+   private Map<List<String>, List<Node>> wordsMap =  new HashMap<List<String>, List<Node>>(); // Ex Map(List(Lord,of,the,rings), List(1.1.1.1, 10.2.1.1))
 
-   public synchronized void addFile(String fileNameString, String ip){
+   public synchronized void addFile(String fileNameString, Node node){
       String  tempString = fileNameString.toLowerCase();
       List<String> wordsList = Arrays.asList(tempString.split(" "));
 
       if(wordsMap.containsKey(wordsList)){
-         List<String> list = wordsMap.get(wordsList);
-         list.add(ip);
-         wordsMap.put(wordsList,list);
+         List<Node> list = wordsMap.get(wordsList);
+         list.add(node);
+         //wordsMap.put(wordsList,list);
       }else{
-         List<String> newlist = new ArrayList<String>();
-         newlist.add(ip);
-         wordsMap.put(wordsList,newlist);
+         List<Node> newlist = new ArrayList<Node>();
+         newlist.add(node);
+         wordsMap.put(wordsList, newlist);
       }
 
    }
 
-   public List<String> searchForFile(String query) {
+   public Map<Node, List<List<String>>> searchForFile(String query) {
       String tempString = query.toLowerCase();
       String[] queryWordsArr = tempString.split(" ");
       List<String> queryWords = Arrays.asList(queryWordsArr);
       Set<List<String>> keySet = wordsMap.keySet();
       //System.out.println(keySet.size());
 
-      List<String> resultIps = new ArrayList<>();
+      Map<Node, List<List<String>>> resultIps = new HashMap<Node, List<List<String>>>();
       for (List<String> key : keySet){
          Boolean  b = key.containsAll(queryWords);
-        // System.out.println(b);
+
          if(b){
-            resultIps.addAll(wordsMap.get(key));
+            List<Node> nodes =  wordsMap.get(key);
+            // System.out.println(b);
+            for(Node node: nodes){
+               if(resultIps.containsKey(node)){
+                  List<List<String>> wordsList = resultIps.get(node);
+                  wordsList.add(key);
+               }else{
+                  List<List<String>> newlist = new ArrayList<List<String>>();
+                  newlist.add(key);
+                  resultIps.put(node,newlist);
+               }
+            }
          }
       }
        return  resultIps;

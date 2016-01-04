@@ -2,6 +2,7 @@ package com.vishlesha.app;
 
 import com.vishlesha.dataType.Node;
 import com.vishlesha.network.Client;
+import com.vishlesha.search.FileIpMapping;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,12 +21,21 @@ public class GlobalState {
     private static List<String> localFiles = new ArrayList<String>();
 
     private static Client client;
+    private static FileIpMapping fileIpMapping;
 
-    public static Node getLocalServerNode() {
+   public static Map<Node, List<String>> getNeighbors() {
+      return neighbors;
+   }
+
+   public static Node getLocalServerNode() {
         return localServerNode;
     }
 
-    public static void setLocalServerNode(Node localServerNode) {
+   public static FileIpMapping getFileIpMapping() {
+      return fileIpMapping;
+   }
+
+   public static void setLocalServerNode(Node localServerNode) {
         GlobalState.localServerNode = localServerNode;
     }
 

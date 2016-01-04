@@ -88,11 +88,11 @@ public class App {
 				int j;
 				int l = neighbour.size();
 				for (j = 0; j < 2 && j < l; j++) {
-					int rand1 = rand.nextInt() % l;
+					int rand1 = rand.nextInt(l);
 					if (l <3) {
 						rand1 = j;
 					}
-					System.out.println(rand1);
+					System.out.println("Rand : " + rand1);
 					JoinRequest jr = new JoinRequest(neighbour.get(rand1));
 
 					client.sendUDPRequest(jr, new CallBack() {

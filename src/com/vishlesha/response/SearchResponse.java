@@ -6,6 +6,7 @@ import com.vishlesha.dataType.Node;
 import com.vishlesha.error.SearchError;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ridwan on 1/1/16.
@@ -42,7 +43,7 @@ public class SearchResponse extends Response {
     }
 
     // responding with files on local node
-    public SearchResponse(int responseCode, int noOfHops, ArrayList<String> fileList){
+    public SearchResponse(int responseCode, int noOfHops, List<String> fileList){
         String fileNameList ="";
         for (int i=0; i<fileList.size(); i++)
             fileNameList += " " + fileList.get(i);
