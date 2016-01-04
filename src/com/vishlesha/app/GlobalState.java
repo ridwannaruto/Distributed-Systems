@@ -1,6 +1,7 @@
 package com.vishlesha.app;
 
 import com.vishlesha.dataType.Node;
+import com.vishlesha.search.FileIpMapping;
 
 /**
  * Created by ridwan on 1/1/16.
@@ -11,6 +12,7 @@ public class GlobalState {
     private static String username;
     private static boolean testMode;
     private static Node localServerNode;
+    private static FileIpMapping fileIpMapping;
 
     public static Node getLocalServerNode() {
         return localServerNode;
@@ -35,4 +37,12 @@ public class GlobalState {
     public static void setTestMode(boolean testMode) {
         GlobalState.testMode = testMode;
     }
+
+   public static FileIpMapping getFileIpMapping() {
+      return fileIpMapping;
+   }
+
+   public static void setFileIpMapping(FileIpMapping fileIpMapping) {
+      GlobalState.fileIpMapping = fileIpMapping;
+   }
 }

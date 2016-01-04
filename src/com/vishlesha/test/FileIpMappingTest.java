@@ -1,6 +1,8 @@
 package com.vishlesha.test;
 
 import java.util.List;
+import java.util.Map;
+
 import com.vishlesha.search.FileIpMapping;
 
 /**
@@ -18,7 +20,7 @@ public class FileIpMappingTest {
       fimt.testAddFile("Home Alone 4", "2.1.1.3");
       fimt.testAddFile("Home Alone 4", "2.3.3.3");
 
-      //Todo Write Test for test AddFile Method
+      //Todo Write Test for AddFile Method
 
       int home_alone = fimt.testQuery("Home Alone");
       fimt.testEqual(String.valueOf(home_alone),String.valueOf(3));
@@ -40,12 +42,12 @@ public class FileIpMappingTest {
    }
 
    private int testQuery(String query){
-      List<String> ips = fim.searchForFile(query);
+      Map<String,List<List<String>>> ips = fim.searchForFile(query);
       int size = ips.size();
-      /*System.out.println(ips.size());
-      for(String ip : ips){
+      System.out.println(ips.size());
+      for(String ip : ips.keySet()){
          System.out.println(ip);
-      }*/
+      }
       return ips.size();
    }
 
