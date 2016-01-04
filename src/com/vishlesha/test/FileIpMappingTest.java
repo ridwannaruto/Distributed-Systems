@@ -3,6 +3,7 @@ package com.vishlesha.test;
 import java.util.List;
 import java.util.Map;
 
+import com.vishlesha.dataType.Node;
 import com.vishlesha.search.FileIpMapping;
 
 /**
@@ -14,11 +15,12 @@ public class FileIpMappingTest {
 
    public static void  main(String[] arg){
       FileIpMappingTest fimt = new FileIpMappingTest();
-      fimt.testAddFile("Lord of the rings", "10.1.1.1");
-      fimt.testAddFile("Home Alone 1", "1.1.1.2");
-      fimt.testAddFile("12 years of a Slave", "1.3.2.1");
-      fimt.testAddFile("Home Alone 4", "2.1.1.3");
-      fimt.testAddFile("Home Alone 4", "2.3.3.3");
+
+      fimt.testAddFile("Lord of the rings", new Node("10.1.4.1", 1057));
+      fimt.testAddFile("Home Alone 1",new Node("1.1.1.2", 1056) );
+      fimt.testAddFile("12 years of a Slave", new Node("10.1.1.1", 1057));
+      fimt.testAddFile("Home Alone 4", new Node("2.1.1.3", 1052));
+      fimt.testAddFile("Home Alone 4", new Node("2.3.3.3", 1054));
 
       //Todo Write Test for AddFile Method
 
@@ -37,18 +39,18 @@ public class FileIpMappingTest {
       fimt.testEqual(String.valueOf(of),String.valueOf(2));
    }
 
-   private void testAddFile(String fileName, String ip) {
-      fim.addFile(fileName, ip);
+   private void testAddFile(String fileName, Node node) {
+      fim.addFile(fileName, node);
    }
 
    private int testQuery(String query){
-      Map<String,List<List<String>>> ips = fim.searchForFile(query);
-      int size = ips.size();
-      System.out.println(ips.size());
-      for(String ip : ips.keySet()){
-         System.out.println(ip);
+      Map<Node,List<List<String>>> nodes = fim.searchForFile(query);
+      int size = nodes.size();
+      System.out.println(size);
+      for(Node node : nodes.keySet()){
+         System.out.println(node);
       }
-      return ips.size();
+      return nodes.size();
    }
 
    private boolean testEqual(String results, String expected){

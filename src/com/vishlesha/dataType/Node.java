@@ -7,7 +7,15 @@ public class Node {
     String ipaddress;
     int portNumber;
 
-    public String getIpaddress() {
+   public Node() {
+   }
+
+   public Node(String ipaddress, int portNumber) {
+      this.ipaddress = ipaddress;
+      this.portNumber = portNumber;
+   }
+
+   public String getIpaddress() {
         return ipaddress;
     }
 

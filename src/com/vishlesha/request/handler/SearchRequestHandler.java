@@ -33,15 +33,15 @@ public class SearchRequestHandler {
        String query = request.getFileName();
        FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
        Client client = new Client();// Get from global state
-       Map<String,List<List<String>>> allFileList = fileIpMapping.searchForFile(query); // Neighbors with results for the query
+       Map<Node,List<List<String>>> allFileList = fileIpMapping.searchForFile(query); // Neighbors with results for the query
        Map<Node, List<String>> neighbors = GlobalState.getNeighbors();
        int noOfHops =  request.getNoOfHops();
        int forwardCount = 0;
 
       if(noOfHops < MAX_NUMBER_OF_HOPS) {
             int newNoOfHops = noOfHops + 1;
-            for (String ip : allFileList.keySet()) {
-               if(ip.equals(GlobalState.getLocalServerNode().getIpaddress())){ //If the user posses any related file respond to user
+            for (Node node : allFileList.keySet()) {
+               if(node.equals(GlobalState.getLocalServerNode().getIpaddress())){ //If the user posses any related file respond to user
                   List<List<String>> fileList = allFileList.get(
                         GlobalState.getLocalServerNode().getIpaddress());
                   List<String> files  = new ArrayList<String>();
@@ -59,13 +59,12 @@ public class SearchRequestHandler {
                   forwardCount++;
                   SearchRequest newRequest = request;
                   newRequest.setNoOfHops(newNoOfHops);
-                  Node node = new Node();
-                  node.setIpaddress(ip);
+                  Node newNode = new Node(node.getIpaddress(),node.getPortNumber());
                   node.setPortNumber(SEARCH_REQUEST_PORT); //Todo change port
 
-                  newRequest.setRecepientNode(node);
+                  newRequest.setRecepientNode(newNode);
 
-                  client.sendUDPRequest(request, CallBack.emptyCallback);// Change callback?
+                  client.sendUDPRequest(newRequest, CallBack.emptyCallback);// Change callback?
                }
             }
             // If already sent to 3 or more neighbors, this will  terminate
