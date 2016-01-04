@@ -27,21 +27,24 @@ public class SearchRequestHandler {
 
     public SearchRequestHandler(SearchRequest request){
         //TODO LOGIC
-       Client client = new Client();// Get from global state
-
-       CallBack callBack = new CallBack() {
-          @Override
-          public void run(String message, Node node) {
-
-          }
-       };
-
-       client.sendUDPRequest(request, callBack);
-
-       //If the user posses any related file
        String query = request.getFileName();
        FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
-       List<List<String>> fileList = fileIpMapping.searchForFile(query).get(
+       Client client = new Client();// Get from global state
+       Map<String,List<List<String>>> allFileList = fileIpMapping.searchForFile(query);
+
+
+
+      for(String ip: allFileList.keySet()) {
+         SearchRequest newRequest = request;
+         Node node = new Node();
+         node.setIpaddress(ip);
+         node.setPortNumber(1000); //Todo change port
+         newRequest.setRecepientNode(node);
+         client.sendUDPRequest(request, CallBack.emptyCallback);// Cahnge callback?
+      }
+       //If the user posses any related file
+
+       List<List<String>> fileList = allFileList.get(
              GlobalState.getLocalServerNode().getIpaddress());
        List<String> files  = new ArrayList<String>();
        StringBuilder s = new StringBuilder();
