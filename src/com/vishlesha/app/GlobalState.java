@@ -23,16 +23,16 @@ public class GlobalState {
     private static Client client;
     private static FileIpMapping fileIpMapping;
 
-    public static Node getLocalServerNode() {
+   public static Map<Node, List<String>> getNeighbors() {
+      return neighbors;
+   }
+
+   public static Node getLocalServerNode() {
         return localServerNode;
     }
 
    public static FileIpMapping getFileIpMapping() {
       return fileIpMapping;
-   }
-
-   public static void setFileIpMapping(FileIpMapping fileIpMapping) {
-      GlobalState.fileIpMapping = fileIpMapping;
    }
 
    public static void setLocalServerNode(Node localServerNode) {
