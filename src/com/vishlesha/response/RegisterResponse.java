@@ -16,12 +16,10 @@ public class RegisterResponse extends Response {
 
     ArrayList<Node> nodeList;
     int noOfNodes;
-
     public RegisterResponse(String responseMessage, Node respondNode){
         setRespondNode(respondNode);
         String[] token = responseMessage.split(" ");
         noOfNodes = Integer.valueOf(token[2]);
-
         if (token[1].equals("REGOK") && noOfNodes <9000){
             setFail(false);
             if (!GlobalState.isTestMode())
@@ -42,9 +40,6 @@ public class RegisterResponse extends Response {
             if (!GlobalState.isTestMode())
                 System.out.println("Register Error: " + registerError.getErrorMessage());
         }
-
-
-
     }
 
     public ArrayList<Node> getNodeList() {
@@ -53,5 +48,9 @@ public class RegisterResponse extends Response {
 
     public void setNodeList(ArrayList<Node> nodeList) {
         this.nodeList = nodeList;
+    }
+    public void show(){
+        System.out.println(nodeList.toString());
+        System.out.println(noOfNodes);
     }
 }

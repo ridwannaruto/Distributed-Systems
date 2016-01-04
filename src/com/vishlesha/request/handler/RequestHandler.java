@@ -12,9 +12,6 @@ import com.vishlesha.response.Response;
 public class RequestHandler {
 
     Response response;
-
-
-
     protected static final int KEY_MSG_LENGTH = 0;
     protected static final int KEY_REQ_TYPE = 1;
 

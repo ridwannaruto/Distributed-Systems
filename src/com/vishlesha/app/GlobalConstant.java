@@ -28,7 +28,7 @@ public class GlobalConstant {
     public static final int NUM_THREADS_CLIENT_WORKER_POOL = 100;
     public static final int NUM_THREADS_SERVER_WORKER_POOL = 100;
     public static final int PORT_MIN = 1050;
-    public static final int PORT_RANGE = 5000;
+    public static final int PORT_RANGE = 20;
 
     public static final int MSG_BYTE_MAX_LENGTH = 1024;
 

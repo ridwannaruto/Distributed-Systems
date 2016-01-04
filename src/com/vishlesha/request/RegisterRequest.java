@@ -24,8 +24,6 @@ public class RegisterRequest extends Request {
         GlobalState.setUsername(userName);
         requestMessage = " REG " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + userName;
         appendMsgLength();
-
-
     }
 
 
