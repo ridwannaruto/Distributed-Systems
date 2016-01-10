@@ -7,9 +7,11 @@ import com.vishlesha.dataType.Node;
 import com.vishlesha.network.CallBack;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
+import com.vishlesha.request.FileListShareRequest;
 import com.vishlesha.request.JoinRequest;
 import com.vishlesha.request.RegisterRequest;
 import com.vishlesha.request.Request;
+import com.vishlesha.response.FileListShareResponse;
 import com.vishlesha.response.JoinResponse;
 import com.vishlesha.response.RegisterResponse;
 
@@ -61,6 +63,17 @@ public class App {
 		server.start(localServer.getIpaddress(), localServer.getPortNumber());
 		Request regRequest = new RegisterRequest(clientForBS);
 
+
+
+
+        // TODO delete these!!!!
+        GlobalState.getLocalFiles().add("Sherloc_Holmes");
+        GlobalState.getLocalFiles().add("a_b_c");
+        GlobalState.getLocalFiles().add("d_e");
+
+
+
+
 		client.sendTCPRequest(regRequest, new CallBack() {
 			public void run(String responseMessage, Node respondNode) {
 				System.out.println("BootStrap Node: " + responseMessage);
@@ -86,8 +99,16 @@ public class App {
 						@Override
 						public void run(String message, Node node) {
 							JoinResponse joinResponse = new JoinResponse(message, node);
+							System.out.println("Join response returned ! " + joinResponse + "  " + node);
 
-							System.out.println(	"Join response returned ! " + joinResponse + "  " + node);
+                            // send file list to new neighbor
+                            client.sendUDPRequest(new FileListShareRequest(node, GlobalState.getLocalFiles()), new CallBack() {
+                                @Override
+                                public void run(String message, Node node) {
+                                    FileListShareResponse shareResponse = new FileListShareResponse(message);
+                                    GlobalState.addNeighborFiles(shareResponse.getRespondNode(), shareResponse.getFiles());
+                                }
+                            });
 						}
 					});
 				}

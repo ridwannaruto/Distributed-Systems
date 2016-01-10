@@ -30,6 +30,7 @@ public class Client extends Base {
                     byte[] sendData;
                     byte[] receiveData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
 
+                    System.out.println("Sending " + request.getRequestMessage());
                     sendData = request.getRequestMessage().getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, request.getRecepientNode().getPortNumber());
                     clientSocket.send(sendPacket);
@@ -37,6 +38,7 @@ public class Client extends Base {
                     DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     clientSocket.receive(receivePacket);
                     String responseLine = new String(receivePacket.getData(),0, receivePacket.getLength());
+                    System.out.println("Received " + responseLine);
                     clientSocket.close();
                     callBack.run(responseLine, request.getRecepientNode());*/
 
