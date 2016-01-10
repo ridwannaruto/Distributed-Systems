@@ -14,7 +14,18 @@ public class Request {
     protected static final int KEY_IP_ADDRESS = 2;
     protected static final int KEY_PORT_NUM = 3;
 
-    public Node getRecepientNode() {
+   private Node sender;
+
+   public Node getSender() {
+      return sender;
+   }
+
+   public void setSender(Node sender) {
+      this.sender = sender;
+   }
+
+
+   public Node getRecepientNode() {
         return recepientNode;
     }
 
@@ -26,7 +37,11 @@ public class Request {
         return requestMessage;
     }
 
-    protected void appendMsgLength(){
+   public void setRequestMessage(String requestMessage) {
+      this.requestMessage = requestMessage;
+   }
+
+   protected void appendMsgLength(){
         requestMessage = String.format("%04d", requestMessage.length()+4) + requestMessage;
     }
 

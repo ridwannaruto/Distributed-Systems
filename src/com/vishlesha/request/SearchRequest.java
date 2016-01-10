@@ -10,8 +10,17 @@ public class SearchRequest extends Request {
 
     private String fileName;
     private int noOfHops;
+    private Node initiator;
 
-    public String getFileName() {
+   public Node getInitiator() {
+      return initiator;
+   }
+
+   public void setInitiator(Node initiator) {
+      this.initiator = initiator;
+   }
+
+   public String getFileName() {
         return fileName;
     }
 
@@ -27,8 +36,8 @@ public class SearchRequest extends Request {
         this.noOfHops = noOfHops;
     }
 
-    public SearchRequest(Node node, String searchFileName, int numberOfHops){
-        setRecepientNode(node);
+    public SearchRequest(Node initiator, String searchFileName, int numberOfHops){
+        setRecepientNode(initiator);
         setFileName(searchFileName);
         setNoOfHops(numberOfHops);
         requestMessage = " SER " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();

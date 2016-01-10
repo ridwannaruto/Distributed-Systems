@@ -3,8 +3,10 @@ package com.vishlesha.request.handler;
 import com.vishlesha.request.JoinRequest;
 import com.vishlesha.request.LeaveRequest;
 import com.vishlesha.request.SearchRequest;
+import com.vishlesha.request.SearchResponseRequest;
 import com.vishlesha.response.ErrorResponse;
 import com.vishlesha.response.Response;
+import com.vishlesha.response.SearchResponse;
 
 /**
  * Created by ridwan on 1/2/16.
@@ -18,6 +20,7 @@ public class RequestHandler {
     protected static final String REQ_TYPE_JOIN = "JOIN";
     protected static final String REQ_TYPE_LEAVE = "LEAVE";
     protected static final String REQ_TYPE_SEARCH = "SER";
+    protected static final String REQ_TYPE_SEARCHOK = "SEROK";
 
     public RequestHandler(String requestMessage){
 
@@ -43,11 +46,14 @@ public class RequestHandler {
                 SearchRequestHandler searchRequestHandler = new SearchRequestHandler(searchRequest);
                 setResponse(searchRequestHandler.getResponse());
 
+            }else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_SEARCHOK)){
+               SearchResponseRequest searchRequest = new SearchResponseRequest(requestMessage);
+               SearchResponseRequestHandler searchRequestHandler = new SearchResponseRequestHandler(searchRequest);
+               setResponse(searchRequestHandler.getResponse());
             }else{
                 setResponse(new ErrorResponse());
             }
         }
-
 
 
     }

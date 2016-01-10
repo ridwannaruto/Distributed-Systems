@@ -4,9 +4,7 @@ import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.network.CallBack;
 import com.vishlesha.network.Client;
-import com.vishlesha.request.JoinRequest;
-import com.vishlesha.request.LeaveRequest;
-import com.vishlesha.request.SearchRequest;
+import com.vishlesha.request.*;
 import com.vishlesha.response.JoinResponse;
 import com.vishlesha.response.SearchResponse;
 import com.vishlesha.search.FileIpMapping;
@@ -30,9 +28,11 @@ public class SearchRequestHandler {
 
     public SearchRequestHandler(SearchRequest request){
         //TODO LOGIC
+       Node initiator = request.getInitiator();
+       Node sender = request.getSender();
        String query = request.getFileName();
        FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
-       Client client = new Client();// Get from global state
+       final Client client = new Client();// Get from global state
        Map<Node,List<List<String>>> allFileList = fileIpMapping.searchForFile(query); // Neighbors with results for the query
        Map<Node, List<String>> neighbors = GlobalState.getNeighbors();
        int noOfHops =  request.getNoOfHops();
@@ -53,8 +53,12 @@ public class SearchRequestHandler {
                      }
                      files.add(s.toString().trim());
                      System.out.println(s);
-               }
-               setResponse(new SearchResponse(RESPOND_CODE_SEARCH_SUCCESS, request.getNoOfHops(),files));
+                  }
+                  // Reply to initiator with a new message.
+                  String formatted_Message = searchResponseMessage(files.size(),noOfHops,files);
+                  replyToInitiator(GlobalState.getLocalServerNode(),initiator ,noOfHops, files, formatted_Message);
+
+               //setResponse(new SearchResponse(RESPOND_CODE_SEARCH_SUCCESS, request.getNoOfHops(),files));
                }else { //Forward the request to all neighbours with a result for the query
                   forwardCount++;
                   final SearchRequest newRequest = request;
@@ -63,13 +67,8 @@ public class SearchRequestHandler {
                   //node.setPortNumber(SEARCH_REQUEST_PORT); //Todo change port
 
                   newRequest.setRecepientNode(newNode);
-                  CallBack callBack = new CallBack() {
-                     @Override public void run(String message, Node node) {
-                        new SearchRequestHandler(newRequest);
-                     }
-                  };
 
-                  client.sendUDPRequest(newRequest, callBack );// Change callback?
+                  client.sendUDPRequest(newRequest, CallBack.emptyCallback );// Change callback?
                }
             }
             // If already sent to 3 or more neighbors, this will  terminate
@@ -94,7 +93,7 @@ public class SearchRequestHandler {
                      }
                   };
                   System.out.println("Forwarding to : " + neighbor);
-                  client.sendUDPRequest(request, callBack);
+                  client.sendUDPRequest(newRequest, callBack);
                }
             }
       }else{
@@ -109,4 +108,26 @@ public class SearchRequestHandler {
     public void setResponse(SearchResponse response) {
         this.response = response;
     }
+
+   private String searchResponseMessage(int responseCode, int noOfHops, List<String> fileList){
+      String fileNameList ="";
+      for (int i=0; i<fileList.size(); i++)
+         fileNameList += " " + fileList.get(i);
+      String responseMessage = " SEROK " + responseCode + " " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + noOfHops + fileNameList;
+      responseMessage = String.format("%04d", responseMessage.length()+4) + responseMessage;
+      //setResponseMessage(responseMessage);
+      //appendMsgLength();
+      return  responseMessage;
+   }
+
+   private void replyToInitiator(Node sender, Node recepient, int numberOfHops, List<String> files, String formattedMeesage){
+      SearchResponseRequest response = new SearchResponseRequest();
+      final Client client = new Client();
+      response.setSender(sender);
+      response.setNoOfHops(numberOfHops);
+      response.setRecepientNode(recepient);
+      response.setRequestMessage(formattedMeesage);
+      response.setResults(files);
+      client.sendUDPRequest(response, CallBack.emptyCallback);
+   }
 }

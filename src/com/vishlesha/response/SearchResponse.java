@@ -45,7 +45,7 @@ public class SearchResponse extends Response {
         String fileNameList ="";
         for (int i=0; i<fileList.size(); i++)
             fileNameList += " " + fileList.get(i);
-        String responseMessage = " SEROK " + responseCode + " " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + noOfHops + fileList;
+        String responseMessage = " SEROK " + responseCode + " " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + noOfHops + fileNameList;
         setResponseMessage(responseMessage);
         appendMsgLength();
     }

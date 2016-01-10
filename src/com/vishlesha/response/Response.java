@@ -50,7 +50,7 @@ abstract public class Response {
         this.fail = fail;
     }
 
-    protected void appendMsgLength(){
+    public void appendMsgLength(){
         responseMessage = String.format("%04d", responseMessage.length()+4) + responseMessage;
     }
 

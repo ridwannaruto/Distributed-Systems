@@ -33,12 +33,12 @@ public class Client extends Base {
                     sendData = request.getRequestMessage().getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, request.getRecepientNode().getPortNumber());
                     clientSocket.send(sendPacket);
-
+/*
                     DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     clientSocket.receive(receivePacket);
                     String responseLine = new String(receivePacket.getData(),0, receivePacket.getLength());
                     clientSocket.close();
-                    callBack.run(responseLine, request.getRecepientNode());
+                    callBack.run(responseLine, request.getRecepientNode());*/
 
                 } catch (UnknownHostException ex) {
                     System.out.println("Unknown Host");

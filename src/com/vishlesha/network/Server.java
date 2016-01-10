@@ -52,9 +52,14 @@ public class Server extends Base implements Runnable {
                                 InetAddress IPAddress = receivePacket.getAddress();
                                 int port = receivePacket.getPort();
                                 RequestHandler requestHandler = new RequestHandler(requestMessage);
-                                sendData = requestHandler.getResponse().getResponseMessage().getBytes();
-                                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
-                                serverSocket.send(sendPacket);
+                                String[] token = requestMessage.split(" ");
+                               // if the
+                               if (!(token[1].equals("SER") ||token[1].equals("SEROK"))) {
+                                  sendData = requestHandler.getResponse().getResponseMessage().getBytes();
+                                  DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress,
+                                        port);
+                                  serverSocket.send(sendPacket);
+                               }
                             } catch (IOException ex) {
                                 System.out.println("Server Exception: " + ex);
                             }
