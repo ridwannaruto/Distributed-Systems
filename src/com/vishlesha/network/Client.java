@@ -25,6 +25,7 @@ public class Client extends Base {
             @Override
             public void run() {
                 try {
+
                     DatagramSocket clientSocket = new DatagramSocket();
                     InetAddress IPAddress = InetAddress.getByName(request.getRecepientNode().getIpaddress());
                     byte[] sendData;

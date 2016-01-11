@@ -40,21 +40,25 @@ public class SearchRequest extends Request {
         setRecepientNode(initiator);
         setFileName(searchFileName);
         setNoOfHops(numberOfHops);
+
         requestMessage = " SER " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
         setRequestMessage(requestMessage);
-        setInitiator(GlobalState.getLocalServerNode());
+
+        setInitiator(initiator);
         appendMsgLength();
     }
 
     public SearchRequest (String requestMessage){
         String[] token = requestMessage.split(" ");
+
         Node node = new Node();
         node.setIpaddress(token[KEY_IP_ADDRESS]);
         node.setPortNumber(Integer.valueOf(token[KEY_PORT_NUM]));
-        setRecepientNode(node);
-        setInitiator(GlobalState.getLocalServerNode());
+
+        setInitiator(node);
         setNoOfHops(Integer.valueOf(token[5]));
         setFileName(token[4]);
+        setRequestMessage(requestMessage);
     }
 
 }

@@ -2,6 +2,7 @@ package com.vishlesha.network;
 
 import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
+import com.vishlesha.dataType.Node;
 import com.vishlesha.request.handler.RequestHandler;
 
 import java.io.*;
@@ -48,11 +49,14 @@ public class Server extends Base implements Runnable {
                         public void run() {
 
                             try {
+
                                 byte[] sendData;
                                 InetAddress IPAddress = receivePacket.getAddress();
                                 int port = receivePacket.getPort();
-                                RequestHandler requestHandler = new RequestHandler(requestMessage);
+                                Node sender = new Node(IPAddress.getHostAddress(), port);
+                                RequestHandler requestHandler = new RequestHandler(requestMessage,sender);
                                 String[] token = requestMessage.split(" ");
+
                                // skip this part for search requests
                                if (!(token[1].equals("SER") ||token[1].equals("SEROK"))) {
                                   sendData = requestHandler.getResponse().getResponseMessage().getBytes();

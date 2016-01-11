@@ -42,7 +42,7 @@ public class App {
 		//      bootstrapPort = scanner.nextInt();
 
 		bootstrapAddress = "127.0.0.1";
-		bootstrapPort = 1043;
+		bootstrapPort = 1033;
 
 		Node clientForBS = new Node();
 		clientForBS.setIpaddress(bootstrapAddress);
@@ -110,8 +110,14 @@ public class App {
                System.out.println("First Node --> No joins ");
             }
             if (neighbour.size() > 3) {
+               long time = 10*1000;
+               try {
+                  Thread.sleep(time);
+               } catch (InterruptedException e) {
+                  e.printStackTrace();
+               }
                System.out.println("Initiate Search Request......");
-               SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(), "sherloc", 0);
+               SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(), "a_b_c", 0);
                client.sendUDPRequest(ser, CallBack.emptyCallback);
             }
 
@@ -120,8 +126,6 @@ public class App {
             }
          }
       });
-
-
 
 	}
 }

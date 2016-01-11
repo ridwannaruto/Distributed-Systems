@@ -29,7 +29,7 @@ public class SearchRequestHandler {
     public SearchRequestHandler(SearchRequest request){
         //TODO LOGIC
        Node initiator = request.getInitiator();
-       Node sender = request.getSender();
+      // Node sender = request.getSender();
        String query = request.getFileName();
        FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
        final Client client = GlobalState.getClient();// Get from global state
@@ -41,7 +41,8 @@ public class SearchRequestHandler {
       if(noOfHops < MAX_NUMBER_OF_HOPS) {
             int newNoOfHops = noOfHops + 1;
             for (Node node : allFileList.keySet()) {
-               if(node.equals(GlobalState.getLocalServerNode().getIpaddress())){ //If the user posses any related file respond to user
+               //If the user posses any related file respond to user
+               if(node.equals(GlobalState.getLocalServerNode().getIpaddress())){
                   List<List<String>> fileList = allFileList.get(
                         GlobalState.getLocalServerNode().getIpaddress());
                   List<String> files  = new ArrayList<String>();
@@ -54,20 +55,25 @@ public class SearchRequestHandler {
                      files.add(s.toString().trim());
                      System.out.println(s);
                   }
-                  // Reply to initiator with a new message.
+                  // Here reply the initiator with a new message.
                   String formatted_Message = searchResponseMessage(files.size(),noOfHops,files);
                   replyToInitiator(GlobalState.getLocalServerNode(),initiator ,noOfHops, files, formatted_Message);
 
                //setResponse(new SearchResponse(RESPOND_CODE_SEARCH_SUCCESS, request.getNoOfHops(),files));
                }else { //Forward the request to all neighbours with a result for the query
                   forwardCount++;
-                  final SearchRequest newRequest = request;
-                  newRequest.setNoOfHops(newNoOfHops);
-                  Node newNode = new Node(node.getIpaddress(),node.getPortNumber());
-                  //node.setPortNumber(SEARCH_REQUEST_PORT); //Todo change port
+                  Node recepientNode = new Node(node.getIpaddress(),node.getPortNumber());
+                  String requestMessage = request.getRequestMessage();
+                  String[] token = requestMessage.split(" ");
 
-                  newRequest.setRecepientNode(newNode);
+                  Node initNode = new Node();
+                  initNode.setIpaddress(token[2]);
+                  initNode.setPortNumber(Integer.valueOf(token[3]));
 
+                  String fileName = token[4];
+
+                  SearchRequest newRequest = new SearchRequest(request.getInitiator(),fileName,noOfHops);
+                  newRequest.setRecepientNode(recepientNode);
                   client.sendUDPRequest(newRequest, CallBack.emptyCallback );// Change callback?
                }
             }
@@ -87,13 +93,8 @@ public class SearchRequestHandler {
 
                   newRequest.setRecepientNode(node);
 
-                  CallBack callBack = new CallBack() {
-                     @Override public void run(String message, Node node) {
-                        new SearchRequestHandler(newRequest);
-                     }
-                  };
-                  System.out.println("Forwarding to : " + neighbor);
-                  client.sendUDPRequest(newRequest, callBack);
+                  System.out.println(request.getSender()+  " forwarding to : " + neighbor);
+                  client.sendUDPRequest(newRequest, CallBack.emptyCallback);
                }
             }
       }else{
@@ -128,6 +129,7 @@ public class SearchRequestHandler {
       response.setRecepientNode(recepient);
       response.setRequestMessage(formattedMeesage);
       response.setResults(files);
+      System.out.println("Reply to inititator");
       client.sendUDPRequest(response, CallBack.emptyCallback);
    }
 }

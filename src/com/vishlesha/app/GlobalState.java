@@ -4,10 +4,7 @@ import com.vishlesha.dataType.Node;
 import com.vishlesha.network.Client;
 import com.vishlesha.search.FileIpMapping;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ridwan on 1/1/16.
@@ -21,8 +18,8 @@ public class GlobalState {
     private static List<String> localFiles = new ArrayList<String>();
 
 
-    private static Client client;
-    private static FileIpMapping fileIpMapping = new FileIpMapping();
+    private static Client client = new Client();
+    //private static FileIpMapping fileIpMapping = new FileIpMapping();
 
    public static Map<Node, List<String>> getNeighbors() {
       return neighbors;
@@ -32,9 +29,9 @@ public class GlobalState {
         return localServerNode;
     }
 
-   public static FileIpMapping getFileIpMapping() {
+   /*public static FileIpMapping getFileIpMapping() {
       return fileIpMapping;
-   }
+   }*/
 
    public static void setLocalServerNode(Node localServerNode) {
         GlobalState.localServerNode = localServerNode;
@@ -67,13 +64,45 @@ public class GlobalState {
         neighbors.remove(n);
     }
 
+   public static FileIpMapping getFileIpMapping() {
+    //  Set<String> availableFiles = new HashSet<>();
+      FileIpMapping fileIpMapping = new FileIpMapping();
+      for(Node n : neighbors.keySet()){
+         List<String> files = neighbors.get(n);
+         for(String file: files){
+           fileIpMapping.addFile(file, n);
+         }
+      }
+      for(String file : localFiles){
+         fileIpMapping.addFile(file, GlobalState.getLocalServerNode());
+      }
+      return fileIpMapping;
+
+   }
+  /* private static FileIpMapping getFileIpMapping(Node node, List<String> localFiles, List<String> neighborFiles) {
+      FileIpMapping fileIpMapping = new FileIpMapping();
+      List<String> availableFiles = neighbors.get(node);
+      if (availableFiles == null) {
+         throw new IllegalStateException("Files from unknown neighbor");
+      }
+      availableFiles.addAll(neighborFiles);
+      availableFiles.addAll(localFiles);
+      for(String file : availableFiles){
+         fileIpMapping.addFile(file,node);
+      }
+      return  fileIpMapping;
+   }*/
     public static void addNeighborFiles(Node node, List<String> files) {
         List<String> availableFiles = neighbors.get(node);
         if (availableFiles == null) {
             throw new IllegalStateException("Files from unknown neighbor");
         }
         availableFiles.addAll(files);
+        /* for(String file : availableFiles){
+            fileIpMapping.addFile(file,node);
+         }*/
     }
+
 
     public static Client getClient() {
         return client;

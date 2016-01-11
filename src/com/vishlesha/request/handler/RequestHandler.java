@@ -1,5 +1,6 @@
 package com.vishlesha.request.handler;
 
+import com.vishlesha.dataType.Node;
 import com.vishlesha.request.FileListShareRequest;
 import com.vishlesha.request.JoinRequest;
 import com.vishlesha.request.LeaveRequest;
@@ -25,7 +26,7 @@ public class RequestHandler {
     protected static final String REQ_TYPE_FILE_SHARE = "FILES";
 
 
-    public RequestHandler(String requestMessage) {
+    public RequestHandler(String requestMessage , Node sender) {
 
        String[] token = requestMessage.split(" ");
        int lengthOfMessage = Integer.valueOf(token[KEY_MSG_LENGTH]);
@@ -49,7 +50,9 @@ public class RequestHandler {
              setResponse(shareRequestHandler.getResponse());
 
           } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_SEARCH)) {
+
              SearchRequest searchRequest = new SearchRequest(requestMessage);
+             searchRequest.setSender(sender);
              SearchRequestHandler searchRequestHandler = new SearchRequestHandler(searchRequest);
              setResponse(searchRequestHandler.getResponse());
 
