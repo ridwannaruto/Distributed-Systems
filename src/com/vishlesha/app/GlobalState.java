@@ -20,8 +20,9 @@ public class GlobalState {
     private static Map<Node, List<String>> neighbors = new HashMap<Node, List<String>>();
     private static List<String> localFiles = new ArrayList<String>();
 
+
     private static Client client;
-    private static FileIpMapping fileIpMapping;
+    private static FileIpMapping fileIpMapping = new FileIpMapping();
 
    public static Map<Node, List<String>> getNeighbors() {
       return neighbors;

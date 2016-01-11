@@ -7,10 +7,7 @@ import com.vishlesha.dataType.Node;
 import com.vishlesha.network.CallBack;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
-import com.vishlesha.request.FileListShareRequest;
-import com.vishlesha.request.JoinRequest;
-import com.vishlesha.request.RegisterRequest;
-import com.vishlesha.request.Request;
+import com.vishlesha.request.*;
 import com.vishlesha.response.FileListShareResponse;
 import com.vishlesha.response.JoinResponse;
 import com.vishlesha.response.RegisterResponse;
@@ -45,7 +42,7 @@ public class App {
 		//      bootstrapPort = scanner.nextInt();
 
 		bootstrapAddress = "127.0.0.1";
-		bootstrapPort = 1040;
+		bootstrapPort = 1043;
 
 		Node clientForBS = new Node();
 		clientForBS.setIpaddress(bootstrapAddress);
@@ -75,51 +72,57 @@ public class App {
 
 
 		client.sendTCPRequest(regRequest, new CallBack() {
-			public void run(String responseMessage, Node respondNode) {
-				System.out.println("BootStrap Node: " + responseMessage);
-				RegisterResponse serverResponse =
-						new RegisterResponse(responseMessage, respondNode);
-				serverResponse.show();
-				ArrayList<Node> neighbour = serverResponse.getNodeList();
-				for (int i = 0; i < neighbour.size(); i++) {
-					GlobalState.addNeighbor(neighbour.get(i));
-				}
-				Random rand = new Random();
-				int j;
-				int l = neighbour.size();
-				for (j = 0; j < 2 && j < l; j++) {
-					int rand1 = rand.nextInt(l);
-					if (l <3) {
-						rand1 = j;
-					}
-					System.out.println("Rand : " + rand1);
-					JoinRequest jr = new JoinRequest(neighbour.get(rand1));
+         public void run(String responseMessage, Node respondNode) {
+            System.out.println("BootStrap Node: " + responseMessage);
+            RegisterResponse serverResponse = new RegisterResponse(responseMessage, respondNode);
+            serverResponse.show();
+            ArrayList<Node> neighbour = serverResponse.getNodeList();
+            for (int i = 0; i < neighbour.size(); i++) {
+               GlobalState.addNeighbor(neighbour.get(i));
+            }
+            Random rand = new Random();
+            int j;
+            int l = neighbour.size();
+            for (j = 0; j < 2 && j < l; j++) {
+               int rand1 = rand.nextInt(l);
+               if (l < 3) {
+                  rand1 = j;
+               }
+               System.out.println("Rand : " + rand1);
+               JoinRequest jr = new JoinRequest(neighbour.get(rand1));
 
-					client.sendUDPRequest(jr, new CallBack() {
-						@Override
-						public void run(String message, Node node) {
-							JoinResponse joinResponse = new JoinResponse(message, node);
-							System.out.println("Join response returned ! " + joinResponse + "  " + node);
+               client.sendUDPRequest(jr, new CallBack() {
+                  @Override public void run(String message, Node node) {
+                     JoinResponse joinResponse = new JoinResponse(message, node);
+                     System.out.println("Join response returned ! " + joinResponse + "  " + node);
 
-                            // send file list to new neighbor
-                            client.sendUDPRequest(new FileListShareRequest(node, GlobalState.getLocalFiles()), new CallBack() {
-                                @Override
-                                public void run(String message, Node node) {
-                                    FileListShareResponse shareResponse = new FileListShareResponse(message);
-                                    GlobalState.addNeighborFiles(shareResponse.getRespondNode(), shareResponse.getFiles());
-                                }
-                            });
-						}
-					});
-				}
-				if (j == 0) {
-					System.out.println("First Node --> No joins ");
-				}
+                     // send file list to new neighbor
+                     client.sendUDPRequest(new FileListShareRequest(node, GlobalState.getLocalFiles()), new CallBack() {
+                        @Override public void run(String message, Node node) {
+                           FileListShareResponse shareResponse = new FileListShareResponse(message);
+                           GlobalState.addNeighborFiles(shareResponse.getRespondNode(), shareResponse.getFiles());
+                        }
+                     });
+                  }
+               });
+            }
+            if (j == 0) {
+               System.out.println("First Node --> No joins ");
+            }
+            if (neighbour.size() > 3) {
+               System.out.println("Initiate Search Request......");
+               SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(), "sherloc", 0);
+               client.sendUDPRequest(ser, CallBack.emptyCallback);
+            }
 
-				if (serverResponse.isFail()) {
-				}
-			}
-		});
+            if (serverResponse.isFail()) {
+               System.out.println("Server Failed");
+            }
+         }
+      });
+
+
+
 	}
 }
 

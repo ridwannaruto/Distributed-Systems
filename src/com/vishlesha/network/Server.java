@@ -53,7 +53,7 @@ public class Server extends Base implements Runnable {
                                 int port = receivePacket.getPort();
                                 RequestHandler requestHandler = new RequestHandler(requestMessage);
                                 String[] token = requestMessage.split(" ");
-                               // if the
+                               // skip this part for search requests
                                if (!(token[1].equals("SER") ||token[1].equals("SEROK"))) {
                                   sendData = requestHandler.getResponse().getResponseMessage().getBytes();
                                   DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress,

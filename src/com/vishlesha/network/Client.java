@@ -29,18 +29,23 @@ public class Client extends Base {
                     InetAddress IPAddress = InetAddress.getByName(request.getRecepientNode().getIpaddress());
                     byte[] sendData;
                     byte[] receiveData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
-
-                    System.out.println("Sending " + request.getRequestMessage());
-                    sendData = request.getRequestMessage().getBytes();
+                   String requestMessage = request.getRequestMessage();
+                    System.out.println("Sending " + requestMessage);
+                    sendData = requestMessage.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, request.getRecepientNode().getPortNumber());
                     clientSocket.send(sendPacket);
-/*
-                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-                    clientSocket.receive(receivePacket);
-                    String responseLine = new String(receivePacket.getData(),0, receivePacket.getLength());
-                    System.out.println("Received " + responseLine);
-                    clientSocket.close();
-                    callBack.run(responseLine, request.getRecepientNode());*/
+
+                   String[] token = requestMessage.split(" ");
+                   // skip this part for search requests
+                   if (!(token[1].equals("SER") ||token[1].equals("SEROK"))) {
+
+                      DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+                      clientSocket.receive(receivePacket);
+                      String responseLine = new String(receivePacket.getData(), 0, receivePacket.getLength());
+                      System.out.println("Received " + responseLine);
+                      clientSocket.close();
+                      callBack.run(responseLine, request.getRecepientNode());
+                   }
 
                 } catch (UnknownHostException ex) {
                     System.out.println("Unknown Host");

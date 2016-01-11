@@ -41,6 +41,8 @@ public class SearchRequest extends Request {
         setFileName(searchFileName);
         setNoOfHops(numberOfHops);
         requestMessage = " SER " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
+        setRequestMessage(requestMessage);
+        setInitiator(GlobalState.getLocalServerNode());
         appendMsgLength();
     }
 
@@ -50,6 +52,9 @@ public class SearchRequest extends Request {
         node.setIpaddress(token[KEY_IP_ADDRESS]);
         node.setPortNumber(Integer.valueOf(token[KEY_PORT_NUM]));
         setRecepientNode(node);
+        setInitiator(GlobalState.getLocalServerNode());
+        setNoOfHops(Integer.valueOf(token[5]));
+        setFileName(token[4]);
     }
 
 }
