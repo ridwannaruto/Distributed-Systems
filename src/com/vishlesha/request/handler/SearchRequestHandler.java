@@ -42,7 +42,7 @@ public class SearchRequestHandler {
             int newNoOfHops = noOfHops + 1;
             for (Node node : allFileList.keySet()) {
                //If the user posses any related file respond to user
-               if(node.equals(GlobalState.getLocalServerNode().getIpaddress())){
+               if(node.equals(GlobalState.getLocalServerNode())){
                   List<List<String>> fileList = allFileList.get(
                         GlobalState.getLocalServerNode().getIpaddress());
                   List<String> files  = new ArrayList<String>();
