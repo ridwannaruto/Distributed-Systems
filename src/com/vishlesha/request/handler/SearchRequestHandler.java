@@ -27,9 +27,15 @@ public class SearchRequestHandler {
     SearchResponse response;
 
     public SearchRequestHandler(SearchRequest request){
-        //TODO LOGIC
+        if (GlobalState.isRequestAlreadyHandled(request)) {
+            System.out.println("Ignoring duplicate request");
+            return;
+        }
+        GlobalState.rememberRequest(request);
+
        Node initiator = request.getInitiator();
-      // Node sender = request.getSender();
+       Node sender = request.getSender();
+
        String query = request.getFileName();
        FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
        final Client client = GlobalState.getClient();// Get from global state
@@ -41,10 +47,14 @@ public class SearchRequestHandler {
       if(noOfHops < MAX_NUMBER_OF_HOPS) {
             int newNoOfHops = noOfHops + 1;
             for (Node node : allFileList.keySet()) {
-               //If the user posses any related file respond to user
+                // ignore if same node as the sender
+                if(node.equals(sender)) {
+                    continue;
+                }
+
+                //If the user posses any related file respond to user
                if(node.equals(GlobalState.getLocalServerNode())){
-                  List<List<String>> fileList = allFileList.get(
-                        GlobalState.getLocalServerNode().getIpaddress());
+                  List<List<String>> fileList = allFileList.get(GlobalState.getLocalServerNode());
                   List<String> files  = new ArrayList<String>();
                   StringBuilder s = new StringBuilder();
                   for(List<String> stringList : fileList){
@@ -72,7 +82,7 @@ public class SearchRequestHandler {
 
                   String fileName = token[4];
 
-                  SearchRequest newRequest = new SearchRequest(request.getInitiator(),fileName,noOfHops);
+                  SearchRequest newRequest = new SearchRequest(request.getInitiator(),fileName,newNoOfHops);
                   newRequest.setRecepientNode(recepientNode);
                   client.sendUDPRequest(newRequest, CallBack.emptyCallback );// Change callback?
                }
@@ -80,7 +90,13 @@ public class SearchRequestHandler {
             // If already sent to 3 or more neighbors, this will  terminate
             // TODO sort neighbors based on NumberoFNeigbors
             for(Node neighbor : neighbors.keySet()){
-               if (forwardCount >= Number_OF_FORWARDS ){
+
+                // ignore if same node as the sender
+                if(neighbor.equals(sender)) {
+                    continue;
+                }
+
+                if (forwardCount >= Number_OF_FORWARDS ){
                   System.out.println("Forward count reached...");
                   break;
                }else{
@@ -93,13 +109,15 @@ public class SearchRequestHandler {
 
                   newRequest.setRecepientNode(node);
 
-                  System.out.println(request.getSender()+  " forwarding to : " + neighbor);
+                  System.out.println(sender +  " forwarding to : " + neighbor);
                   client.sendUDPRequest(newRequest, CallBack.emptyCallback);
                }
             }
       }else{
          System.out.println("Reached Hops limit");
       }
+        // TODO remove this ONLY after a suitable time has passed! (on actual network)
+        GlobalState.forgetRequest(request);
     }
 
     public SearchResponse getResponse() {

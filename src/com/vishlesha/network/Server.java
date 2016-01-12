@@ -42,7 +42,7 @@ public class Server extends Base implements Runnable {
                     serverSocket.receive(receivePacket);
                     final String requestMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
                     if (!GlobalState.isTestMode())
-                        System.out.println("Server Received: " + requestMessage);
+                        System.out.println("Server recv: " + requestMessage);
 
                     workerPool.submit(new Runnable() {
                         @Override
@@ -59,7 +59,9 @@ public class Server extends Base implements Runnable {
 
                                // skip this part for search requests
                                if (!(token[1].equals("SER") ||token[1].equals("SEROK"))) {
-                                  sendData = requestHandler.getResponse().getResponseMessage().getBytes();
+                                   String responseMessage = requestHandler.getResponse().getResponseMessage();
+                                  sendData = responseMessage.getBytes();
+                                   System.out.println("Server send: " + responseMessage);
                                   DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress,
                                         port);
                                   serverSocket.send(sendPacket);

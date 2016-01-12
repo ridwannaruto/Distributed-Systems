@@ -2,6 +2,9 @@ package com.vishlesha.app;
 
 import com.vishlesha.dataType.Node;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by ridwan on 1/1/16.
  */
@@ -58,5 +61,80 @@ public class GlobalConstant {
 
     public static final String MSG_SEARCH_NORESULT = "No matching result. Searched key not in key table";
 
+    public static final List<String> ALL_FILES = new ArrayList<String>();
+    public static final List<String> ALL_QUERIES = new ArrayList<String>();
+    static {
+        ALL_FILES.add("Adventures_of_Tintin");
+        ALL_FILES.add("Jack_and_Jill");
+        ALL_FILES.add("Glee");
+        ALL_FILES.add("The_Vampire_Diarie");
+        ALL_FILES.add("King_Arthur");
+        ALL_FILES.add("Windows_XP");
+        ALL_FILES.add("Harry_Potter");
+        ALL_FILES.add("Kung_Fu_Panda");
+        ALL_FILES.add("Lady_Gaga");
+        ALL_FILES.add("Twilight");
+        ALL_FILES.add("Windows_8");
+        ALL_FILES.add("Mission_Impossible");
+        ALL_FILES.add("Turn_Up_The_Music");
+        ALL_FILES.add("Super_Mario");
+        ALL_FILES.add("American_Pickers");
+        ALL_FILES.add("Microsoft_Office_2010");
+        ALL_FILES.add("Happy_Feet");
+        ALL_FILES.add("Modern_Family");
+        ALL_FILES.add("American_Idol");
+        ALL_FILES.add("Hacking_for_Dummies");
+
+        ALL_QUERIES.add("Twilight");
+        ALL_QUERIES.add("Jack");
+        ALL_QUERIES.add("American_Idol");
+        ALL_QUERIES.add("Happy_Feet");
+        ALL_QUERIES.add("Twilight_saga");
+        ALL_QUERIES.add("Happy_Feet");
+        ALL_QUERIES.add("Happy_Feet");
+        ALL_QUERIES.add("Feet");
+        ALL_QUERIES.add("Happy_Feet");
+        ALL_QUERIES.add("Twilight");
+        ALL_QUERIES.add("Windows");
+        ALL_QUERIES.add("Happy_Feet");
+        ALL_QUERIES.add("Mission_Impossible");
+        ALL_QUERIES.add("Twilight");
+        ALL_QUERIES.add("Windows_8");
+        ALL_QUERIES.add("The");
+        ALL_QUERIES.add("Happy");
+        ALL_QUERIES.add("Windows_8");
+        ALL_QUERIES.add("Happy_Feet");
+        ALL_QUERIES.add("Super_Mario");
+        ALL_QUERIES.add("Jack_and_Jill");
+        ALL_QUERIES.add("Happy_Feet");
+        ALL_QUERIES.add("Impossible");
+        ALL_QUERIES.add("Happy_Feet");
+        ALL_QUERIES.add("Turn_Up_The_Music");
+        ALL_QUERIES.add("Adventures_of_Tintin");
+        ALL_QUERIES.add("Twilight_saga");
+        ALL_QUERIES.add("Happy_Feet");
+        ALL_QUERIES.add("Super_Mario");
+        ALL_QUERIES.add("American_Pickers");
+        ALL_QUERIES.add("Microsoft_Office_2010");
+        ALL_QUERIES.add("Twilight");
+        ALL_QUERIES.add("Modern_Family");
+        ALL_QUERIES.add("Jack_and_Jill");
+        ALL_QUERIES.add("Jill");
+        ALL_QUERIES.add("Glee");
+        ALL_QUERIES.add("The_Vampire_Diarie");
+        ALL_QUERIES.add("King_Arthur");
+        ALL_QUERIES.add("Jack_and_Jill");
+        ALL_QUERIES.add("King_Arthur");
+        ALL_QUERIES.add("Windows_XP");
+        ALL_QUERIES.add("Harry_Potter");
+        ALL_QUERIES.add("Feet");
+        ALL_QUERIES.add("Kung_Fu_Panda");
+        ALL_QUERIES.add("Lady_Gaga");
+        ALL_QUERIES.add("Gaga");
+        ALL_QUERIES.add("Happy_Feet");
+        ALL_QUERIES.add("Twilight");
+        ALL_QUERIES.add("Hacking");
+        ALL_QUERIES.add("King");
+    }
 
 }

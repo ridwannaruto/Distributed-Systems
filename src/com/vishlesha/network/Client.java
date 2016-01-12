@@ -31,7 +31,7 @@ public class Client extends Base {
                     byte[] sendData;
                     byte[] receiveData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
                    String requestMessage = request.getRequestMessage();
-                    System.out.println("Sending " + requestMessage);
+                    System.out.println("UDP send: " + requestMessage);
                     sendData = requestMessage.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, request.getRecepientNode().getPortNumber());
                     clientSocket.send(sendPacket);
@@ -43,7 +43,7 @@ public class Client extends Base {
                       DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                       clientSocket.receive(receivePacket);
                       String responseLine = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                      System.out.println("Received " + responseLine);
+                      System.out.println("UDP recv: " + responseLine);
                       clientSocket.close();
                       callBack.run(responseLine, request.getRecepientNode());
                    }
@@ -70,9 +70,12 @@ public class Client extends Base {
                     BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     BufferedWriter outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     if (socket != null && outputStream != null && inputStream != null) {
-                        outputStream.write(request.getRequestMessage());
+                        String requestMessage = request.getRequestMessage();
+                        System.out.println("TCP send: " + requestMessage);
+                        outputStream.write(requestMessage);
                         outputStream.flush();
                         responseLine = inputStream.readLine();
+                        System.out.println("TCP recv: " + responseLine);
                     }
                     inputStream.close();
                     outputStream.close();

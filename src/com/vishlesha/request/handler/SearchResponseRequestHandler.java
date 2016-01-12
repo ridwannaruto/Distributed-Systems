@@ -35,6 +35,7 @@ public class SearchResponseRequestHandler {
     public SearchResponseRequestHandler(SearchResponseRequest request) {
        //TODO LOGIC
        String responseMessage = request.getRequestMessage();
+        System.out.println("----------------------------");
        System.out.println("Search Response Message from Handler :" + responseMessage);
        String[] token = responseMessage.split(" ");
        int responseCode = Integer.valueOf(token[2]);
@@ -43,13 +44,20 @@ public class SearchResponseRequestHandler {
           if (!GlobalState.isTestMode())
              System.out.println(GlobalConstant.MSG_SEARCH_NORESULT);
        } else if (token[1].equals("SEROK") && responseCode < 9000) {
-          if (!GlobalState.isTestMode())
-             System.out.println(GlobalConstant.SUCCESS_MSG_SEARCH);
+          if (!GlobalState.isTestMode()) {
+              System.out.println(GlobalConstant.SUCCESS_MSG_SEARCH);
+          }
+           System.out.println("Host: " + token[3] + ":" + token[4]);
+           System.out.println("Hops: " + token[5]);
+           for (int i = 0; i < responseCode; i++) {
+               System.out.println(token[6 + i]);
+           }
        } else {
           SearchError searchError = new SearchError(responseMessage, request.getSender());
           if (!GlobalState.isTestMode())
              System.out.println("Search Error: " + searchError.getErrorMessage());
        }
+        System.out.println("----------------------------");
 
        setResponse(getSearchResponse(responseCode, request.getNoOfHops(), request.getResults()));
     }

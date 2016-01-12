@@ -2,6 +2,7 @@ package com.vishlesha.app;
 
 import com.vishlesha.dataType.Node;
 import com.vishlesha.network.Client;
+import com.vishlesha.request.SearchRequest;
 import com.vishlesha.search.FileIpMapping;
 
 import java.util.*;
@@ -16,7 +17,7 @@ public class GlobalState {
     private static Node localServerNode;
     private static Map<Node, List<String>> neighbors = new HashMap<Node, List<String>>();
     private static List<String> localFiles = new ArrayList<String>();
-
+    private static List<SearchRequest> oldRequests = new ArrayList<SearchRequest>();
 
     private static Client client = new Client();
     //private static FileIpMapping fileIpMapping = new FileIpMapping();
@@ -118,5 +119,17 @@ public class GlobalState {
 
     public static void addLocalFile(String file) {
         localFiles.add(file);
+    }
+
+    public static void rememberRequest(SearchRequest request) {
+        oldRequests.add(request);
+    }
+
+    public static boolean isRequestAlreadyHandled(SearchRequest request) {
+        return oldRequests.contains(request);
+    }
+
+    public static boolean forgetRequest(SearchRequest request) {
+        return oldRequests.remove(request);
     }
 }

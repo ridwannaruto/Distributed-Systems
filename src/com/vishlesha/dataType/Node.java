@@ -45,17 +45,12 @@ public class Node {
         if (o == null || getClass() != o.getClass()) return false;
 
         Node node = (Node) o;
-
-        if (portNumber != node.portNumber) return false;
         if (!ipaddress.equals(node.ipaddress)) return false;
-
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = ipaddress.hashCode();
-        result = 31 * result + portNumber;
-        return result;
+        return ipaddress.hashCode();
     }
 }

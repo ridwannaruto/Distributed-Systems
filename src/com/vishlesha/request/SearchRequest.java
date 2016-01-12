@@ -61,4 +61,23 @@ public class SearchRequest extends Request {
         setRequestMessage(requestMessage);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SearchRequest that = (SearchRequest) o;
+
+        if (!fileName.equals(that.fileName)) return false;
+        if (initiator != null ? !initiator.equals(that.initiator) : that.initiator != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = fileName.hashCode();
+        result = 31 * result + (initiator != null ? initiator.hashCode() : 0);
+        return result;
+    }
 }
