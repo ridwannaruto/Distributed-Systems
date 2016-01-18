@@ -5,7 +5,6 @@ import com.vishlesha.dataType.Node;
 import com.vishlesha.network.CallBack;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.*;
-import com.vishlesha.response.JoinResponse;
 import com.vishlesha.response.SearchResponse;
 import com.vishlesha.search.FileIpMapping;
 
@@ -26,7 +25,7 @@ public class SearchRequestHandler {
     private static final int Number_OF_FORWARDS = 3;
     SearchResponse response;
 
-    public SearchRequestHandler(SearchRequest request){
+    public void handle(SearchRequest request){
         if (GlobalState.isRequestAlreadyHandled(request)) {
             System.out.println("Ignoring duplicate request");
             return;
@@ -34,7 +33,7 @@ public class SearchRequestHandler {
         GlobalState.rememberRequest(request);
 
        Node initiator = request.getInitiator();
-       Node sender = request.getSender();
+       Node sender = request.getSenderNode();
 
        String query = request.getFileName();
        FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
@@ -83,8 +82,8 @@ public class SearchRequestHandler {
                   String fileName = token[4];
 
                   SearchRequest newRequest = new SearchRequest(request.getInitiator(),fileName,newNoOfHops);
-                  newRequest.setRecepientNode(recepientNode);
-                  client.sendUDPRequest(newRequest, CallBack.emptyCallback );// Change callback?
+                  newRequest.setRecipientNode(recepientNode);
+                  client.sendUDPRequest(newRequest, CallBack.emptyCallback);// Change callback?
                }
             }
             // If already sent to 3 or more neighbors, this will  terminate
@@ -107,7 +106,7 @@ public class SearchRequestHandler {
                   node.setIpaddress(neighbor.getIpaddress());
                   node.setPortNumber(neighbor.getPortNumber()); //Todo change port
 
-                  newRequest.setRecepientNode(node);
+                  newRequest.setRecipientNode(node);
 
                   System.out.println(sender +  " forwarding to : " + neighbor);
                   client.sendUDPRequest(newRequest, CallBack.emptyCallback);
@@ -142,9 +141,9 @@ public class SearchRequestHandler {
    private void replyToInitiator(Node sender, Node recepient, int numberOfHops, List<String> files, String formattedMeesage){
       SearchResponseRequest response = new SearchResponseRequest();
       final Client client = new Client();
-      response.setSender(sender);
+      response.setSenderNode(sender);
       response.setNoOfHops(numberOfHops);
-      response.setRecepientNode(recepient);
+      response.setRecipientNode(recepient);
       response.setRequestMessage(formattedMeesage);
       response.setResults(files);
       System.out.println("Reply to inititator");
