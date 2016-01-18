@@ -13,6 +13,7 @@ import com.vishlesha.response.JoinResponse;
 import com.vishlesha.response.RegisterResponse;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.util.*;
 
 /*
@@ -42,24 +43,30 @@ public class App {
         bootstrapAddress = "127.0.0.1";
         bootstrapPort = 1033;
 
-        final Node clientForBS = new Node();
-        clientForBS.setIpaddress(bootstrapAddress);
-        clientForBS.setPortNumber(bootstrapPort);
+        final Node bootstrapServerNode = new Node();
+        bootstrapServerNode.setIpaddress(bootstrapAddress);
+        bootstrapServerNode.setPortNumber(bootstrapPort);
+
+        /*
 
         System.out.print("Enter seed: ");
         int seed = scanner.nextInt();
 
-        Node localServer = new Node();
-        localServer.setIpaddress("127.0.0." + seed);
-        int serverPort = GlobalConstant.PORT_MIN + seed;
+        */
 
-        localServer.setPortNumber(serverPort);
+        Node localServerNode = new Node();
+        localServerNode.setIpaddress(InetAddress.getLocalHost().getHostAddress());
+        int serverPort = GlobalConstant.PORT_LISTEN;
+        localServerNode.setPortNumber(serverPort);
+        GlobalState.setLocalServerNode(localServerNode);
 
-        GlobalState.setLocalServerNode(localServer);
+
         final Client client = new Client();
-        final Server server = new Server();
-        server.start(localServer.getIpaddress(), localServer.getPortNumber());
-        Request regRequest = new RegisterRequest(clientForBS);
+        final Server server = new Server(localServerNode);
+
+
+        server.start();
+        Request regRequest = new RegisterRequest(bootstrapServerNode);
 
         System.out.println("----------------------------");
         System.out.println("Generating local file list...");
@@ -80,9 +87,9 @@ public class App {
         System.out.println("----------------------------");
 
         client.sendTCPRequest(regRequest, new CallBack() {
-            public void run(String responseMessage, Node respondNode) {
+            public void run(String responseMessage, Node senderNode) {
                 System.out.println("BootStrap Node: " + responseMessage);
-                RegisterResponse serverResponse = new RegisterResponse(responseMessage, respondNode);
+                RegisterResponse serverResponse = new RegisterResponse(responseMessage, senderNode);
                 serverResponse.show();
                 ArrayList<Node> neighbour = serverResponse.getNodeList();
                 for (int i = 0; i < neighbour.size(); i++) {
@@ -97,29 +104,16 @@ public class App {
                     } else {
                         // pick a previously unused random number
                         do {
-                           rand1 = rand.nextInt(l);
+                            rand1 = rand.nextInt(l);
                         } while (prev == rand1);
                     }
                     prev = rand1;
 
                     System.out.println("Rand : " + rand1);
                     JoinRequest jr = new JoinRequest(neighbour.get(rand1));
+                    client.sendUDPRequest(jr);
 
-                    client.sendUDPRequest(jr, new CallBack() {
-                        @Override
-                        public void run(String message, Node node) {
-                            JoinResponse joinResponse = new JoinResponse(message, node);
 
-                            // send file list to new neighbor
-                            client.sendUDPRequest(new FileListShareRequest(node, GlobalState.getLocalFiles()), new CallBack() {
-                                @Override
-                                public void run(String message, Node node) {
-                                    FileListShareResponse shareResponse = new FileListShareResponse(message);
-                                    GlobalState.addNeighborFiles(shareResponse.getRespondNode(), shareResponse.getFiles());
-                                }
-                            });
-                        }
-                    });
                 }
                 if (j == 0) {
                     System.out.println("First Node --> No joins ");
@@ -136,7 +130,7 @@ public class App {
                     System.out.println("Initiate Search Request......");
                     SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(),
                             GlobalConstant.ALL_QUERIES.get(rand.nextInt(GlobalConstant.ALL_QUERIES.size())), 0);
-                    client.sendUDPRequest(ser, CallBack.emptyCallback);
+                    client.sendUDPRequest(ser);
                 }
 
                 if (serverResponse.isFail()) {
@@ -149,11 +143,11 @@ public class App {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 System.out.println("Unregistering and leaving the network");
-                Request unregRequest = new UnregisterRequest(clientForBS);
+                Request unregRequest = new UnregisterRequest(bootstrapServerNode);
                 client.sendTCPRequest(unregRequest, CallBack.emptyCallback);
 
                 for (Node n : GlobalState.getNeighbors().keySet()) {
-                    client.sendUDPRequest(new LeaveRequest(n), CallBack.emptyCallback);
+                    client.sendUDPRequest(new LeaveRequest(n));
                 }
 
                 // TODO add reasonable blocking mechanism
