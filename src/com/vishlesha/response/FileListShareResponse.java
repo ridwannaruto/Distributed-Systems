@@ -2,7 +2,6 @@ package com.vishlesha.response;
 
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
-import com.vishlesha.request.FileListShareRequest;
 import com.vishlesha.request.Request;
 
 import java.util.ArrayList;
@@ -23,9 +22,9 @@ public class FileListShareResponse extends Response {
 
     // response sent out by this node
     public FileListShareResponse(Node node, List<String> files){
-        setRespondNode(node);
+        setRecipientNode(node);
         setFiles(files);
-        StringBuilder builder = new StringBuilder(" FILES ");
+        StringBuilder builder = new StringBuilder(" FILESOK ");
         builder.append(GlobalState.getLocalServerNode().getIpaddress())
                 .append(" ")
                 .append(GlobalState.getLocalServerNode().getPortNumber())
@@ -43,7 +42,7 @@ public class FileListShareResponse extends Response {
         Node node = new Node();
         node.setIpaddress(tokens[Request.KEY_IP_ADDRESS]);
         node.setPortNumber(Integer.valueOf(tokens[Request.KEY_PORT_NUM]));
-        setRespondNode(node);
+        setRecipientNode(node);
 
         List<String> files = new ArrayList<>();
         for (int i = Request.KEY_PORT_NUM + 1; i < tokens.length; i++) {
