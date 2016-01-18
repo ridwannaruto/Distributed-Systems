@@ -40,7 +40,7 @@ public class App {
         //      System.out.print("\nBootstrap Node port: ");
         //      bootstrapPort = scanner.nextInt();
 
-        bootstrapAddress = "127.0.0.1";
+        bootstrapAddress = "172.31.23.116";
         bootstrapPort = 1033;
 
         final Node bootstrapServerNode = new Node();
