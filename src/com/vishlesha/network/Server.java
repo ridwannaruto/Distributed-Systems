@@ -4,9 +4,12 @@ import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.request.handler.RequestHandler;
+import com.vishlesha.response.handler.ResponseHandler;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,12 +21,12 @@ public class Server extends Base implements Runnable {
 
     ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_SERVER_WORKER_POOL);
     DatagramSocket serverSocket;
-    int listenPort;
-    String ip;
+    Node node;
 
-    public void start(String ip,int listenPort) {
-        this.listenPort=listenPort;
-        this.ip=ip;
+    public Server(Node node){
+        this.node = node;
+    }
+    public void start() {
         Thread t = new Thread(this);
         t.setDaemon(true);
         t.start();
@@ -32,7 +35,7 @@ public class Server extends Base implements Runnable {
     public void run() {
 
         try {
-            serverSocket = new DatagramSocket(listenPort);
+            serverSocket = new DatagramSocket(node.getPortNumber());
             System.out.println("Server socket created and waiting for requests..");
             while (!serverSocket.isClosed()) {
                 try {
@@ -40,36 +43,33 @@ public class Server extends Base implements Runnable {
                     byte[] receiveData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
                     final DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     serverSocket.receive(receivePacket);
-                    final String requestMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
+                    final String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
                     if (!GlobalState.isTestMode())
-                        System.out.println("Server recv: " + requestMessage);
+                        System.out.println("Server received: " + message);
 
                     workerPool.submit(new Runnable() {
                         @Override
                         public void run() {
 
-                            try {
 
-                                byte[] sendData;
-                                InetAddress IPAddress = receivePacket.getAddress();
-                                int port = receivePacket.getPort();
-                                Node sender = new Node(IPAddress.getHostAddress(), port);
-                                RequestHandler requestHandler = new RequestHandler(requestMessage,sender);
-                                String[] token = requestMessage.split(" ");
+                            InetAddress IPAddress = receivePacket.getAddress();
+                            int port = receivePacket.getPort();
+                            Node sender = new Node(IPAddress.getHostAddress(), port);
 
-                               // skip this part for search requests
-                               if (!(token[1].equals("SER") ||token[1].equals("SEROK"))) {
-                                   String responseMessage = requestHandler.getResponse().getResponseMessage();
-                                  sendData = responseMessage.getBytes();
-                                   System.out.println("Server send: " + responseMessage);
-                                  DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress,
-                                        port);
-                                  serverSocket.send(sendPacket);
-                               }
-                            } catch (IOException ex) {
-                                System.out.println("Server Exception: " + ex);
+                            String[] token = message.split(" ");
+
+                            //check if a new request or a response to a request
+                            if (token[1].contains("OK")) {
+                                ResponseHandler responseHandler = new ResponseHandler();
+                                responseHandler.handle(message, sender);
+                            } else {
+                                RequestHandler requestHandler = new RequestHandler();
+                                requestHandler.handle(message, sender);
                             }
+
+
                         }
+
 
                     });
 
