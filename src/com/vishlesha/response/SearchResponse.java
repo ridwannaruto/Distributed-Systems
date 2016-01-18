@@ -5,7 +5,6 @@ import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.error.SearchError;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,8 +15,8 @@ public class SearchResponse extends Response {
     int responseCode;
 
     // decoding response sent from another node
-    public SearchResponse (String responseMessage, Node respondNode){
-        setRespondNode(respondNode);
+    public SearchResponse (String responseMessage, Node senderNode){
+        setSenderNode(senderNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
@@ -35,7 +34,7 @@ public class SearchResponse extends Response {
 
         else{
             setFail(true);
-            SearchError searchError = new SearchError(responseMessage,respondNode);
+            SearchError searchError = new SearchError(responseMessage,senderNode);
             if (!GlobalState.isTestMode())
                 System.out.println("Search Error: " + searchError.getErrorMessage());
         }
@@ -51,4 +50,5 @@ public class SearchResponse extends Response {
         setResponseMessage(responseMessage);
         appendMsgLength();
     }
+
 }
