@@ -83,7 +83,7 @@ public class SearchRequestHandler {
 
                   SearchRequest newRequest = new SearchRequest(request.getInitiator(),fileName,newNoOfHops);
                   newRequest.setRecipientNode(recepientNode);
-                  client.sendUDPRequest(newRequest, CallBack.emptyCallback);// Change callback?
+                  client.sendUDPRequest(newRequest);// Change callback?
                }
             }
             // If already sent to 3 or more neighbors, this will  terminate
@@ -109,7 +109,7 @@ public class SearchRequestHandler {
                   newRequest.setRecipientNode(node);
 
                   System.out.println(sender +  " forwarding to : " + neighbor);
-                  client.sendUDPRequest(newRequest, CallBack.emptyCallback);
+                  client.sendUDPRequest(newRequest);
                }
             }
       }else{
@@ -147,6 +147,6 @@ public class SearchRequestHandler {
       response.setRequestMessage(formattedMeesage);
       response.setResults(files);
       System.out.println("Reply to inititator");
-      client.sendUDPRequest(response, CallBack.emptyCallback);
+      client.sendUDPRequest(response);
    }
 }
