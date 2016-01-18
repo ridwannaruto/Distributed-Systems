@@ -6,31 +6,40 @@ import com.vishlesha.dataType.Node;
  * Created by ridwan on 1/1/16.
  */
 public class Request {
-    protected Node recepientNode;
-    protected String requestMessage;
+    private Node recipientNode;
+    private Node serverNode;
+    private Node senderNode;
+    private String requestMessage;
 
     public static final int KEY_MSG_LENGTH = 0;
     public static final int KEY_REQ_TYPE = 1;
     public static final int KEY_IP_ADDRESS = 2;
     public static final int KEY_PORT_NUM = 3;
 
-   private Node sender;
 
-   public Node getSender() {
-      return sender;
-   }
-
-   public void setSender(Node sender) {
-      this.sender = sender;
-   }
-
-
-   public Node getRecepientNode() {
-        return recepientNode;
+    public Node getServerNode() {
+        return serverNode;
     }
 
-    public void setRecepientNode(Node recepientNode) {
-        this.recepientNode = recepientNode;
+    public void setServerNode(Node serverNode) {
+        this.serverNode = serverNode;
+    }
+
+    public Node getSenderNode() {
+      return senderNode;
+   }
+
+   public void setSenderNode(Node senderNode) {
+      this.senderNode = senderNode;
+   }
+
+
+   public Node getRecipientNode() {
+        return recipientNode;
+    }
+
+    public void setRecipientNode(Node recipientNode) {
+        this.recipientNode = recipientNode;
     }
 
     public String getRequestMessage(){
