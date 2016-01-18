@@ -68,8 +68,8 @@ public class OverlayNetworkTest {
 
         GlobalState.setLocalServerNode(localServer);
         clientInstance = new Client();
-        serverInstance = new Server();
-        serverInstance.start(null,0);
+        serverInstance = new Server(new Node(null,0));
+        serverInstance.start();
     }
 
     private void testRegister (){
@@ -128,17 +128,7 @@ public class OverlayNetworkTest {
 
     private void testJoinServer(){
         JoinRequest joinRequest = new JoinRequest(localServer);
-        clientInstance.sendUDPRequest(joinRequest, new CallBack() {
-            @Override
-            public void run(String responseMessage, Node respondNode) {
-                JoinResponse joinResponse = new JoinResponse(responseMessage, respondNode);
-                if (!joinResponse.isFail()) {
-                    System.out.println("Join Server Test: Success");
-                } else
-                    System.out.println("Join Server Test: Fail");
-            }
-        });
-
+        clientInstance.sendUDPRequest(joinRequest);
         sleep(shortSleepDuration);
     }
 
@@ -146,17 +136,7 @@ public class OverlayNetworkTest {
 
     private void testLeaveServer(){
         LeaveRequest leaveRequest = new LeaveRequest(localServer);
-        clientInstance.sendUDPRequest(leaveRequest, new CallBack() {
-            @Override
-            public void run(String responseMessage, Node respondNode) {
-                LeaveResponse leaveResponse = new LeaveResponse(responseMessage, respondNode);
-                if (!leaveResponse.isFail()) {
-                    System.out.println("Leave Server Test: Success");
-                } else
-                    System.out.println("Leave Server Test: Fail");
-            }
-        });
-
+        clientInstance.sendUDPRequest(leaveRequest);
         sleep(shortSleepDuration);
     }
 
