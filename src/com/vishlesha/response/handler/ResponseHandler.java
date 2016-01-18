@@ -42,7 +42,7 @@ public class ResponseHandler {
 
             } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_SEARCH)) {
 
-                SearchResponse searchResponse = new SearchResponse(responseMessage);
+                SearchResponse searchResponse = new SearchResponse(responseMessage,sender);
                 SearchResponseHandler searchResponseHandler = new SearchResponseHandler();
                 searchResponseHandler.handle(searchResponse);
 

@@ -139,14 +139,14 @@ public class SearchRequestHandler {
    }
 
    private void replyToInitiator(Node sender, Node recepient, int numberOfHops, List<String> files, String formattedMeesage){
-      SearchResponseRequest response = new SearchResponseRequest();
+      SearchResponse response = new SearchResponse(files.size(),numberOfHops,files);
       final Client client = new Client();
       response.setSenderNode(sender);
-      response.setNoOfHops(numberOfHops);
+      //response.setNoOfHops(numberOfHops);
       response.setRecipientNode(recepient);
-      response.setRequestMessage(formattedMeesage);
-      response.setResults(files);
+      //response.setRequestMessage(formattedMeesage);
+      //response.setResults(files);
       System.out.println("Reply to inititator");
-      client.sendUDPRequest(response);
+      client.sendUDPResponse(response);
    }
 }
