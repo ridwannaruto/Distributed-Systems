@@ -2,8 +2,10 @@ package com.vishlesha.request.handler;
 
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
+import com.vishlesha.network.Client;
 import com.vishlesha.request.JoinRequest;
 import com.vishlesha.response.JoinResponse;
+import com.vishlesha.response.Response;
 
 /**
  * Created by ridwan on 1/2/16.
@@ -15,18 +17,20 @@ public class JoinRequestHandler {
 
     JoinResponse response;
 
-    public JoinRequestHandler(JoinRequest request){
+    public void handle(JoinRequest request){
         // add as neighbor
-        Node neighbor = request.getRecepientNode();
-        GlobalState.addNeighbor(neighbor);
-        setResponse(new JoinResponse(RESPOND_CODE_JOIN_SUCCESS));
+        Node neighbor = request.getServerNode();
+        try{
+            GlobalState.addNeighbor(neighbor);
+            sendResponse(new JoinResponse(RESPOND_CODE_JOIN_SUCCESS));
+        }catch (IllegalStateException ex){
+            sendResponse(new JoinResponse(RESPOND_CODE_JOIN_ERROR));
+        }
+
     }
 
-    public JoinResponse getResponse() {
-        return response;
-    }
-
-    public void setResponse(JoinResponse response) {
-        this.response = response;
+    private void sendResponse(Response response){
+        Client client = new Client();
+        client.sendUDPResponse(response);
     }
 }
