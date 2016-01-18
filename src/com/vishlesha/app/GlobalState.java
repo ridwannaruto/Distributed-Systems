@@ -61,8 +61,12 @@ public class GlobalState {
         neighbors.put(node, new ArrayList<String>());
     }
 
-    public static void removeNeighbor(Node n){
-        neighbors.remove(n);
+    public static void removeNeighbor(Node node){
+
+        if (!neighbors.containsKey(node)) {
+            throw new IllegalStateException("Neighbor already joined");
+        }
+        neighbors.remove(node);
     }
 
    public static FileIpMapping getFileIpMapping() {
@@ -132,4 +136,5 @@ public class GlobalState {
     public static boolean forgetRequest(SearchRequest request) {
         return oldRequests.remove(request);
     }
+
 }
