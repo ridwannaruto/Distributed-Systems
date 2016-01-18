@@ -37,11 +37,11 @@ public class SearchRequest extends Request {
     }
 
     public SearchRequest(Node initiator, String searchFileName, int numberOfHops){
-        setRecepientNode(initiator);
+        setRecipientNode(initiator);
         setFileName(searchFileName);
         setNoOfHops(numberOfHops);
 
-        requestMessage = " SER " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
+        String requestMessage = " SER " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
         setRequestMessage(requestMessage);
 
         setInitiator(initiator);
