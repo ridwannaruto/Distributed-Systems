@@ -8,11 +8,17 @@ import com.vishlesha.error.Error;
  */
 
 abstract public class Response {
-    protected Node respondNode;
+    protected Node recipientNode;
+    protected Node senderNode;
     protected String responseMessage;
     protected int responseCode;
     protected boolean fail;
     protected Error error;
+
+    public static final int KEY_MSG_LENGTH = 0;
+    public static final int KEY_RESPONSE_TYPE = 1;
+    public static final int KEY_IP_ADDRESS = 2;
+    public static final int KEY_PORT_NUM = 3;
 
     public int getResponseCode() {
         return responseCode;
@@ -30,12 +36,20 @@ abstract public class Response {
         this.error = error;
     }
 
-    public Node getRespondNode() {
-        return respondNode;
+    public Node getSenderNode() {
+        return senderNode;
     }
 
-    public void setRespondNode(Node respondNode) {
-        this.respondNode = respondNode;
+    public void setSenderNode(Node senderNode) {
+        this.senderNode = senderNode;
+    }
+
+    public Node getRecipientNode() {
+        return recipientNode;
+    }
+
+    public void setRecipientNode(Node recipientNode) {
+        this.recipientNode = recipientNode;
     }
 
     public String getResponseMessage(){
