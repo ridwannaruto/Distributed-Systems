@@ -13,8 +13,8 @@ public class UnregisterResponse extends Response {
 
     int responseCode;
 
-    public UnregisterResponse(String responseMessage, Node respondNode){
-        setRespondNode(respondNode);
+    public UnregisterResponse(String responseMessage, Node senderNode){
+        setRecipientNode(senderNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
@@ -26,7 +26,7 @@ public class UnregisterResponse extends Response {
 
         else{
             setFail(true);
-            UnregisterError unregisterError = new UnregisterError(responseMessage,respondNode);
+            UnregisterError unregisterError = new UnregisterError(responseMessage,senderNode);
             if (!GlobalState.isTestMode())
                 System.out.println("Unregister Error: " + unregisterError.getErrorMessage());
         }

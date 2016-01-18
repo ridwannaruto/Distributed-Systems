@@ -11,8 +11,8 @@ import com.vishlesha.error.JoinError;
 public class JoinResponse extends Response{
     int responseCode;
 
-    public JoinResponse(String responseMessage, Node respondNode){
-        setRespondNode(respondNode);
+    public JoinResponse(String responseMessage, Node senderNode){
+        setSenderNode(senderNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
@@ -24,7 +24,7 @@ public class JoinResponse extends Response{
 
         else{
             setFail(true);
-            JoinError joinError = new JoinError(responseMessage,respondNode);
+            JoinError joinError = new JoinError(responseMessage,senderNode);
             if (!GlobalState.isTestMode())
                 System.out.println("Join Error: " + joinError.getErrorMessage());
         }

@@ -12,8 +12,8 @@ public class LeaveResponse extends Response {
 
     int responseCode;
 
-    public LeaveResponse(String responseMessage, Node respondNode){
-        setRespondNode(respondNode);
+    public LeaveResponse(String responseMessage, Node senderNode){
+        setRecipientNode(senderNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
@@ -25,7 +25,7 @@ public class LeaveResponse extends Response {
 
         else{
             setFail(true);
-            LeaveError leaveError = new LeaveError(responseMessage,respondNode);
+            LeaveError leaveError = new LeaveError(responseMessage,senderNode);
             if (!GlobalState.isTestMode())
                 System.out.println("Leave Error: " + leaveError.getErrorMessage());
         }
