@@ -2,6 +2,7 @@ package com.vishlesha.network;
 
 import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.request.Request;
+import com.vishlesha.response.Response;
 
 import java.io.*;
 import java.net.*;
@@ -20,33 +21,49 @@ public class Client extends Base {
         return socket;
     }
 
-    public void sendUDPRequest(final Request request, final CallBack callBack) {
+    public void sendUDPRequest(final Request request) {
         workerPool.submit(new Runnable() {
             @Override
             public void run() {
                 try {
 
                     DatagramSocket clientSocket = new DatagramSocket();
-                    InetAddress IPAddress = InetAddress.getByName(request.getRecepientNode().getIpaddress());
+                    InetAddress IPAddress = InetAddress.getByName(request.getRecipientNode().getIpaddress());
+                    int portNumber = request.getRecipientNode().getPortNumber();
                     byte[] sendData;
-                    byte[] receiveData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
-                   String requestMessage = request.getRequestMessage();
+                    String requestMessage = request.getRequestMessage();
                     System.out.println("UDP send: " + requestMessage);
                     sendData = requestMessage.getBytes();
-                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, request.getRecepientNode().getPortNumber());
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress,portNumber );
                     clientSocket.send(sendPacket);
 
-                   String[] token = requestMessage.split(" ");
-                   // skip this part for search requests
-                   if (!(token[1].equals("SER") ||token[1].equals("SEROK"))) {
+                } catch (UnknownHostException ex) {
+                    System.out.println("Unknown Host");
+                } catch (IOException ex) {
+                    System.out.println("IO exception: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            }
 
-                      DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-                      clientSocket.receive(receivePacket);
-                      String responseLine = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                      System.out.println("UDP recv: " + responseLine);
-                      clientSocket.close();
-                      callBack.run(responseLine, request.getRecepientNode());
-                   }
+
+        });
+    }
+
+    public void sendUDPResponse(final Response response) {
+        workerPool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    DatagramSocket clientSocket = new DatagramSocket();
+                    InetAddress IPAddress = InetAddress.getByName(response.getRecipientNode().getIpaddress());
+                    int portNumber = response.getRecipientNode().getPortNumber();
+                    byte[] sendData;
+                    String requestMessage = response.getResponseMessage();
+                    System.out.println("UDP send: " + requestMessage);
+                    sendData = requestMessage.getBytes();
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, portNumber);
+                    clientSocket.send(sendPacket);
 
                 } catch (UnknownHostException ex) {
                     System.out.println("Unknown Host");
@@ -66,7 +83,7 @@ public class Client extends Base {
             public void run() {
                 try {
                     String responseLine = null;
-                    socket = new Socket(request.getRecepientNode().getIpaddress(), request.getRecepientNode().getPortNumber());
+                    socket = new Socket(request.getRecipientNode().getIpaddress(), request.getRecipientNode().getPortNumber());
                     BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     BufferedWriter outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     if (socket != null && outputStream != null && inputStream != null) {
@@ -80,7 +97,7 @@ public class Client extends Base {
                     inputStream.close();
                     outputStream.close();
                     socket.close();
-                    callBack.run(responseLine, request.getRecepientNode());
+                    callBack.run(responseLine, request.getRecipientNode());
 
                 } catch (UnknownHostException ex) {
                     System.out.println("Unknown Host");
