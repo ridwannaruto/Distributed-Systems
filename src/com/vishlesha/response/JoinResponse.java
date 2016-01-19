@@ -18,8 +18,6 @@ public class JoinResponse extends Response{
 
         if (token[1].equals("JOINOK") && responseCode == 0){
             setFail(false);
-            if (!GlobalState.isTestMode())
-                System.out.println(GlobalConstant.SUCCESS_MSG_JOIN);
         }
 
         else{

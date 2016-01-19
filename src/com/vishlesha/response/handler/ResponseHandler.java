@@ -1,8 +1,11 @@
 package com.vishlesha.response.handler;
 
 import com.vishlesha.dataType.Node;
+import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.response.*;
+
+import java.util.logging.Logger;
 
 /**
  * Created by ridwan on 1/18/16.
@@ -17,12 +20,15 @@ public class ResponseHandler {
     protected static final String RESPONSE_TYPE_SEARCH = "SEROK";
     protected static final String RESPONSE_TYPE_FILE_SHARE = "FILES";
 
+    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+
     public void handle(String responseMessage , Node sender) {
 
         String[] token = responseMessage.split(" ");
         int lengthOfMessage = Integer.valueOf(token[KEY_MSG_LENGTH]);
 
         if (lengthOfMessage != responseMessage.length()) {
+            log.severe(this.getClass() + " : incorrect message length");
             sendResponse(new ErrorResponse());
         } else {
             if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_JOIN)) {
@@ -47,6 +53,7 @@ public class ResponseHandler {
                 searchResponseHandler.handle(searchResponse);
 
             } else {
+                log.severe(this.getClass() + " : unknown message format");
                 sendResponse(new ErrorResponse());
             }
         }

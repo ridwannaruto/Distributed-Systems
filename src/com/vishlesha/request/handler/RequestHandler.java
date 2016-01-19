@@ -1,12 +1,15 @@
 package com.vishlesha.request.handler;
 
 import com.vishlesha.dataType.Node;
+import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.JoinRequest;
 import com.vishlesha.request.LeaveRequest;
 import com.vishlesha.request.SearchRequest;
 import com.vishlesha.response.ErrorResponse;
 import com.vishlesha.response.Response;
+
+import java.util.logging.Logger;
 
 /**
  * Created by ridwan on 1/2/16.
@@ -20,6 +23,7 @@ public class RequestHandler {
     protected static final String REQ_TYPE_LEAVE = "LEAVE";
     protected static final String REQ_TYPE_SEARCH = "SER";
 
+    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
     public void handle(String requestMessage , Node sender) {
 
@@ -27,6 +31,7 @@ public class RequestHandler {
        int lengthOfMessage = Integer.valueOf(token[KEY_MSG_LENGTH]);
 
        if (lengthOfMessage != requestMessage.length()) {
+           log.severe(this.getClass() + " : incorrect message length");
           sendErrorResponse(new ErrorResponse());
        } else {
           if (token[KEY_REQ_TYPE].equals(REQ_TYPE_JOIN)) {
@@ -47,6 +52,7 @@ public class RequestHandler {
               searchRequestHandler.handle(searchRequest);
 
           }else {
+              log.severe(this.getClass() + " : unknown message format");
               sendErrorResponse(new ErrorResponse());
           }
        }

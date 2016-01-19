@@ -3,6 +3,7 @@ package com.vishlesha.network;
 import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
+import com.vishlesha.log.AppLogger;
 import com.vishlesha.request.handler.RequestHandler;
 import com.vishlesha.response.handler.ResponseHandler;
 
@@ -12,6 +13,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * Created by ridwan on 1/1/16.
@@ -20,6 +22,7 @@ public class Server extends Base implements Runnable {
 
 
     ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_SERVER_WORKER_POOL);
+    Logger log = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
     DatagramSocket serverSocket;
     Node node;
 
@@ -36,7 +39,7 @@ public class Server extends Base implements Runnable {
 
         try {
             serverSocket = new DatagramSocket(node.getPortNumber());
-            System.out.println("Server socket created and waiting for requests..");
+            log.info("Server socket created and waiting for requests..");
             while (!serverSocket.isClosed()) {
                 try {
 
@@ -45,7 +48,7 @@ public class Server extends Base implements Runnable {
                     serverSocket.receive(receivePacket);
                     final String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
                     if (!GlobalState.isTestMode())
-                        System.out.println("Server received: " + message);
+                        log.info("Server received: " + message);
 
                     workerPool.submit(new Runnable() {
                         @Override
@@ -74,13 +77,17 @@ public class Server extends Base implements Runnable {
                     });
 
                 } catch (IOException ex) {
-                    System.out.println("Server Exception:  " + ex);
+                    log.severe("Server Exception:  " + ex);
+                    log.severe(ex.getStackTrace().toString());
+                    ex.printStackTrace();
                 }
 
             }
 
         } catch (IOException ex) {
             System.out.println("Server Exception:  " + ex);
+            log.severe(ex.getStackTrace().toString());
+            ex.printStackTrace();
         }
 
     }

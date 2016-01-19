@@ -59,15 +59,6 @@ public class SearchResponseHandler {
         this.response = response;
     }
 
-    private SearchResponse getSearchResponse(int responseCode, int noOfHops, List<String> fileList){
-        String fileNameList ="";
-        for (int i=0; i<fileList.size(); i++)
-            fileNameList += " " + fileList.get(i);
-        String responseMessage = " SEROK " + responseCode + " " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + noOfHops + fileNameList;
-        responseMessage = String.format("%04d", responseMessage.length()+4) + responseMessage;
-        response.setResponseMessage(responseMessage);
-        response.appendMsgLength();
-        return  response;
-    }
+
 }
 

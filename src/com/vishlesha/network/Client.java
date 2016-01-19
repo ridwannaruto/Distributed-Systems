@@ -1,6 +1,7 @@
 package com.vishlesha.network;
 
 import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.log.AppLogger;
 import com.vishlesha.request.Request;
 import com.vishlesha.response.Response;
 
@@ -8,6 +9,7 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * Created by ridwan on 1/1/16.
@@ -16,7 +18,7 @@ public class Client extends Base {
 
     Socket socket = null;
     ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_CLIENT_WORKER_POOL);
-
+    Logger log = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
     public Socket getSocket() {
         return socket;
     }
@@ -32,15 +34,16 @@ public class Client extends Base {
                     int portNumber = request.getRecipientNode().getPortNumber();
                     byte[] sendData;
                     String requestMessage = request.getRequestMessage();
-                    System.out.println("UDP send: " + requestMessage);
+                    log.info("UDP send: " + requestMessage);
                     sendData = requestMessage.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress,portNumber );
                     clientSocket.send(sendPacket);
 
                 } catch (UnknownHostException ex) {
-                    System.out.println("Unknown Host");
+                    log.severe("Unknown Host");
                 } catch (IOException ex) {
-                    System.out.println("IO exception: " + ex.getMessage());
+                    log.severe("IO exception: " + ex.getMessage());
+                    log.severe(ex.getStackTrace().toString());
                     ex.printStackTrace();
                 }
             }
@@ -60,15 +63,16 @@ public class Client extends Base {
                     int portNumber = response.getRecipientNode().getPortNumber();
                     byte[] sendData;
                     String requestMessage = response.getResponseMessage();
-                    System.out.println("UDP send: " + requestMessage);
+                    log.info("UDP send: " + requestMessage);
                     sendData = requestMessage.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, portNumber);
                     clientSocket.send(sendPacket);
 
                 } catch (UnknownHostException ex) {
-                    System.out.println("Unknown Host");
+                    log.severe("Unknown Host");
                 } catch (IOException ex) {
-                    System.out.println("IO exception: " + ex.getMessage());
+                    log.severe("IO exception: " + ex.getMessage());
+                    log.severe(ex.getStackTrace().toString());
                     ex.printStackTrace();
                 }
             }
@@ -88,11 +92,11 @@ public class Client extends Base {
                     BufferedWriter outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     if (socket != null && outputStream != null && inputStream != null) {
                         String requestMessage = request.getRequestMessage();
-                        System.out.println("TCP send: " + requestMessage);
+                        log.info("TCP send: " + requestMessage);
                         outputStream.write(requestMessage);
                         outputStream.flush();
                         responseLine = inputStream.readLine();
-                        System.out.println("TCP recv: " + responseLine);
+                        log.info("TCP recv: " + responseLine);
                     }
                     inputStream.close();
                     outputStream.close();
@@ -100,9 +104,10 @@ public class Client extends Base {
                     callBack.run(responseLine, request.getRecipientNode());
 
                 } catch (UnknownHostException ex) {
-                    System.out.println("Unknown Host");
+                    log.severe("Unknown Host");
                 } catch (IOException ex) {
-                    System.out.println("IO exception: " + ex.getMessage());
+                    log.severe("IO exception: " + ex.getMessage());
+                    log.severe(ex.getStackTrace().toString());
                     ex.printStackTrace();
                 }
             }

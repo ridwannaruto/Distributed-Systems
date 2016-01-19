@@ -4,6 +4,7 @@ package com.vishlesha.app;
 //created by Ridwan
 
 import com.vishlesha.dataType.Node;
+import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.CallBack;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
@@ -15,7 +16,7 @@ import com.vishlesha.response.RegisterResponse;
 import java.io.*;
 import java.net.InetAddress;
 import java.util.*;
-
+import java.util.logging.Logger;
 /*
     * Runs the interface for the client application
     * Displays the dialog box asking for connection details and query commands
@@ -31,9 +32,10 @@ public class App {
         int bootstrapPort;
         final GlobalConstant globalConstant = new GlobalConstant();
         Scanner scanner = new Scanner(System.in);
+        AppLogger.setup();
 
         System.out.println("Vishlesha Distributed System");
-        System.out.println("----------------------------");
+        System.out.println("----------------------------\n\n");
         //      System.out.println("Please enter the details of the bootstrap server");
         //      System.out.print("Bootstrap Node IP address: ");
         //      bootstrapAddress = scanner.next();
@@ -68,7 +70,7 @@ public class App {
         server.start();
         Request regRequest = new RegisterRequest(bootstrapServerNode);
 
-        System.out.println("----------------------------");
+
         System.out.println("Generating local file list...");
         final Random rand = new Random();
         int index;
@@ -84,7 +86,7 @@ public class App {
             GlobalState.getLocalFiles().add(file);
             System.out.format("%2d %s\n", index, file);
         }
-        System.out.println("----------------------------");
+        System.out.println("File list generated\n---------------------------\n");
 
         client.sendTCPRequest(regRequest, new CallBack() {
             public void run(String responseMessage, Node senderNode) {

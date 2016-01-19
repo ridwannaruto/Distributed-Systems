@@ -2,12 +2,14 @@ package com.vishlesha.request.handler;
 
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
+import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
-import com.vishlesha.request.JoinRequest;
 import com.vishlesha.request.LeaveRequest;
 import com.vishlesha.response.JoinResponse;
 import com.vishlesha.response.LeaveResponse;
 import com.vishlesha.response.Response;
+
+import java.util.logging.Logger;
 
 /**
  * Created by ridwan on 1/2/16.
@@ -17,15 +19,17 @@ public class LeaveRequestHandler {
     private static final int RESPOND_CODE_LEAVE_SUCCESS = 0;
     private static final int RESPOND_CODE_LEAVE_ERROR = 9999;
 
-    LeaveResponse response;
+    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
     public void handle(LeaveRequest request){
         // remove neighbor
         Node neighbor = request.getServerNode();
         try{
             GlobalState.removeNeighbor(neighbor);
+            log.info(this.getClass() + " : neighbour left " + neighbor.toString());
             sendResponse(new JoinResponse(RESPOND_CODE_LEAVE_SUCCESS));
         }catch (IllegalStateException ex){
+            log.severe(this.getClass() + " : neighbour doesn't exist " + neighbor.toString());
             sendResponse(new JoinResponse(RESPOND_CODE_LEAVE_ERROR));
         }
         sendResponse(new LeaveResponse(RESPOND_CODE_LEAVE_SUCCESS));

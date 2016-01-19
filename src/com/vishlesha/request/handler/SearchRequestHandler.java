@@ -2,6 +2,7 @@ package com.vishlesha.request.handler;
 
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
+import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.CallBack;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.*;
@@ -11,6 +12,7 @@ import com.vishlesha.search.FileIpMapping;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by ridwan on 1/2/16.
@@ -25,9 +27,11 @@ public class SearchRequestHandler {
     private static final int Number_OF_FORWARDS = 3;
     SearchResponse response;
 
+    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    Logger networkLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
     public void handle(SearchRequest request){
         if (GlobalState.isRequestAlreadyHandled(request)) {
-            System.out.println("Ignoring duplicate request");
+            log.info(this.getClass() + " : Ignoring duplicate request");
             return;
         }
         GlobalState.rememberRequest(request);
@@ -96,7 +100,7 @@ public class SearchRequestHandler {
                 }
 
                 if (forwardCount >= Number_OF_FORWARDS ){
-                  System.out.println("Forward count reached...");
+                    networkLog.info(this.getClass() + " : Forward count reached...");
                   break;
                }else{
                   forwardCount++;
@@ -107,13 +111,12 @@ public class SearchRequestHandler {
                   node.setPortNumber(neighbor.getPortNumber()); //Todo change port
 
                   newRequest.setRecipientNode(node);
-
-                  System.out.println(sender +  " forwarding to : " + neighbor);
+                    networkLog.info(this.getClass() + " : " + sender +  " forwarding to : " + neighbor);
                   client.sendUDPRequest(newRequest);
                }
             }
       }else{
-         System.out.println("Reached Hops limit");
+          networkLog.info(this.getClass() + " : Reached Hops limit");
       }
         // TODO remove this ONLY after a suitable time has passed! (on actual network)
         GlobalState.forgetRequest(request);
@@ -146,7 +149,7 @@ public class SearchRequestHandler {
       response.setRecipientNode(recepient);
       //response.setRequestMessage(formattedMeesage);
       //response.setResults(files);
-      System.out.println("Reply to inititator");
+      networkLog.info(this.getClass() + " : Reply to initiator");
       client.sendUDPResponse(response);
    }
 }
