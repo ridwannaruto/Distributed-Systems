@@ -4,6 +4,7 @@ import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.request.Request;
 import com.vishlesha.response.Response;
+import com.vishlesha.response.handler.ResponseHandler;
 
 import java.io.*;
 import java.net.*;
@@ -34,7 +35,7 @@ public class Client extends Base {
                     int portNumber = request.getRecipientNode().getPortNumber();
                     byte[] sendData;
                     String requestMessage = request.getRequestMessage();
-                    log.info("UDP send: " + requestMessage);
+                    log.info("UDP sent: " + requestMessage);
                     sendData = requestMessage.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress,portNumber );
                     clientSocket.send(sendPacket);
@@ -63,7 +64,7 @@ public class Client extends Base {
                     int portNumber = response.getRecipientNode().getPortNumber();
                     byte[] sendData;
                     String requestMessage = response.getResponseMessage();
-                    log.info("UDP send: " + requestMessage);
+                    log.info("UDP sent: " + requestMessage);
                     sendData = requestMessage.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, portNumber);
                     clientSocket.send(sendPacket);
@@ -81,7 +82,7 @@ public class Client extends Base {
         });
     }
 
-    public void sendTCPRequest(final Request request, final CallBack callBack) {
+    public void sendTCPRequest(final Request request) {
         workerPool.submit(new Runnable() {
             @Override
             public void run() {
@@ -92,16 +93,17 @@ public class Client extends Base {
                     BufferedWriter outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     if (socket != null && outputStream != null && inputStream != null) {
                         String requestMessage = request.getRequestMessage();
-                        log.info("TCP send: " + requestMessage);
+                        log.info("TCP sent: " + requestMessage);
                         outputStream.write(requestMessage);
                         outputStream.flush();
                         responseLine = inputStream.readLine();
-                        log.info("TCP recv: " + responseLine);
+                        log.info("TCP received: " + responseLine);
                     }
                     inputStream.close();
                     outputStream.close();
                     socket.close();
-                    callBack.run(responseLine, request.getRecipientNode());
+                    ResponseHandler responseHandler = new ResponseHandler();
+                    responseHandler.handle(responseLine, request.getRecipientNode());
 
                 } catch (UnknownHostException ex) {
                     log.severe("Unknown Host");

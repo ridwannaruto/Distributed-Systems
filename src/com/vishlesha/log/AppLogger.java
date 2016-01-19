@@ -39,7 +39,7 @@ public class AppLogger {
 
         networkLogger.setLevel(Level.ALL);
         networkLog = new FileHandler(APP_LOG_FILE_NAME);
-        appLogger.setLevel(Level.INFO);
+        appLogger.setLevel(Level.ALL);
         appLog = new FileHandler(NETWORK_LOG_FILE_NAME);
 
         // create a TXT formatter

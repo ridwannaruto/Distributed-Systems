@@ -33,11 +33,11 @@ public class OverlayNetworkTest {
         GlobalState.setTestMode(true);
         initialize();
         System.out.println("Running register user test");
-        testRegister();
+    //    testRegister();
         System.out.println("Running register same user test");
-        testRegisterSameUserName();
+    //    testRegisterSameUserName();
         System.out.println("Running unregister user test");
-        testUnregister();
+    //    testUnregister();
         System.out.println("Running join server test");
         testJoinServer();
         System.out.println("Running leave server test");
@@ -72,6 +72,7 @@ public class OverlayNetworkTest {
         serverInstance.start();
     }
 
+    /*
     private void testRegister (){
         RegisterRequest registerRequest = new RegisterRequest(bootstrapServer);
         clientInstance.sendTCPRequest(registerRequest, new CallBack() {
@@ -125,6 +126,8 @@ public class OverlayNetworkTest {
 
         sleep(shortSleepDuration);
     }
+
+    */
 
     private void testJoinServer(){
         JoinRequest joinRequest = new JoinRequest(localServer);

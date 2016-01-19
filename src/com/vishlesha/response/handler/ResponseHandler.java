@@ -15,6 +15,7 @@ public class ResponseHandler {
     protected static final int KEY_MSG_LENGTH = 0;
     protected static final int KEY_RESPONSE_TYPE = 1;
 
+    protected static final String RESPONSE_TYPE_REGISTER= "REGOK";
     protected static final String RESPONSE_TYPE_JOIN = "JOINOK";
     protected static final String RESPONSE_TYPE_LEAVE = "LEAVEOK";
     protected static final String RESPONSE_TYPE_SEARCH = "SEROK";
@@ -31,7 +32,12 @@ public class ResponseHandler {
             log.severe(this.getClass() + " : incorrect message length");
             sendResponse(new ErrorResponse());
         } else {
-            if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_JOIN)) {
+            if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_REGISTER)) {
+                RegisterResponse registerResponse = new RegisterResponse(responseMessage,sender);
+                RegisterResponseHandler registerResponseHandler = new RegisterResponseHandler();
+                registerResponseHandler.handle(registerResponse);
+
+            }else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_JOIN)) {
                 JoinResponse joinResponse = new JoinResponse(responseMessage,sender);
                 JoinResponseHandler joinResponseHandler = new JoinResponseHandler();
                 joinResponseHandler.handle(joinResponse);
