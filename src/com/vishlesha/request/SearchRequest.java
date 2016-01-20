@@ -1,6 +1,5 @@
 package com.vishlesha.request;
 
-import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 
 /**
@@ -10,15 +9,7 @@ public class SearchRequest extends Request {
 
     private String fileName;
     private int noOfHops;
-    private Node initiator;
 
-   public Node getInitiator() {
-      return initiator;
-   }
-
-   public void setInitiator(Node initiator) {
-      this.initiator = initiator;
-   }
 
    public String getFileName() {
         return fileName;
@@ -40,11 +31,9 @@ public class SearchRequest extends Request {
         setRecipientNode(initiator);
         setFileName(searchFileName);
         setNoOfHops(numberOfHops);
-
-        String requestMessage = " SER " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
+        setInitialNode(initiator);
+        String requestMessage = " SER " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
         setRequestMessage(requestMessage);
-
-        setInitiator(initiator);
         appendMsgLength();
     }
 
@@ -55,10 +44,16 @@ public class SearchRequest extends Request {
         node.setIpaddress(token[KEY_IP_ADDRESS]);
         node.setPortNumber(Integer.valueOf(token[KEY_PORT_NUM]));
 
-        setInitiator(node);
+        setInitialNode(node);
         setNoOfHops(Integer.valueOf(token[5]));
         setFileName(token[4]);
         setRequestMessage(requestMessage);
+    }
+
+    public void updateRequestMessage(){
+        String requestMessage = " SER " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
+        setRequestMessage(requestMessage);
+        appendMsgLength();
     }
 
     @Override
@@ -69,7 +64,7 @@ public class SearchRequest extends Request {
         SearchRequest that = (SearchRequest) o;
 
         if (!fileName.equals(that.fileName)) return false;
-        if (initiator != null ? !initiator.equals(that.initiator) : that.initiator != null) return false;
+        if (getInitialNode() != null ? !getInitialNode().equals(that.getInitialNode()) : that.getInitialNode() != null) return false;
 
         return true;
     }
@@ -77,7 +72,7 @@ public class SearchRequest extends Request {
     @Override
     public int hashCode() {
         int result = fileName.hashCode();
-        result = 31 * result + (initiator != null ? initiator.hashCode() : 0);
+        result = 31 * result + (getInitialNode() != null ? getInitialNode().hashCode() : 0);
         return result;
     }
 }

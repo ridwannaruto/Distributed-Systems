@@ -22,7 +22,7 @@ public class JoinRequest extends Request {
         Node node = new Node();
         node.setIpaddress(token[KEY_IP_ADDRESS]);
         node.setPortNumber(Integer.valueOf(token[KEY_PORT_NUM]));
-        setServerNode(node);
+        setInitialNode(node);
     }
 
 

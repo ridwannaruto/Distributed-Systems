@@ -6,9 +6,9 @@ import com.vishlesha.dataType.Node;
  * Created by ridwan on 1/1/16.
  */
 public class Request {
-    private Node recipientNode;
-    private Node serverNode;
-    private Node senderNode;
+    private Node recipientNode; //to which node the request is sent
+    private Node initialNode; // node which initiated the request / the node in the request message
+    private Node senderNode; // which node is sending the request
     private String requestMessage;
 
     public static final int KEY_MSG_LENGTH = 0;
@@ -17,12 +17,12 @@ public class Request {
     public static final int KEY_PORT_NUM = 3;
 
 
-    public Node getServerNode() {
-        return serverNode;
+    public Node getInitialNode() {
+        return initialNode;
     }
 
-    public void setServerNode(Node serverNode) {
-        this.serverNode = serverNode;
+    public void setInitialNode(Node initialNode) {
+        this.initialNode = initialNode;
     }
 
     public Node getSenderNode() {
