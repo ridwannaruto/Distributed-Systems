@@ -22,7 +22,7 @@ public class JoinRequestHandler {
 
     public void handle(JoinRequest request){
         // add as neighbor
-        Node neighbor = request.getServerNode();
+        Node neighbor = request.getInitialNode();
         try{
             GlobalState.addNeighbor(neighbor);
             log.info(this.getClass() +" : new neighbour joined " + neighbor.toString());

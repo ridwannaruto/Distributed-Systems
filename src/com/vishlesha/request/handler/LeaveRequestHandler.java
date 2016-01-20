@@ -23,7 +23,7 @@ public class LeaveRequestHandler {
 
     public void handle(LeaveRequest request){
         // remove neighbor
-        Node neighbor = request.getServerNode();
+        Node neighbor = request.getInitialNode();
         try{
             GlobalState.removeNeighbor(neighbor);
             log.info(this.getClass() + " : neighbour left " + neighbor.toString());
