@@ -2,6 +2,7 @@ package com.vishlesha.app;
 
 import com.vishlesha.dataType.Node;
 import com.vishlesha.network.Client;
+import com.vishlesha.request.Request;
 import com.vishlesha.request.SearchRequest;
 import com.vishlesha.search.FileIpMapping;
 
@@ -14,10 +15,33 @@ public class GlobalState {
 
     private static String username;
     private static boolean testMode;
+    private static long roundTripTime;
     private static Node localServerNode;
     private static Map<Node, List<String>> neighbors = new HashMap<Node, List<String>>();
     private static List<String> localFiles = new ArrayList<String>();
     private static List<SearchRequest> oldRequests = new ArrayList<SearchRequest>();
+    private static List<Request> responsePendingList = new ArrayList<>();
+
+
+
+    public static boolean isResponsePending(Request request){
+        if (responsePendingList.contains(request)){
+            return true;
+        }
+        return false;
+    }
+
+    public static List<Request> getResponsePendingRequestList(){
+        return responsePendingList;
+    }
+
+    public static long getRoundTripTime() {
+        return roundTripTime;
+    }
+
+    public static void setRoundTripTime(long roundTripTime) {
+        GlobalState.roundTripTime = roundTripTime;
+    }
 
     private static Client client = new Client();
     //private static FileIpMapping fileIpMapping = new FileIpMapping();

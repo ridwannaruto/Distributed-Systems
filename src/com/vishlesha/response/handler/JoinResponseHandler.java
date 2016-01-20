@@ -32,6 +32,7 @@ public class JoinResponseHandler {
                 log.info(this.getClass() + " : local file list sent to" + newNeighbour.toString());
             }catch (IllegalStateException ex){
                 //TODO
+                log.warning(this.getClass() + " : node already exists" );
             }
 
         }else{

@@ -27,6 +27,7 @@ public class LeaveResponseHandler {
 
             }catch (IllegalStateException ex){
                 //TODO
+                log.warning(this.getClass() + " : node doesn't exists");
             }
 
         }else{
