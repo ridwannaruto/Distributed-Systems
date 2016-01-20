@@ -2,3 +2,6 @@
 Distributed Systems.iml
 out
 build
+app.log
+network.log
+output.zip
