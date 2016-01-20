@@ -93,11 +93,11 @@ public class Client extends Base {
                     BufferedWriter outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     if (socket != null && outputStream != null && inputStream != null) {
                         String requestMessage = request.getRequestMessage();
-                        log.info("TCP sent: " + requestMessage);
+                        log.info("TCP Client Message Sent: " + requestMessage + " to " + request.getRecipientNode().toString());
                         outputStream.write(requestMessage);
                         outputStream.flush();
                         responseLine = inputStream.readLine();
-                        log.info("TCP received: " + responseLine);
+                        log.info("TCP Client Message Received: " + responseLine + " from " + request.getRecipientNode().toString());
                     }
                     inputStream.close();
                     outputStream.close();
