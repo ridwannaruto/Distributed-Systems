@@ -162,7 +162,7 @@ public class GlobalState {
     }
 
     public static boolean isRequestAlreadyHandled(String key) {
-        return searchRequestList.containsValue(key);
+        return searchRequestList.containsKey(key);
     }
 
     public static void forgetRequest(String key) {
