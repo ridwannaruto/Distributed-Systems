@@ -47,16 +47,15 @@ public class Server extends Base implements Runnable {
                     final DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     serverSocket.receive(receivePacket);
                     final String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                    log.info("UDP Server Received: " + message);
+                    InetAddress IPAddress = receivePacket.getAddress();
+                    int port = receivePacket.getPort();
+                    Node sender = new Node(IPAddress.getHostAddress(), port);
+                    log.info("UDP Server Received: " + message + " from " + sender.toString());
+
 
                     workerPool.submit(new Runnable() {
                         @Override
                         public void run() {
-
-
-                            InetAddress IPAddress = receivePacket.getAddress();
-                            int port = receivePacket.getPort();
-                            Node sender = new Node(IPAddress.getHostAddress(), port);
 
                             String[] token = message.split(" ");
 
