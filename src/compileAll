@@ -1,0 +1,1 @@
+javac -s ./ -d ../output com/vishlesha/**/*.java
