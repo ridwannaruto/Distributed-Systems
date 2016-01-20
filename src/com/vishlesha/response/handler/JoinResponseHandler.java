@@ -21,7 +21,16 @@ public class JoinResponseHandler {
 
     public void handle(JoinResponse joinResponse) {
 
+        try{
+            String key = "JOIN-" + joinResponse.getRecipientNode().getIpaddress();
+            GlobalState.removeResponsePendingRequest(key);
+            log.info("removed request from pending list");
+        }catch (Exception ex){
+            log.warning("could not remove request from pending list");
+        }
+
         try {
+
             Node newNeighbour = joinResponse.getSenderNode();
             newNeighbour.setPortNumber(GlobalConstant.PORT_LISTEN);
             GlobalState.addNeighbor(newNeighbour);

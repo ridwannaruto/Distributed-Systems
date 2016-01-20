@@ -39,6 +39,10 @@ public class GlobalState {
         return responsePendingList.get(key);
     }
 
+    public static void removeResponsePendingRequest(String key){
+        responsePendingList.remove(key);
+    }
+
     public static long getRoundTripTime() {
         return roundTripTime;
     }
