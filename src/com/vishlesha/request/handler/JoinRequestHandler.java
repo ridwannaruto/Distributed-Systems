@@ -25,8 +25,10 @@ public class JoinRequestHandler {
         Node neighbor = request.getInitialNode();
         try{
             GlobalState.addNeighbor(neighbor);
-            log.info(this.getClass() +" : new neighbour joined " + neighbor.toString());
-            sendResponse(new JoinResponse(RESPOND_CODE_JOIN_SUCCESS));
+            log.info(this.getClass() + " : new neighbour joined " + neighbor.toString());
+            Response joinResponse =new JoinResponse(RESPOND_CODE_JOIN_SUCCESS);
+            joinResponse.setRecipientNode(neighbor);
+            sendResponse(joinResponse);
         }catch (IllegalStateException ex){
             log.severe(this.getClass() + ": neighbour already exists " + neighbor.toString() );
             sendResponse(new JoinResponse(RESPOND_CODE_JOIN_ERROR));
