@@ -19,7 +19,7 @@ public class ResponseHandler {
     protected static final String RESPONSE_TYPE_JOIN = "JOINOK";
     protected static final String RESPONSE_TYPE_LEAVE = "LEAVEOK";
     protected static final String RESPONSE_TYPE_SEARCH = "SEROK";
-    protected static final String RESPONSE_TYPE_FILE_SHARE = "FILES";
+    protected static final String RESPONSE_TYPE_FILE_SHARE = "FILESOK";
 
     Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
