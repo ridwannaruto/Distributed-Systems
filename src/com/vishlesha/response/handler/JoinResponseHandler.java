@@ -1,5 +1,6 @@
 package com.vishlesha.response.handler;
 
+import com.vishlesha.app.App;
 import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
@@ -18,15 +19,16 @@ import java.util.logging.Logger;
 public class JoinResponseHandler {
 
     Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
 
     public void handle(JoinResponse joinResponse) {
 
         try{
             String key = "JOIN-" + joinResponse.getRecipientNode().getIpaddress();
             GlobalState.removeResponsePendingRequest(key);
-            log.info("removed request from pending list");
+            netLog.info("removed request from pending list");
         }catch (Exception ex){
-            log.warning("could not remove request from pending list");
+            netLog.warning("could not remove request from pending list");
         }
 
         try {
