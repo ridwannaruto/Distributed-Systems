@@ -32,24 +32,32 @@ public class App {
 
 
         System.out.println("Vishlesha Distributed System");
-        System.out.println("----------------------------\n\n");
+        System.out.println("----------------------------\n");
         setup(bootstrapServerNode, client);
 
         Request regRequest = new RegisterRequest(bootstrapServerNode);
         client.sendTCPRequest(regRequest);
 
         // TODO modify to issue multiple queries
-        System.out.println("Initiate Search......");
+
+        System.out.println("connecting to the network..........");
+
+
+        boolean print = true;
 
         while(true){
-            System.out.print("Enter your search query: ");
-            String searchQuery = scanner.nextLine();
-            SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(),searchQuery , 0);
-            client.sendUDPRequest(ser);
+            if (GlobalState.getNeighbors().size() > 0){
+
+                if (print){
+                    System.out.println("connected to network");
+                    System.out.println("\nInitiate Search\n---------------------");
+                }
+                System.out.print("Enter your search query: ");
+                String searchQuery = scanner.nextLine();
+                SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(),searchQuery , 0);
+                client.sendUDPRequest(ser);
+            }
         }
-
-
-
     }
 
     private static void setup(Node bootstrapServerNode, Client client){
@@ -59,10 +67,16 @@ public class App {
         Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
         Server server;
 
+        bootstrapAddress = "172.31.23.116";
+        bootstrapPort = 1033;
+
+        bootstrapServerNode.setIpaddress(bootstrapAddress);
+        bootstrapServerNode.setPortNumber(bootstrapPort);
+
         // handle LEAVE and UNREG on shutdown
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
-                System.out.println("Unregistering and leaving the network");
+                System.out.println("\nUnregistering and leaving the network");
                 Request unregRequest = new UnregisterRequest(bootstrapServerNode);
                 client.sendTCPRequest(unregRequest);
 
@@ -82,11 +96,6 @@ public class App {
         });
         try {
             AppLogger.setup();
-            bootstrapAddress = "172.31.23.116";
-            bootstrapPort = 1033;
-
-            bootstrapServerNode.setIpaddress(bootstrapAddress);
-            bootstrapServerNode.setPortNumber(bootstrapPort);
 
             Node localServerNode = new Node();
             localServerNode.setIpaddress(InetAddress.getLocalHost().getHostAddress());
@@ -111,11 +120,12 @@ public class App {
                 GlobalState.getLocalFiles().add(file);
                 System.out.format("%2d %s\n", index, file);
             }
-            System.out.println("File list generated\n---------------------------\n");
+            System.out.println("File list generated\n");
 
 
         }catch (IOException ex){
             System.out.println("Unable to create log files");
+            ex.printStackTrace();
         }
 
     }
