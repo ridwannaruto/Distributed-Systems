@@ -35,8 +35,6 @@ public class JoinResponseHandler {
         }
 
         try {
-
-
             GlobalState.addNeighbor(newNeighbour);
             log.info("new neighbour added " + newNeighbour.toString());
             Client client = new Client();
@@ -44,7 +42,7 @@ public class JoinResponseHandler {
             log.info("local file list sent to" + newNeighbour.toString());
         } catch (IllegalStateException ex) {
             //TODO
-            log.warning("node already exists " + newNeighbour);
+            log.warning("node already exists " + newNeighbour.toString());
         }
 
 

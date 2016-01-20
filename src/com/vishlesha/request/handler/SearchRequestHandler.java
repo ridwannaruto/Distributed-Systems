@@ -32,7 +32,7 @@ public class SearchRequestHandler {
 
     public void handle(SearchRequest request) {
         if (GlobalState.isRequestAlreadyHandled(request)) {
-            log.info(this.getClass() + " : Ignoring duplicate request");
+            log.warning("duplicate request " + request.getRequestMessage());
             return;
         }
         GlobalState.rememberRequest(request);
@@ -102,7 +102,7 @@ public class SearchRequestHandler {
                     node.setPortNumber(neighbor.getPortNumber()); //Todo change port
                     request.setRecipientNode(node);
                     request.updateRequestMessage();
-                    networkLog.info(this.getClass() + " : " + sender + " forwarding to : " + neighbor);
+                    networkLog.info(sender.toString() + " forwarding to : " + neighbor.toString());
                     client.sendUDPRequest(request);
                 }
             }
@@ -140,7 +140,7 @@ public class SearchRequestHandler {
         response.setRecipientNode(recepient);
         //response.setRequestMessage(formattedMeesage);
         //response.setResults(files);
-        networkLog.info(this.getClass() + " : Reply to initiator");
+        networkLog.info("Reply to initiator");
         client.sendUDPResponse(response);
     }
 
