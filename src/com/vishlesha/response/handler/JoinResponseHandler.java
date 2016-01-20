@@ -23,8 +23,11 @@ public class JoinResponseHandler {
 
     public void handle(JoinResponse joinResponse) {
 
+        Node newNeighbour = joinResponse.getSenderNode();
+        newNeighbour.setPortNumber(GlobalConstant.PORT_LISTEN);
+
         try{
-            String key = "JOIN-" + joinResponse.getRecipientNode().getIpaddress();
+            String key = "JOIN-" + newNeighbour.getIpaddress();
             GlobalState.removeResponsePendingRequest(key);
             netLog.info("removed request from pending list");
         }catch (Exception ex){
@@ -33,8 +36,7 @@ public class JoinResponseHandler {
 
         try {
 
-            Node newNeighbour = joinResponse.getSenderNode();
-            newNeighbour.setPortNumber(GlobalConstant.PORT_LISTEN);
+
             GlobalState.addNeighbor(newNeighbour);
             log.info("new neighbour added " + newNeighbour.toString());
             Client client = new Client();
@@ -42,7 +44,7 @@ public class JoinResponseHandler {
             log.info("local file list sent to" + newNeighbour.toString());
         } catch (IllegalStateException ex) {
             //TODO
-            log.warning("node already exists");
+            log.warning("node already exists " + newNeighbour);
         }
 
 

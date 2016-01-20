@@ -24,7 +24,7 @@ public class RegisterResponseHandler {
         final Random rand = new Random();
         Client client = new Client();
         if (!registerResponse.isFail()){
-            log.info(this.getClass() + " : " + GlobalConstant.SUCCESS_MSG_REG);
+            log.info(GlobalConstant.SUCCESS_MSG_REG);
             ArrayList<Node> neighbour = registerResponse.getNodeList();
             for (int i = 0; i < neighbour.size(); i++) {
                 GlobalState.addNeighbor(neighbour.get(i));
@@ -47,7 +47,7 @@ public class RegisterResponseHandler {
                 client.sendUDPRequest(jr);
             }
             if (j == 0) {
-                log.info(this.getClass() + " : This is the first node");
+                log.info("This is the first node");
                 System.out.println("waiting for other nodes to connect..... ");
             }
 
