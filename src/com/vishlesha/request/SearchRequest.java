@@ -35,6 +35,7 @@ public class SearchRequest extends Request {
         String requestMessage = " SER " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
         setRequestMessage(requestMessage);
         appendMsgLength();
+        setHashCode("SER-" + initiator.getIpaddress() + "-" + getFileName());
     }
 
     public SearchRequest (String requestMessage){
