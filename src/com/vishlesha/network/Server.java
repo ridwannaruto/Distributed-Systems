@@ -47,8 +47,7 @@ public class Server extends Base implements Runnable {
                     final DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     serverSocket.receive(receivePacket);
                     final String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                    if (!GlobalState.isTestMode())
-                        log.info("Server received: " + message);
+                    log.info("Server received: " + message);
 
                     workerPool.submit(new Runnable() {
                         @Override
