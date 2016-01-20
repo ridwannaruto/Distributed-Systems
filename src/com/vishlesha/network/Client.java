@@ -35,7 +35,7 @@ public class Client extends Base {
                     int portNumber = request.getRecipientNode().getPortNumber();
                     byte[] sendData;
                     String requestMessage = request.getRequestMessage();
-                    log.info("UDP sent: " + requestMessage);
+                    log.info("UDP Request Message: " + requestMessage + " sent to " + request.getRecipientNode().toString());
                     sendData = requestMessage.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress,portNumber );
                     clientSocket.send(sendPacket);
@@ -63,9 +63,9 @@ public class Client extends Base {
                     InetAddress IPAddress = InetAddress.getByName(response.getRecipientNode().getIpaddress());
                     int portNumber = response.getRecipientNode().getPortNumber();
                     byte[] sendData;
-                    String requestMessage = response.getResponseMessage();
-                    log.info("UDP sent: " + requestMessage);
-                    sendData = requestMessage.getBytes();
+                    String responseMessage = response.getResponseMessage();
+                    log.info("UDP Response Message: " + responseMessage + " sent to " + response.getRecipientNode().toString());
+                    sendData = responseMessage.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, portNumber);
                     clientSocket.send(sendPacket);
 
