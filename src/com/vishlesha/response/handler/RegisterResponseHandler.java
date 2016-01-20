@@ -48,7 +48,7 @@ public class RegisterResponseHandler {
             }
             if (j == 0) {
                 log.info(this.getClass() + " : This is the first node");
-                System.out.println("First Node --> No joins ");
+                System.out.println("waiting for other nodes to connect..... ");
             }
 
         }else{
