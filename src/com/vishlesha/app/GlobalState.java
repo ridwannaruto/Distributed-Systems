@@ -20,19 +20,23 @@ public class GlobalState {
     private static Map<Node, List<String>> neighbors = new HashMap<Node, List<String>>();
     private static List<String> localFiles = new ArrayList<String>();
     private static List<SearchRequest> oldRequests = new ArrayList<SearchRequest>();
-    private static List<Request> responsePendingList = new ArrayList<>();
+    private static Map<String,Request> responsePendingList = new HashMap<String,Request>();
 
 
 
     public static boolean isResponsePending(Request request){
-        if (responsePendingList.contains(request)){
+        if (responsePendingList.containsValue(request)){
             return true;
         }
         return false;
     }
 
-    public static List<Request> getResponsePendingRequestList(){
-        return responsePendingList;
+    public static void addResponsePendingRequest(String key, Request request){
+        responsePendingList.put(key,request);
+    }
+
+    public static Request getResponsePendingRequest(String key){
+        return responsePendingList.get(key);
     }
 
     public static long getRoundTripTime() {

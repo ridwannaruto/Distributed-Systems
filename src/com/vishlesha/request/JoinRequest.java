@@ -1,5 +1,6 @@
 package com.vishlesha.request;
 
+import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 
@@ -11,10 +12,11 @@ public class JoinRequest extends Request {
 
     public JoinRequest(Node recipientNode){
         setRecipientNode(recipientNode);
-        Node localServerNode = GlobalState.getLocalServerNode();
-        String requestMessage = " JOIN " + localServerNode.getIpaddress() + " " + localServerNode.getPortNumber();
+        setInitialNode(GlobalState.getLocalServerNode());
+        String requestMessage = " JOIN " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber();
         setRequestMessage(requestMessage);
         appendMsgLength();
+        setHashCode("JOIN" + getInitialNode().getIpaddress());
     }
 
     public JoinRequest (String requestMessage){
@@ -23,6 +25,7 @@ public class JoinRequest extends Request {
         node.setIpaddress(token[KEY_IP_ADDRESS]);
         node.setPortNumber(Integer.valueOf(token[KEY_PORT_NUM]));
         setInitialNode(node);
+        setHashCode("JOIN" + getInitialNode().getIpaddress());
     }
 
 

@@ -34,7 +34,7 @@ public class Client extends Base {
                 try {
 
                     if (!GlobalState.isResponsePending(request) || request.getRetryCount() == 0)
-                        GlobalState.getResponsePendingRequestList().add(request);
+                        GlobalState.addResponsePendingRequest(request.getHashCode(),request);
                     DatagramSocket clientSocket = new DatagramSocket();
                     InetAddress IPAddress = InetAddress.getByName(request.getRecipientNode().getIpaddress());
                     int portNumber = request.getRecipientNode().getPortNumber();
