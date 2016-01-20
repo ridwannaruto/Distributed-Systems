@@ -4,13 +4,16 @@ import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.error.JoinError;
+import com.vishlesha.log.AppLogger;
+
+import java.util.logging.Logger;
 
 /**
  * Created by ridwan on 1/1/16.
  */
 public class JoinResponse extends Response{
     int responseCode;
-
+    Logger logger = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
     public JoinResponse(String responseMessage, Node senderNode){
         setSenderNode(senderNode);
         String[] token = responseMessage.split(" ");
@@ -23,8 +26,7 @@ public class JoinResponse extends Response{
         else{
             setFail(true);
             JoinError joinError = new JoinError(responseMessage,senderNode);
-            if (!GlobalState.isTestMode())
-                System.out.println("Join Error: " + joinError.getErrorMessage());
+            logger.warning("could not join node " + senderNode.getIpaddress());
         }
 
     }

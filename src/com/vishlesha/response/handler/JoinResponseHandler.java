@@ -18,26 +18,22 @@ import java.util.logging.Logger;
 public class JoinResponseHandler {
 
     Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
-    public void handle(JoinResponse joinResponse){
 
-        if (!joinResponse.isFail()){
-            log.info(this.getClass() + " : " + GlobalConstant.SUCCESS_MSG_JOIN);
-            try{
-                Node newNeighbour = joinResponse.getSenderNode();
-                newNeighbour.setPortNumber(GlobalConstant.PORT_LISTEN);
-                GlobalState.addNeighbor(newNeighbour);
-                log.info(this.getClass() + " : new neighbour added " + newNeighbour.toString());
-                Client client = new Client();
-                client.sendUDPResponse(new FileListShareResponse(newNeighbour,GlobalState.getLocalFiles()));
-                log.info(this.getClass() + " : local file list sent to" + newNeighbour.toString());
-            }catch (IllegalStateException ex){
-                //TODO
-                log.warning(this.getClass() + " : node already exists" );
-            }
+    public void handle(JoinResponse joinResponse) {
 
-        }else{
+        try {
+            Node newNeighbour = joinResponse.getSenderNode();
+            newNeighbour.setPortNumber(GlobalConstant.PORT_LISTEN);
+            GlobalState.addNeighbor(newNeighbour);
+            log.info("new neighbour added " + newNeighbour.toString());
+            Client client = new Client();
+            client.sendUDPResponse(new FileListShareResponse(newNeighbour, GlobalState.getLocalFiles()));
+            log.info("local file list sent to" + newNeighbour.toString());
+        } catch (IllegalStateException ex) {
             //TODO
+            log.warning("node already exists");
         }
+
 
     }
 

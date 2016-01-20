@@ -28,7 +28,7 @@ public class RetryTask extends TimerTask {
                 int index = GlobalState.getResponsePendingRequestList().indexOf(request);
                 GlobalState.getResponsePendingRequestList().get(index).incrementRetryCount();
                 Client client = new Client();
-                logger.info("Resending Request: " + request.getRequestMessage() + " to " + request.getRecipientNode().toString());
+                logger.info("Resending Request: retry count " + request.getRetryCount() + " " + request.getRequestMessage() + " to " + request.getRecipientNode().toString());
                 client.sendUDPRequest(request);
             }
         }
