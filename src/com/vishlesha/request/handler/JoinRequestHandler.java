@@ -30,11 +30,17 @@ public class JoinRequestHandler {
             joinResponse.setRecipientNode(neighbor);
             sendResponse(joinResponse);
         }catch (IllegalStateException ex){
-            log.severe(this.getClass() + ": neighbour already exists " + neighbor.toString());
+            log.warning(this.getClass() + ": neighbour already exists " + neighbor.toString());
+            Response joinResponse = new JoinResponse(RESPOND_CODE_JOIN_SUCCESS);
+            joinResponse.setRecipientNode(neighbor);
+            sendResponse(joinResponse);
+        } catch (Exception ex){
+            log.severe(this.getClass() + ": could not add neighbour " + neighbor.toString());
             Response joinResponse = new JoinResponse(RESPOND_CODE_JOIN_ERROR);
             joinResponse.setRecipientNode(neighbor);
             sendResponse(joinResponse);
         }
+
 
     }
 

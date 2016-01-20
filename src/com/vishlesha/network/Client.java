@@ -115,7 +115,7 @@ public class Client extends Base {
                 } catch (IOException ex) {
                     log.severe("IO exception: " + ex.getMessage());
                     log.severe(ex.getStackTrace().toString());
-                    ex.printStackTrace();
+                    System.out.println("Could not connect to boostrap server");
                 }
             }
         });

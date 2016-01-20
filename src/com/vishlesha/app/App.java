@@ -51,6 +51,7 @@ public class App {
                 if (print){
                     System.out.println("connected to network");
                     System.out.println("\nInitiate Search\n---------------------");
+                    print = false;
                 }
                 System.out.print("Enter your search query: ");
                 String searchQuery = scanner.nextLine();

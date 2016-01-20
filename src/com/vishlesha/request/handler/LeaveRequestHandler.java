@@ -32,6 +32,11 @@ public class LeaveRequestHandler {
             sendResponse(leaveResponse);
         }catch (IllegalStateException ex){
             log.severe(this.getClass() + " : neighbour doesn't exist " + neighbor.toString());
+            Response leaveResponse = new JoinResponse(RESPOND_CODE_LEAVE_SUCCESS);
+            leaveResponse.setRecipientNode(neighbor);
+            sendResponse(leaveResponse);
+        }catch (Exception ex){
+            log.severe(this.getClass() + " : error removing neighbour " + neighbor.toString());
             Response leaveResponse = new JoinResponse(RESPOND_CODE_LEAVE_ERROR);
             leaveResponse.setRecipientNode(neighbor);
             sendResponse(leaveResponse);
