@@ -1,15 +1,12 @@
 package com.vishlesha.response.handler;
 
-import com.vishlesha.app.App;
 import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
-import com.vishlesha.request.JoinRequest;
 import com.vishlesha.response.FileListShareResponse;
 import com.vishlesha.response.JoinResponse;
-import jdk.nashorn.internal.objects.Global;
 
 import java.util.logging.Logger;
 
@@ -43,6 +40,8 @@ public class JoinResponseHandler {
         } catch (IllegalStateException ex) {
             //TODO
             log.warning("node already exists " + newNeighbour.toString());
+        }catch (Exception ex){
+            log.severe(ex.getMessage());
         }
 
 
