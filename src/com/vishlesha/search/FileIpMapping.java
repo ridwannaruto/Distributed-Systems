@@ -13,7 +13,7 @@ public class FileIpMapping {
 
    public synchronized void addFile(String fileNameString, Node node){
       String  tempString = fileNameString.toLowerCase();
-      List<String> wordsList = Arrays.asList(tempString.split(" "));
+      List<String> wordsList = Arrays.asList(tempString.split("_"));
 
       if(wordsMap.containsKey(wordsList)){
          List<Node> list = wordsMap.get(wordsList);
