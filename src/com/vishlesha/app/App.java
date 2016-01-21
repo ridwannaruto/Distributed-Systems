@@ -62,14 +62,14 @@ public class App {
         }
     }
 
-    private static void setup(Node bootstrapServerNode, Client client){
+    private static void setup(final Node bootstrapServerNode, final Client client){
         int nodeId;
         String bootstrapAddress, userName;
         int bootstrapPort;
-        Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+        final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
         Server server;
 
-        bootstrapAddress = "172.31.23.116";
+        bootstrapAddress = "127.0.0.1";
         bootstrapPort = 1033;
 
         bootstrapServerNode.setIpaddress(bootstrapAddress);

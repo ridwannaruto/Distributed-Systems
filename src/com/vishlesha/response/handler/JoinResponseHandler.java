@@ -9,7 +9,6 @@ import com.vishlesha.network.Client;
 import com.vishlesha.request.JoinRequest;
 import com.vishlesha.response.FileListShareResponse;
 import com.vishlesha.response.JoinResponse;
-import jdk.nashorn.internal.objects.Global;
 
 import java.util.logging.Logger;
 
