@@ -1,6 +1,7 @@
 package com.vishlesha.network;
 
 import com.vishlesha.app.GlobalState;
+import com.vishlesha.error.handler.ErrorHandler;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.request.Request;
 
@@ -28,6 +29,9 @@ public class RetryTask extends TimerTask {
                 Client client = new Client();
                 logger.info("Resending Request: retry count " + request.getRetryCount() + " " + request.getRequestMessage() + " to " + request.getRecipientNode().toString());
                 client.sendUDPRequest(request);
+            }else{
+                ErrorHandler errorHandler = new ErrorHandler();
+                errorHandler.handleNodeUnreachable(request);
             }
         }
     }
