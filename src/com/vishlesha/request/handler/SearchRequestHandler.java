@@ -47,7 +47,7 @@ public class SearchRequestHandler {
             Map<Node, List<String>> neighbors = GlobalState.getNeighbors();
             int noOfHops = request.getNoOfHops();
             int forwardCount = 0;
-            sendLocalResult(allFileList, request);
+            sendLocalResult(request);
 
             if (noOfHops < MAX_NUMBER_OF_HOPS) {
                 int newNoOfHops = noOfHops + 1;
@@ -69,7 +69,7 @@ public class SearchRequestHandler {
                 // TODO sort neighbors based on NumberoFNeigbors
                 for (Node neighbor : neighbors.keySet()) {
                     // ignore if same node as the sender
-                    if (neighbor.equals(sender) || neighbor.equals(initiator) || neighbor.equals(GlobalState.getLocalServerNode())) {
+                    if (neighbor.equals(sender) || neighbor.equals(initiator) || neighbor.equals(GlobalState.getLocalServerNode()) ) {
                         continue;
                     }
                     if (forwardCount >= Number_OF_FORWARDS) {
@@ -108,34 +108,45 @@ public class SearchRequestHandler {
         this.response = response;
     }
 
-    private void sendLocalResult(Map<Node, List<List<String>>> allFileList, SearchRequest request) {
-
+    public List<String> getLocalResult(SearchRequest request){
+        FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
+        Map<Node, List<List<String>>> fileMap  = fileIpMapping.searchForFile(request.getFileName());
+        List<List<String>> fileListList;
+        List<String> fileList = new ArrayList<String>();
         try{
-
-            List<List<String>> fileList = allFileList.get(GlobalState.getLocalServerNode());
-            List<String> files = new ArrayList<String>();
+            fileListList = fileMap.get(GlobalState.getLocalServerNode());
             StringBuilder s = new StringBuilder();
             if (fileList != null){
-                for (List<String> stringList : fileList) {
+                for (List<String> stringList : fileListList) {
                     for (String string : stringList) {
                         s.append(string);
                         s.append(" ");
                     }
-                    files.add(s.toString().trim());
+                    fileList.add(s.toString().trim());
                     //System.out.println(s);
                 }
             }
+        }catch(Exception ex){
+            log.severe(ex.getMessage());
+        }
+        return fileList;
+    }
 
+    private void sendLocalResult(SearchRequest request) {
 
-            SearchResponse response = new SearchResponse(files.size(), request.getNoOfHops(), files);
+        try{
+            List<String > fileList = getLocalResult(request);
+            SearchResponse response = new SearchResponse(fileList.size(), request.getNoOfHops(), fileList);
             final Client client = new Client();
             //send response to Sender
             response.setRecipientNode(request.getSenderNode());
+            if (!request.getRecipientNode().equals(GlobalState.getLocalServerNode()))
             client.sendUDPResponse(response);
             log.info("local search result sent to sender");
 
             //send response to Initiator
             response.setRecipientNode(request.getInitialNode());
+            if (!request.getRecipientNode().equals(GlobalState.getLocalServerNode()))
             client.sendUDPResponse(response);
             log.info("local search result sent to initiator");
 
