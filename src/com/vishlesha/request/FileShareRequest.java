@@ -35,6 +35,8 @@ public class FileShareRequest extends Request {
         }
         setRequestMessage(builder.substring(0, builder.length() - 1));    // ignore last ' '
         appendMsgLength();
+        setHashCode("FILES-" + getRecipientNode().getIpaddress());
+
     }
 
     // request from a different node

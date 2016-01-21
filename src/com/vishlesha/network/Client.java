@@ -57,7 +57,7 @@ public class Client extends Base {
                     log.severe(ex.getStackTrace().toString());
                     ex.printStackTrace();
                 } catch (Exception ex){
-                    log.severe(ex.getMessage());
+                    log.severe(ex.getStackTrace().toString());
                 }
             }
 
@@ -91,7 +91,7 @@ public class Client extends Base {
                     log.severe(ex.getStackTrace().toString());
                     ex.printStackTrace();
                 } catch (Exception ex){
-                    log.severe(ex.getMessage());
+                    log.severe(ex.getStackTrace().toString());
                 }
             }
 
@@ -134,7 +134,7 @@ public class Client extends Base {
                     log.severe(ex.getStackTrace().toString());
                     System.out.println("Could not connect to boostrap server");
                 } catch (Exception ex){
-                    log.severe(ex.getMessage());
+                    log.severe(ex.getStackTrace().toString());
                 }
             }
         });
