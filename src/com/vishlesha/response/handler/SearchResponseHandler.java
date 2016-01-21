@@ -52,6 +52,7 @@ public class SearchResponseHandler {
                 for (int i=0; i<fileList.size();i++){
                     System.out.printf(fileList.get(i));
                 }
+                System.out.println();
             }
 
         } else {
