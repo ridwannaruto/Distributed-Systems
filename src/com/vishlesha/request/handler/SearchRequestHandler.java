@@ -116,7 +116,7 @@ public class SearchRequestHandler {
         try{
             fileListList = fileMap.get(GlobalState.getLocalServerNode());
             StringBuilder s = new StringBuilder();
-            if (fileList != null){
+            if (fileListList != null){
                 for (List<String> stringList : fileListList) {
                     for (String string : stringList) {
                         s.append(string);
