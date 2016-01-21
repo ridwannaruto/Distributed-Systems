@@ -1,15 +1,13 @@
-package com.vishlesha.errorHandler;
+package com.vishlesha.error.handler;
 
 import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.error.Error;
 import com.vishlesha.log.AppLogger;
-import com.vishlesha.network.CallBack;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.RegisterRequest;
 
-import java.util.Random;
 import java.util.logging.Logger;
 
 /**

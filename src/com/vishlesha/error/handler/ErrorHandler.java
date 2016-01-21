@@ -1,6 +1,5 @@
-package com.vishlesha.errorHandler;
+package com.vishlesha.error.handler;
 
-import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.request.Request;
 
 /**
