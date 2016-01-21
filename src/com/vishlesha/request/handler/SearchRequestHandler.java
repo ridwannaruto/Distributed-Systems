@@ -114,6 +114,7 @@ public class SearchRequestHandler {
     private void sendLocalResult(Map<Node, List<List<String>>> allFileList, SearchRequest request) {
 
         try{
+            log.info("start");
             List<List<String>> fileList = allFileList.get(GlobalState.getLocalServerNode());
             List<String> files = new ArrayList<String>();
             StringBuilder s = new StringBuilder();
@@ -125,18 +126,19 @@ public class SearchRequestHandler {
                 files.add(s.toString().trim());
                 System.out.println(s);
             }
+            log.info("end");
 
             SearchResponse response = new SearchResponse(files.size(), request.getNoOfHops(), files);
             final Client client = new Client();
             //send response to Sender
             response.setRecipientNode(request.getSenderNode());
             client.sendUDPResponse(response);
-            log.info("local file search result sent to sender");
+            log.info("local search result sent to sender");
 
             //send response to Initiator
             response.setRecipientNode(request.getInitialNode());
             client.sendUDPResponse(response);
-            log.info("local file search result sent to initiator");
+            log.info("local search result sent to initiator");
 
         }catch (Exception ex){
             log.severe(ex.getMessage());
