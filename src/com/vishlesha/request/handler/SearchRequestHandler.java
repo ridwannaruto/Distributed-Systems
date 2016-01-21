@@ -53,7 +53,7 @@ public class SearchRequestHandler {
                 int newNoOfHops = noOfHops + 1;
                 for (Node node : allFileList.keySet()) {
                     // ignore if same node as the sender
-                    if (node.equals(sender) || node.equals(initiator)) {
+                    if (node.equals(sender) || node.equals(initiator) || node.equals(GlobalState.getLocalServerNode())) {
                         continue;
                     }
 
@@ -64,17 +64,14 @@ public class SearchRequestHandler {
                     request.setNoOfHops(newNoOfHops);
                     request.setRecipientNode(recipientNode);
                     client.sendUDPRequest(request);// Change callback?
-
                 }
                 // If already sent to 3 or more neighbors, this will  terminate
                 // TODO sort neighbors based on NumberoFNeigbors
                 for (Node neighbor : neighbors.keySet()) {
-
                     // ignore if same node as the sender
-                    if (neighbor.equals(sender) || neighbor.equals(initiator)) {
+                    if (neighbor.equals(sender) || neighbor.equals(initiator) || neighbor.equals(GlobalState.getLocalServerNode())) {
                         continue;
                     }
-
                     if (forwardCount >= Number_OF_FORWARDS) {
                         networkLog.info(this.getClass() + " : Forward count reached...");
                         break;

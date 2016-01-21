@@ -3,9 +3,11 @@ package com.vishlesha.response.handler;
 import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.error.SearchError;
+import com.vishlesha.log.AppLogger;
 import com.vishlesha.response.SearchResponse;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by ridwan on 1/18/16.
@@ -22,10 +24,22 @@ public class SearchResponseHandler {
 
 
     public void handle(SearchResponse response) {
-        //TODO LOGIC
+        Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+        Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
+
+
+        try{
+            String key = "SER-" + response.getSenderNode().getIpaddress();
+            GlobalState.removeResponsePendingRequest(key);
+            netLog.info("removed request from pending list");
+        }catch (Exception ex){
+            netLog.warning("could not remove request from pending list");
+        }
+
         String responseMessage = response.getResponseMessage();
+        System.out.println("\nSearch Response Message from " + response.getSenderNode().getIpaddress() + " :" + responseMessage);
         System.out.println("----------------------------");
-        System.out.println("Search Response Message from Handler :" + responseMessage);
+
         String[] token = responseMessage.split(" ");
         int responseCode = Integer.valueOf(token[2]);
 
