@@ -114,19 +114,21 @@ public class SearchRequestHandler {
     private void sendLocalResult(Map<Node, List<List<String>>> allFileList, SearchRequest request) {
 
         try{
-            log.info("start");
+
             List<List<String>> fileList = allFileList.get(GlobalState.getLocalServerNode());
             List<String> files = new ArrayList<String>();
             StringBuilder s = new StringBuilder();
-            for (List<String> stringList : fileList) {
-                for (String string : stringList) {
-                    s.append(string);
-                    s.append(" ");
+            if (fileList != null){
+                for (List<String> stringList : fileList) {
+                    for (String string : stringList) {
+                        s.append(string);
+                        s.append(" ");
+                    }
+                    files.add(s.toString().trim());
+                    //System.out.println(s);
                 }
-                files.add(s.toString().trim());
-                System.out.println(s);
             }
-            log.info("end");
+
 
             SearchResponse response = new SearchResponse(files.size(), request.getNoOfHops(), files);
             final Client client = new Client();
