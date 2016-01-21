@@ -32,7 +32,7 @@ public class SearchRequestHandler {
 
     public void handle(SearchRequest request) {
         if (GlobalState.isRequestAlreadyHandled(request.getHashCode())) {
-            log.warning("duplicate request " + request.getRequestMessage());
+            networkLog.warning("duplicate request " + request.getRequestMessage());
             return;
         }
         GlobalState.rememberRequest(request.getHashCode(),request);
