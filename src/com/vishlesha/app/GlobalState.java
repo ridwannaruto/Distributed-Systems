@@ -96,7 +96,7 @@ public class GlobalState {
     public static void removeNeighbor(Node node){
 
         if (!neighbors.containsKey(node)) {
-            throw new IllegalStateException("Neighbor already joined");
+            throw new IllegalStateException("Neighbor does not exist");
         }
         neighbors.remove(node);
     }
