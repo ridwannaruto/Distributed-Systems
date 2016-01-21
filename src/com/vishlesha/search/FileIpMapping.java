@@ -13,7 +13,7 @@ public class FileIpMapping {
 
    public synchronized void addFile(String fileNameString, Node node){
       String  tempString = fileNameString.toLowerCase();
-      List<String> wordsList = Arrays.asList(tempString.split("_"));
+      List<String> wordsList = Arrays.asList(tempString.split(" "));
 
       if(wordsMap.containsKey(wordsList)){
          List<Node> list = wordsMap.get(wordsList);
@@ -29,7 +29,7 @@ public class FileIpMapping {
 
    public Map<Node, List<List<String>>> searchForFile(String query) {
       String tempString = query.toLowerCase();
-      String[] queryWordsArr = tempString.split(" ");
+      String[] queryWordsArr = tempString.split("_");
       List<String> queryWords = Arrays.asList(queryWordsArr);
       Set<List<String>> keySet = wordsMap.keySet();
       //System.out.println(keySet.size());
