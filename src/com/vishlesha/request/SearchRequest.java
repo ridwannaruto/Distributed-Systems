@@ -49,6 +49,8 @@ public class SearchRequest extends Request {
         setNoOfHops(Integer.valueOf(token[5]));
         setFileName(token[4]);
         setRequestMessage(requestMessage);
+        setHashCode("SER-" + getInitialNode().getIpaddress() + "-" + getFileName());
+
     }
 
     public void updateRequestMessage(){

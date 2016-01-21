@@ -27,45 +27,45 @@ public class RequestHandler {
 
     Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
-    public void handle(String requestMessage , Node sender) {
+    public void handle(String requestMessage, Node sender) {
 
-       String[] token = requestMessage.split(" ");
-       int lengthOfMessage = Integer.valueOf(token[KEY_MSG_LENGTH]);
+        String[] token = requestMessage.split(" ");
+        int lengthOfMessage = Integer.valueOf(token[KEY_MSG_LENGTH]);
 
-       if (lengthOfMessage != requestMessage.length()) {
-           log.severe(this.getClass() + " : incorrect message length");
-          sendErrorResponse(new ErrorResponse());
-       } else {
-          if (token[KEY_REQ_TYPE].equals(REQ_TYPE_JOIN)) {
-             JoinRequest joinRequest = new JoinRequest(requestMessage);
-             JoinRequestHandler joinRequestHandler = new JoinRequestHandler();
-              joinRequestHandler.handle(joinRequest);
+        if (lengthOfMessage != requestMessage.length()) {
+            log.severe(this.getClass() + " : incorrect message length");
+            sendErrorResponse(new ErrorResponse());
+        } else {
+            if (token[KEY_REQ_TYPE].equals(REQ_TYPE_JOIN)) {
+                JoinRequest joinRequest = new JoinRequest(requestMessage);
+                JoinRequestHandler joinRequestHandler = new JoinRequestHandler();
+                joinRequestHandler.handle(joinRequest);
 
-          } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_LEAVE)) {
-              LeaveRequest leaveRequest = new LeaveRequest(requestMessage);
-              LeaveRequestHandler leaveRequestHandler = new LeaveRequestHandler();
-              leaveRequestHandler.handle(leaveRequest);
+            } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_LEAVE)) {
+                LeaveRequest leaveRequest = new LeaveRequest(requestMessage);
+                LeaveRequestHandler leaveRequestHandler = new LeaveRequestHandler();
+                leaveRequestHandler.handle(leaveRequest);
 
-          } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_FILES)) {
-             FileShareRequest fileShareRequest = new FileShareRequest(requestMessage);
-             FileShareRequestHandler fileShareRequestHandler = new FileShareRequestHandler();
-              fileShareRequestHandler.handle(fileShareRequest);
+            } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_FILES)) {
+                FileShareRequest fileShareRequest = new FileShareRequest(requestMessage);
+                FileShareRequestHandler fileShareRequestHandler = new FileShareRequestHandler();
+                fileShareRequestHandler.handle(fileShareRequest);
 
-          } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_SEARCH)) {
+            } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_SEARCH)) {
 
-             SearchRequest searchRequest = new SearchRequest(requestMessage);
-             searchRequest.setSenderNode(sender);
-             SearchRequestHandler searchRequestHandler = new SearchRequestHandler();
-              searchRequestHandler.handle(searchRequest);
+                SearchRequest searchRequest = new SearchRequest(requestMessage);
+                searchRequest.setSenderNode(sender);
+                SearchRequestHandler searchRequestHandler = new SearchRequestHandler();
+                searchRequestHandler.handle(searchRequest);
 
-          }else {
-              log.severe(this.getClass() + " : unknown message format");
-              sendErrorResponse(new ErrorResponse());
-          }
-       }
+            } else {
+                log.severe(this.getClass() + " : unknown message format");
+                sendErrorResponse(new ErrorResponse());
+            }
+        }
     }
 
-    private void sendErrorResponse(Response response){
+    private void sendErrorResponse(Response response) {
         Client client = new Client();
         client.sendUDPResponse(response);
     }
