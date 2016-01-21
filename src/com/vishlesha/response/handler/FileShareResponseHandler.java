@@ -15,17 +15,26 @@ import java.util.logging.Logger;
 public class FileShareResponseHandler {
 
     Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
 
     public void handle(FileShareResponse fileShareResponse){
         Node neighbour = fileShareResponse.getRecipientNode();
+        try{
+            String key = "FILES-" + neighbour.getIpaddress();
+            GlobalState.removeResponsePendingRequest(key);
+            netLog.info("removed request from pending list");
+        }catch (Exception ex){
+            netLog.warning("could not remove request from pending list");
+        }
+
 
         try {
             GlobalState.addNeighborFiles(neighbour, fileShareResponse.getFiles());
             log.info("added files from neighbor " + fileShareResponse.getSenderNode().toString());
         }catch (IllegalStateException ex) {
-            log.warning(ex.getMessage() + " sent by " + neighbour.toString());
+            log.warning("files sent by unkown neighbor " + neighbour.toString());
         }catch (RuntimeException ex){
-            log.warning(ex.getMessage() + " sent by " + neighbour.toString());
+            log.warning("duplicate files sent by " + neighbour.toString());
 
         }catch(Exception ex){
             log.severe(ex.getMessage());

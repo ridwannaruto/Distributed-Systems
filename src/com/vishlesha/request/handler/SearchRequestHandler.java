@@ -35,7 +35,7 @@ public class SearchRequestHandler {
             networkLog.warning("duplicate request " + request.getRequestMessage());
             return;
         }
-        GlobalState.rememberRequest(request.getHashCode(),request);
+        GlobalState.rememberRequest(request.getHashCode(), request);
 
         Node initiator = request.getInitialNode();
         Node sender = request.getSenderNode();
@@ -48,6 +48,8 @@ public class SearchRequestHandler {
         int noOfHops = request.getNoOfHops();
         int forwardCount = 0;
 
+        sendLocalResult(allFileList, request);
+
         if (noOfHops < MAX_NUMBER_OF_HOPS) {
             int newNoOfHops = noOfHops + 1;
             for (Node node : allFileList.keySet()) {
@@ -57,30 +59,13 @@ public class SearchRequestHandler {
                 }
 
                 //If the user posses any related file respond to user
-                if (node.equals(GlobalState.getLocalServerNode())) {
-                    List<List<String>> fileList = allFileList.get(GlobalState.getLocalServerNode());
-                    List<String> files = new ArrayList<String>();
-                    StringBuilder s = new StringBuilder();
-                    for (List<String> stringList : fileList) {
-                        for (String string : stringList) {
-                            s.append(string);
-                            s.append(" ");
-                        }
-                        files.add(s.toString().trim());
-                        System.out.println(s);
-                    }
-                    // Here reply the initiator with a new message.
-                    String formatted_Message = searchResponseMessage(files.size(), noOfHops, files);
-                    replyToInitiator(GlobalState.getLocalServerNode(), initiator, noOfHops, files, formatted_Message);
+                //Forward the request to all neighbours with a result for the query
+                forwardCount++;
+                Node recipientNode = new Node(node.getIpaddress(), node.getPortNumber());
+                request.setNoOfHops(newNoOfHops);
+                request.setRecipientNode(recipientNode);
+                client.sendUDPRequest(request);// Change callback?
 
-                    //setResponse(new SearchResponse(RESPOND_CODE_SEARCH_SUCCESS, request.getNoOfHops(),files));
-                } else { //Forward the request to all neighbours with a result for the query
-                    forwardCount++;
-                    Node recipientNode = new Node(node.getIpaddress(), node.getPortNumber());
-                    request.setNoOfHops(newNoOfHops);
-                    request.setRecipientNode(recipientNode);
-                    client.sendUDPRequest(request);// Change callback?
-                }
             }
             // If already sent to 3 or more neighbors, this will  terminate
             // TODO sort neighbors based on NumberoFNeigbors
@@ -121,28 +106,31 @@ public class SearchRequestHandler {
         this.response = response;
     }
 
-    private String searchResponseMessage(int responseCode, int noOfHops, List<String> fileList) {
-        String fileNameList = "";
-        for (int i = 0; i < fileList.size(); i++)
-            fileNameList += " " + fileList.get(i);
-        String responseMessage = " SEROK " + responseCode + " " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + noOfHops + fileNameList;
-        responseMessage = String.format("%04d", responseMessage.length() + 4) + responseMessage;
-        //setResponseMessage(responseMessage);
-        //appendMsgLength();
-        return responseMessage;
-    }
+    private void sendLocalResult(Map<Node, List<List<String>>> allFileList, SearchRequest request) {
+        List<List<String>> fileList = allFileList.get(GlobalState.getLocalServerNode());
+        List<String> files = new ArrayList<String>();
+        StringBuilder s = new StringBuilder();
+        for (List<String> stringList : fileList) {
+            for (String string : stringList) {
+                s.append(string);
+                s.append(" ");
+            }
+            files.add(s.toString().trim());
+            System.out.println(s);
+        }
 
-    private void replyToInitiator(Node sender, Node recepient, int numberOfHops, List<String> files, String formattedMeesage) {
-        SearchResponse response = new SearchResponse(files.size(), numberOfHops, files);
+        SearchResponse response = new SearchResponse(files.size(), request.getNoOfHops(), files);
         final Client client = new Client();
-        response.setSenderNode(sender);
-        //response.setNoOfHops(numberOfHops);
-        response.setRecipientNode(recepient);
-        //response.setRequestMessage(formattedMeesage);
-        //response.setResults(files);
-        networkLog.info("Reply to initiator");
+        //send response to Sender
+        response.setRecipientNode(request.getSenderNode());
         client.sendUDPResponse(response);
+        log.info("local file search result sent to sender");
+
+        //send response to Initiator
+        response.setRecipientNode(request.getInitialNode());
+        client.sendUDPResponse(response);
+        log.info("local file search result sent to initiator");
+
+
     }
-
-
 }
