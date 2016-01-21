@@ -49,7 +49,7 @@ public class Server extends Base implements Runnable {
                     final String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
                     InetAddress IPAddress = receivePacket.getAddress();
                     int port = receivePacket.getPort();
-                    Node sender = new Node(IPAddress.getHostAddress(), port);
+                    final Node sender = new Node(IPAddress.getHostAddress(), port);
                     log.info("UDP Server Received: " + message + " from " + sender.toString());
 
 

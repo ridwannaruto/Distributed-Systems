@@ -53,6 +53,10 @@ public class App {
                     System.out.println("\nInitiate Search\n---------------------");
                     print = false;
                 }
+
+                if (scanner.hasNextLine()) {
+                    scanner.nextLine();
+                }
                 System.out.print("Enter your search query: ");
                 String searchQuery = scanner.nextLine();
                 SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(),searchQuery , 0);
@@ -62,14 +66,14 @@ public class App {
         }
     }
 
-    private static void setup(Node bootstrapServerNode, Client client){
+    private static void setup(final Node bootstrapServerNode, final Client client){
         int nodeId;
         String bootstrapAddress, userName;
         int bootstrapPort;
-        Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+        final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
         Server server;
 
-        bootstrapAddress = "172.31.23.116";
+        bootstrapAddress = "127.0.0.1";
         bootstrapPort = 1033;
 
         bootstrapServerNode.setIpaddress(bootstrapAddress);
@@ -99,12 +103,21 @@ public class App {
         try {
             AppLogger.setup();
 
-            Node localServerNode = new Node();
-            localServerNode.setIpaddress(InetAddress.getLocalHost().getHostAddress());
-            int serverPort = GlobalConstant.PORT_LISTEN;
-            localServerNode.setPortNumber(serverPort);
-            GlobalState.setLocalServerNode(localServerNode);
-            server= new Server(localServerNode);
+            // switch to seed-based IP addresses on 127.0.0.1 (local environment)
+            Node localServer = new Node();
+            String localIp = InetAddress.getLocalHost().getHostAddress();
+            if ("127.0.0.1".equals(localIp)) {
+                System.out.print("Enter seed: ");
+                int seed = scanner.nextInt();
+                localServer.setIpaddress("127.0.0." + seed);
+                localServer.setPortNumber(GlobalConstant.PORT_MIN + seed);
+            } else {
+                localServer.setIpaddress(localIp);
+                localServer.setPortNumber(GlobalConstant.PORT_LISTEN);
+            }
+
+            GlobalState.setLocalServerNode(localServer);
+            server= new Server(localServer);
             server.start();
 
             System.out.println("Generating local file list\n................................");
