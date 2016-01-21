@@ -140,13 +140,11 @@ public class SearchRequestHandler {
             final Client client = new Client();
             //send response to Sender
             response.setRecipientNode(request.getSenderNode());
-            if (!request.getRecipientNode().equals(GlobalState.getLocalServerNode()))
             client.sendUDPResponse(response);
             log.info("local search result sent to sender");
 
             //send response to Initiator
             response.setRecipientNode(request.getInitialNode());
-            if (!request.getRecipientNode().equals(GlobalState.getLocalServerNode()))
             client.sendUDPResponse(response);
             log.info("local search result sent to initiator");
 
