@@ -27,17 +27,8 @@ public class SearchResponseHandler {
         Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
         Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
 
-
-        try{
-            String key = "SER-" + response.getSenderNode().getIpaddress();
-            GlobalState.removeResponsePendingRequest(key);
-            netLog.info("removed request from pending list");
-        }catch (Exception ex){
-            netLog.warning("could not remove request from pending list");
-        }
-
         String responseMessage = response.getResponseMessage();
-        System.out.println("\nSearch Response Message from " + response.getSenderNode().getIpaddress() );
+        System.out.println("\nSearch Response Message from " + response.getSenderNode().getIpaddress() + " hops: " + response.getNoOfHops());
         System.out.println("----------------------------");
 
         String[] token = responseMessage.split(" ");
@@ -47,6 +38,11 @@ public class SearchResponseHandler {
             if (!GlobalState.isTestMode())
                 System.out.println(GlobalConstant.MSG_SEARCH_NORESULT);
         } else if (token[1].equals("SEROK") && responseCode < 9000) {
+            String key = "SER-" + response.getSenderNode().getIpaddress();
+
+            //If result already printed ignore
+            if (!GlobalState.isResponsePending(key))
+                return;
             List<String> fileList = response.getFileList();
             if (!GlobalState.isTestMode()) {
                 for (int i=0; i<fileList.size();i++){
@@ -59,6 +55,14 @@ public class SearchResponseHandler {
             SearchError searchError = new SearchError(responseMessage, response.getSenderNode());
             if (!GlobalState.isTestMode())
                 System.out.println("Search Error: " + searchError.getErrorMessage());
+        }
+
+        try{
+            String key = "SER-" + response.getSenderNode().getIpaddress();
+            GlobalState.removeResponsePendingRequest(key);
+            netLog.info("removed request from pending list");
+        }catch (Exception ex){
+            netLog.warning("could not remove request from pending list");
         }
 
         //setResponse(getSearchResponse(responseCode, response.getNoOfHops(), response.getResults()));

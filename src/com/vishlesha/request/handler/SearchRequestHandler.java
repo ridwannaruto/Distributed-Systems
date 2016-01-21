@@ -70,7 +70,7 @@ public class SearchRequestHandler {
                 if (node.equals(sender) || node.equals(initiator) || node.equals(GlobalState.getLocalServerNode())) {
                     continue;
                 }
-
+                neighbors.remove(node);
                 //If the user posses any related file respond to user
                 //Forward the request to all neighbours with a result for the query
                 forwardCount++;

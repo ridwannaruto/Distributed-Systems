@@ -47,6 +47,13 @@ public class GlobalState {
         return false;
     }
 
+    public static boolean isResponsePending(String key) {
+        if (responsePendingList.containsKey(key)) {
+            return true;
+        }
+        return false;
+    }
+
     public static void addResponsePendingRequest(String key, Request request) {
         responsePendingList.put(key, request);
     }

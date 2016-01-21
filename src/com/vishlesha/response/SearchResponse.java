@@ -15,6 +15,7 @@ public class SearchResponse extends Response {
 
     int responseCode;
     List<String > fileList = new ArrayList<>();
+    int noOfHops;
 
     // decoding response sent from another node
     public SearchResponse (String responseMessage, Node senderNode){
@@ -22,6 +23,7 @@ public class SearchResponse extends Response {
         setResponseMessage(responseMessage);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
+        setNoOfHops(Integer.valueOf(token[5]));
 
         if (token[1].equals("SEROK") && responseCode == 0){
 
@@ -39,6 +41,14 @@ public class SearchResponse extends Response {
 
         }
 
+    }
+
+    public int getNoOfHops() {
+        return noOfHops;
+    }
+
+    public void setNoOfHops(int noOfHops) {
+        this.noOfHops = noOfHops;
     }
 
     public List<String> getFileList(){
