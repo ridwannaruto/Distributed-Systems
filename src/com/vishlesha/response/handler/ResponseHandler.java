@@ -48,9 +48,9 @@ public class ResponseHandler {
                 leaveResponseHandler.handle(leaveResponse);
 
             } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_FILE_SHARE)) {
-                FileListShareResponse fileListShareResponse = new FileListShareResponse(responseMessage);
+                FileShareResponse fileShareResponse = new FileShareResponse(responseMessage);
                 FileShareResponseHandler fileShareResponseHandler = new FileShareResponseHandler();
-                fileShareResponseHandler.handle(fileListShareResponse);
+                fileShareResponseHandler.handle(fileShareResponse);
 
             } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_SEARCH)) {
 

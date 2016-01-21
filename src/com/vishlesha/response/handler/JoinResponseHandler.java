@@ -5,7 +5,8 @@ import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
-import com.vishlesha.response.FileListShareResponse;
+import com.vishlesha.request.FileShareRequest;
+import com.vishlesha.response.FileShareResponse;
 import com.vishlesha.response.JoinResponse;
 
 import java.util.logging.Logger;
@@ -35,7 +36,7 @@ public class JoinResponseHandler {
             GlobalState.addNeighbor(newNeighbour);
             log.info("new neighbour added " + newNeighbour.toString());
             Client client = new Client();
-            client.sendUDPResponse(new FileListShareResponse(newNeighbour, GlobalState.getLocalFiles()));
+            client.sendUDPRequest(new FileShareRequest(newNeighbour, GlobalState.getLocalFiles()));
             log.info("local file list sent to" + newNeighbour.toString());
         } catch (IllegalStateException ex) {
             //TODO

@@ -1,14 +1,15 @@
-package com.vishlesha.response;
+package com.vishlesha.request;
 
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
-import com.vishlesha.request.Request;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// 00xx FILES IP port file1 file2 ...
-public class FileListShareResponse extends Response {
+/**
+ * Created by ridwan on 1/21/16.
+ */
+public class FileShareRequest extends Request {
 
     private List<String> files;
 
@@ -21,10 +22,10 @@ public class FileListShareResponse extends Response {
     }
 
     // response sent out by this node
-    public FileListShareResponse(Node node, List<String> files){
+    public FileShareRequest(Node node, List<String> files){
         setRecipientNode(node);
         setFiles(files);
-        StringBuilder builder = new StringBuilder(" FILESOK ");
+        StringBuilder builder = new StringBuilder(" FILES ");
         builder.append(GlobalState.getLocalServerNode().getIpaddress())
                 .append(" ")
                 .append(GlobalState.getLocalServerNode().getPortNumber())
@@ -32,12 +33,12 @@ public class FileListShareResponse extends Response {
         for (String file: files) {
             builder.append(file).append(" ");   // FIXME assuming no spaces in file names
         }
-        responseMessage = builder.substring(0, builder.length() - 1);    // ignore last ' '
+        setRequestMessage(builder.substring(0, builder.length() - 1));    // ignore last ' '
         appendMsgLength();
     }
 
     // request from a different node
-    public FileListShareResponse(String requestMessage){
+    public FileShareRequest(String requestMessage){
         String[] tokens = requestMessage.split(" ");
         Node node = new Node();
         node.setIpaddress(tokens[Request.KEY_IP_ADDRESS]);

@@ -133,6 +133,8 @@ public class GlobalState {
         List<String> availableFiles = neighbors.get(node);
         if (availableFiles == null) {
             throw new IllegalStateException("Files from unknown neighbor");
+        }else if (!availableFiles.isEmpty()){
+            throw new RuntimeException("files already added");
         }
         availableFiles.addAll(files);
         /* for(String file : availableFiles){

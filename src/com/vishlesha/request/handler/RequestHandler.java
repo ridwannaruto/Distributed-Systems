@@ -3,6 +3,7 @@ package com.vishlesha.request.handler;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
+import com.vishlesha.request.FileShareRequest;
 import com.vishlesha.request.JoinRequest;
 import com.vishlesha.request.LeaveRequest;
 import com.vishlesha.request.SearchRequest;
@@ -22,6 +23,7 @@ public class RequestHandler {
     protected static final String REQ_TYPE_JOIN = "JOIN";
     protected static final String REQ_TYPE_LEAVE = "LEAVE";
     protected static final String REQ_TYPE_SEARCH = "SER";
+    protected static final String REQ_TYPE_FILES = "FILES";
 
     Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
@@ -40,9 +42,14 @@ public class RequestHandler {
               joinRequestHandler.handle(joinRequest);
 
           } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_LEAVE)) {
-             LeaveRequest leaveRequest = new LeaveRequest(requestMessage);
-             LeaveRequestHandler leaveRequestHandler = new LeaveRequestHandler();
+              LeaveRequest leaveRequest = new LeaveRequest(requestMessage);
+              LeaveRequestHandler leaveRequestHandler = new LeaveRequestHandler();
               leaveRequestHandler.handle(leaveRequest);
+
+          } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_FILES)) {
+             FileShareRequest fileShareRequest = new FileShareRequest(requestMessage);
+             FileShareRequestHandler fileShareRequestHandler = new FileShareRequestHandler();
+              fileShareRequestHandler.handle(fileShareRequest);
 
           } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_SEARCH)) {
 
