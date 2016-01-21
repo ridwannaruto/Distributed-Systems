@@ -3,11 +3,12 @@ package com.vishlesha.response.handler;
 import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
-import com.vishlesha.errorHandler.RegisterErrorHandler;
+import com.vishlesha.error.RegisterError;
+import com.vishlesha.error.handler.ErrorHandler;
+import com.vishlesha.error.handler.RegisterErrorHandler;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.JoinRequest;
-import com.vishlesha.response.LeaveResponse;
 import com.vishlesha.response.RegisterResponse;
 
 import java.util.ArrayList;
@@ -25,10 +26,10 @@ public class RegisterResponseHandler {
         Client client = new Client();
         if (!registerResponse.isFail()){
             log.info(GlobalConstant.SUCCESS_MSG_REG);
-            ArrayList<Node> neighbour = registerResponse.getNodeList();
-
+            ArrayList<Node> registeredList = registerResponse.getNodeList();
+            GlobalState.setRegisteredNodeList(registeredList);
             int j, prev = -1;
-            int l = neighbour.size();
+            int l = registeredList.size();
             for (j = 0; j < 2 && j < l; j++) {
                 int rand1;
                 if (l < 3) {
@@ -41,7 +42,7 @@ public class RegisterResponseHandler {
                 }
                 prev = rand1;
                 //System.out.println("Rand : " + rand1);
-                JoinRequest jr = new JoinRequest(neighbour.get(rand1));
+                JoinRequest jr = new JoinRequest(registeredList.get(rand1));
                 client.sendUDPRequest(jr);
             }
             if (j == 0) {
@@ -50,8 +51,9 @@ public class RegisterResponseHandler {
             }
 
         }else{
-            RegisterErrorHandler registerErrorHandler = new RegisterErrorHandler();
-            registerErrorHandler.handle(registerResponse.getError());
+            RegisterError registerError = new RegisterError(registerResponse.getResponseMessage(),registerResponse.getRecipientNode());
+            ErrorHandler errorHandler = new ErrorHandler();
+            errorHandler.handleError(registerError);
         }
 
     }

@@ -28,6 +28,9 @@ public class JoinResponseHandler {
             String key = "JOIN-" + newNeighbour.getIpaddress();
             GlobalState.removeResponsePendingRequest(key);
             netLog.info("removed request from pending list");
+            GlobalState.removeRegisteredNode(joinResponse.getSenderNode());
+            netLog.info("removed Node from registered nodes list");
+
         }catch (Exception ex){
             netLog.warning("could not remove request from pending list");
         }
