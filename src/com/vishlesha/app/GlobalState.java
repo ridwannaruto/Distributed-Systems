@@ -21,7 +21,24 @@ public class GlobalState {
     private static List<String> localFiles = new ArrayList<String>();
     private static List<SearchRequest> searchRequestList = new ArrayList<>();
     private static Map<String, Request> responsePendingList = new Hashtable<>();
+    private static List<Node> registeredNodeList = new ArrayList<>();
 
+    public static void setRegisteredNodeList(ArrayList<Node> list){
+        registeredNodeList = list;
+    }
+
+
+    public static void removeRegisteredNode(Node node){
+        registeredNodeList.remove(node);
+    }
+
+    public static Node getRegisteredNode(int index){
+        return registeredNodeList.get(index);
+    }
+
+    public static int getRegisteredNodeCount(){
+        return registeredNodeList.size();
+    }
 
     public static boolean isResponsePending(Request request) {
         if (responsePendingList.containsValue(request)) {
