@@ -36,66 +36,70 @@ public class SearchRequestHandler {
             return;
         }
         GlobalState.rememberRequest(request.getHashCode(), request);
-
         Node initiator = request.getInitialNode();
         Node sender = request.getSenderNode();
-
         String query = request.getFileName();
-        FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
-        final Client client = GlobalState.getClient();// Get from global state
-        Map<Node, List<List<String>>> allFileList = fileIpMapping.searchForFile(query); // Neighbors with results for the query
-        Map<Node, List<String>> neighbors = GlobalState.getNeighbors();
-        int noOfHops = request.getNoOfHops();
-        int forwardCount = 0;
 
-        sendLocalResult(allFileList, request);
+        try{
+            FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
+            final Client client = GlobalState.getClient();// Get from global state
+            Map<Node, List<List<String>>> allFileList = fileIpMapping.searchForFile(query); // Neighbors with results for the query
+            Map<Node, List<String>> neighbors = GlobalState.getNeighbors();
+            int noOfHops = request.getNoOfHops();
+            int forwardCount = 0;
+            sendLocalResult(allFileList, request);
 
-        if (noOfHops < MAX_NUMBER_OF_HOPS) {
-            int newNoOfHops = noOfHops + 1;
-            for (Node node : allFileList.keySet()) {
-                // ignore if same node as the sender
-                if (node.equals(sender) || node.equals(initiator)) {
-                    continue;
-                }
+            if (noOfHops < MAX_NUMBER_OF_HOPS) {
+                int newNoOfHops = noOfHops + 1;
+                for (Node node : allFileList.keySet()) {
+                    // ignore if same node as the sender
+                    if (node.equals(sender) || node.equals(initiator)) {
+                        continue;
+                    }
 
-                //If the user posses any related file respond to user
-                //Forward the request to all neighbours with a result for the query
-                forwardCount++;
-                Node recipientNode = new Node(node.getIpaddress(), node.getPortNumber());
-                request.setNoOfHops(newNoOfHops);
-                request.setRecipientNode(recipientNode);
-                client.sendUDPRequest(request);// Change callback?
-
-            }
-            // If already sent to 3 or more neighbors, this will  terminate
-            // TODO sort neighbors based on NumberoFNeigbors
-            for (Node neighbor : neighbors.keySet()) {
-
-                // ignore if same node as the sender
-                if (neighbor.equals(sender) || neighbor.equals(initiator)) {
-                    continue;
-                }
-
-                if (forwardCount >= Number_OF_FORWARDS) {
-                    networkLog.info(this.getClass() + " : Forward count reached...");
-                    break;
-                } else {
+                    //If the user posses any related file respond to user
+                    //Forward the request to all neighbours with a result for the query
                     forwardCount++;
+                    Node recipientNode = new Node(node.getIpaddress(), node.getPortNumber());
                     request.setNoOfHops(newNoOfHops);
-                    Node node = new Node();
-                    node.setIpaddress(neighbor.getIpaddress());
-                    node.setPortNumber(neighbor.getPortNumber()); //Todo change port
-                    request.setRecipientNode(node);
-                    request.updateRequestMessage();
-                    networkLog.info(sender.toString() + " forwarding to : " + neighbor.toString());
-                    client.sendUDPRequest(request);
+                    request.setRecipientNode(recipientNode);
+                    client.sendUDPRequest(request);// Change callback?
+
                 }
+                // If already sent to 3 or more neighbors, this will  terminate
+                // TODO sort neighbors based on NumberoFNeigbors
+                for (Node neighbor : neighbors.keySet()) {
+
+                    // ignore if same node as the sender
+                    if (neighbor.equals(sender) || neighbor.equals(initiator)) {
+                        continue;
+                    }
+
+                    if (forwardCount >= Number_OF_FORWARDS) {
+                        networkLog.info(this.getClass() + " : Forward count reached...");
+                        break;
+                    } else {
+                        forwardCount++;
+                        request.setNoOfHops(newNoOfHops);
+                        Node node = new Node();
+                        node.setIpaddress(neighbor.getIpaddress());
+                        node.setPortNumber(neighbor.getPortNumber()); //Todo change port
+                        request.setRecipientNode(node);
+                        request.updateRequestMessage();
+                        networkLog.info(sender.toString() + " forwarding to : " + neighbor.toString());
+                        client.sendUDPRequest(request);
+                    }
+                }
+            } else {
+                networkLog.info(this.getClass() + " : Reached Hops limit");
             }
-        } else {
-            networkLog.info(this.getClass() + " : Reached Hops limit");
+            // TODO remove this ONLY after a suitable time has passed! (on actual network)
+            GlobalState.forgetRequest(request.getHashCode());
+
+        }catch (Exception ex){
+            log.severe(ex.getStackTrace().toString());
         }
-        // TODO remove this ONLY after a suitable time has passed! (on actual network)
-        GlobalState.forgetRequest(request.getHashCode());
+
     }
 
     public SearchResponse getResponse() {
@@ -107,6 +111,7 @@ public class SearchRequestHandler {
     }
 
     private void sendLocalResult(Map<Node, List<List<String>>> allFileList, SearchRequest request) {
+        log.info("sending local result");
         List<List<String>> fileList = allFileList.get(GlobalState.getLocalServerNode());
         List<String> files = new ArrayList<String>();
         StringBuilder s = new StringBuilder();
