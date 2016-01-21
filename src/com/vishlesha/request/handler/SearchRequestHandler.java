@@ -97,7 +97,8 @@ public class SearchRequestHandler {
             GlobalState.forgetRequest(request);
 
         }catch (Exception ex){
-            log.severe(ex.getStackTrace().toString());
+            log.severe(ex.getMessage());
+            ex.printStackTrace();
         }
 
     }
@@ -112,29 +113,35 @@ public class SearchRequestHandler {
 
     private void sendLocalResult(Map<Node, List<List<String>>> allFileList, SearchRequest request) {
 
-        List<List<String>> fileList = allFileList.get(GlobalState.getLocalServerNode());
-        List<String> files = new ArrayList<String>();
-        StringBuilder s = new StringBuilder();
-        for (List<String> stringList : fileList) {
-            for (String string : stringList) {
-                s.append(string);
-                s.append(" ");
+        try{
+            List<List<String>> fileList = allFileList.get(GlobalState.getLocalServerNode());
+            List<String> files = new ArrayList<String>();
+            StringBuilder s = new StringBuilder();
+            for (List<String> stringList : fileList) {
+                for (String string : stringList) {
+                    s.append(string);
+                    s.append(" ");
+                }
+                files.add(s.toString().trim());
+                System.out.println(s);
             }
-            files.add(s.toString().trim());
-            System.out.println(s);
+
+            SearchResponse response = new SearchResponse(files.size(), request.getNoOfHops(), files);
+            final Client client = new Client();
+            //send response to Sender
+            response.setRecipientNode(request.getSenderNode());
+            client.sendUDPResponse(response);
+            log.info("local file search result sent to sender");
+
+            //send response to Initiator
+            response.setRecipientNode(request.getInitialNode());
+            client.sendUDPResponse(response);
+            log.info("local file search result sent to initiator");
+
+        }catch (Exception ex){
+            log.severe(ex.getMessage());
+            ex.printStackTrace();
         }
-
-        SearchResponse response = new SearchResponse(files.size(), request.getNoOfHops(), files);
-        final Client client = new Client();
-        //send response to Sender
-        response.setRecipientNode(request.getSenderNode());
-        client.sendUDPResponse(response);
-        log.info("local file search result sent to sender");
-
-        //send response to Initiator
-        response.setRecipientNode(request.getInitialNode());
-        client.sendUDPResponse(response);
-        log.info("local file search result sent to initiator");
 
 
     }
