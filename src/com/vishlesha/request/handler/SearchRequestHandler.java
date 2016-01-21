@@ -31,11 +31,11 @@ public class SearchRequestHandler {
 
 
     public void handle(SearchRequest request) {
-        if (GlobalState.isSearchRequestAlreadyProcessed(request.getHashCode())) {
+        if (GlobalState.isSearchRequestAlreadyProcessed(request)) {
             networkLog.warning("duplicate request " + request.getRequestMessage());
             return;
         }
-        GlobalState.rememberRequest(request.getHashCode(), request);
+        GlobalState.rememberRequest(request);
         Node initiator = request.getInitialNode();
         Node sender = request.getSenderNode();
         String query = request.getFileName();
@@ -94,7 +94,7 @@ public class SearchRequestHandler {
                 networkLog.info(this.getClass() + " : Reached Hops limit");
             }
             // TODO remove this ONLY after a suitable time has passed! (on actual network)
-            GlobalState.forgetRequest(request.getHashCode());
+            GlobalState.forgetRequest(request);
 
         }catch (Exception ex){
             log.severe(ex.getStackTrace().toString());
