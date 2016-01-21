@@ -37,7 +37,7 @@ public class SearchResponseHandler {
         }
 
         String responseMessage = response.getResponseMessage();
-        System.out.println("\nSearch Response Message from " + response.getSenderNode().getIpaddress() + " : " + responseMessage);
+        System.out.println("\nSearch Response Message from " + response.getSenderNode().getIpaddress() );
         System.out.println("----------------------------");
 
         String[] token = responseMessage.split(" ");
@@ -59,7 +59,6 @@ public class SearchResponseHandler {
             if (!GlobalState.isTestMode())
                 System.out.println("Search Error: " + searchError.getErrorMessage());
         }
-        System.out.println("----------------------------");
 
         //setResponse(getSearchResponse(responseCode, response.getNoOfHops(), response.getResults()));
     }
