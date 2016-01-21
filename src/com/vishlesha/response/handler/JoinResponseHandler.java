@@ -37,7 +37,7 @@ public class JoinResponseHandler {
             log.info("new neighbour added " + newNeighbour.toString());
             Client client = new Client();
             client.sendUDPRequest(new FileShareRequest(newNeighbour, GlobalState.getLocalFiles()));
-            log.info("local file list sent to" + newNeighbour.toString());
+            log.info("local file list sent to " + newNeighbour.toString());
         } catch (IllegalStateException ex) {
             //TODO
             log.warning("node already exists " + newNeighbour.toString());

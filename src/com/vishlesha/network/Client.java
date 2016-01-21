@@ -40,7 +40,7 @@ public class Client extends Base {
                     int portNumber = request.getRecipientNode().getPortNumber();
                     byte[] sendData;
                     if (IPAddress == null )
-                        log.warning(this.getClass() + " : no recipient set for " + request.getClass());
+                        log.warning("no recipient set for " + request.getClass());
                     String requestMessage = request.getRequestMessage();
                     log.info("UDP Request Message: " + requestMessage + " sent to " + request.getRecipientNode().toString());
                     sendData = requestMessage.getBytes();
@@ -56,6 +56,8 @@ public class Client extends Base {
                     log.severe("IO exception: " + ex.getMessage());
                     log.severe(ex.getStackTrace().toString());
                     ex.printStackTrace();
+                } catch (Exception ex){
+                    log.severe(ex.getMessage());
                 }
             }
 
@@ -74,7 +76,7 @@ public class Client extends Base {
                     int portNumber = response.getRecipientNode().getPortNumber();
 
                     if (IPAddress == null )
-                        log.warning(this.getClass() + " : no recipient set for " + response.getClass());
+                        log.warning("no recipient set for " + response.getClass());
                     byte[] sendData;
                     String responseMessage = response.getResponseMessage();
                     log.info("UDP Response Message: " + responseMessage + " sent to " + response.getRecipientNode().toString());
@@ -88,6 +90,8 @@ public class Client extends Base {
                     log.severe("IO exception: " + ex.getMessage());
                     log.severe(ex.getStackTrace().toString());
                     ex.printStackTrace();
+                } catch (Exception ex){
+                    log.severe(ex.getMessage());
                 }
             }
 
@@ -129,6 +133,8 @@ public class Client extends Base {
                     log.severe("IO exception: " + ex.getMessage());
                     log.severe(ex.getStackTrace().toString());
                     System.out.println("Could not connect to boostrap server");
+                } catch (Exception ex){
+                    log.severe(ex.getMessage());
                 }
             }
         });
