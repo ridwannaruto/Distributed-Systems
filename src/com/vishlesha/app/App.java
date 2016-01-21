@@ -45,10 +45,10 @@ public class App {
 
         boolean print = true;
 
-        while(true){
-            if (GlobalState.getNeighbors().size() > 0){
+        while (true) {
+            if (GlobalState.getNeighbors().size() > 0) {
 
-                if (print){
+                if (print) {
                     System.out.println("connected to network");
                     System.out.println("\nInitiate Search\n---------------------");
                     print = false;
@@ -59,25 +59,31 @@ public class App {
                 }
                 System.out.print("Enter your search query: ");
                 String searchQuery = scanner.nextLine();
-                SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(),searchQuery , 0);
+                SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(), searchQuery, 0);
                 client.sendUDPRequest(ser);
                 System.out.printf("searching for file ......");
             }
         }
     }
 
-    private static void setup(final Node bootstrapServerNode, final Client client){
+    private static void setup(final Node bootstrapServerNode, final Client client) {
         int nodeId;
-        String bootstrapAddress, userName;
         int bootstrapPort;
         final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
         Server server;
+        bootstrapServerNode.setIpaddress("127.0.0.1");
+        try {
+            String localIp = InetAddress.getLocalHost().getHostAddress();
+            if (!"127.0.0.1".equals(localIp))
+                bootstrapServerNode.setIpaddress("172.31.23.116");
 
-        bootstrapAddress = "127.0.0.1";
+        } catch (Exception ex) {
+            log.severe(ex.getMessage());
+        }
+
         bootstrapPort = 1033;
-
-        bootstrapServerNode.setIpaddress(bootstrapAddress);
         bootstrapServerNode.setPortNumber(bootstrapPort);
+
 
         // handle LEAVE and UNREG on shutdown
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -106,7 +112,7 @@ public class App {
             // switch to seed-based IP addresses on 127.0.0.1 (local environment)
             Node localServer = new Node();
             String localIp = InetAddress.getLocalHost().getHostAddress();
-            if ("172.31.23.116".equals(localIp)) {
+            if ("127.0.0.1".equals(localIp)) {
                 System.out.print("Enter seed: ");
                 int seed = scanner.nextInt();
                 localServer.setIpaddress("127.0.0." + seed);
@@ -117,7 +123,7 @@ public class App {
             }
 
             GlobalState.setLocalServerNode(localServer);
-            server= new Server(localServer);
+            server = new Server(localServer);
             server.start();
 
             System.out.println("Generating local file list\n................................");
@@ -138,7 +144,7 @@ public class App {
             System.out.println("File list generated\n");
 
 
-        }catch (IOException ex){
+        } catch (IOException ex) {
             System.out.println("Unable to create log files");
             ex.printStackTrace();
         }
