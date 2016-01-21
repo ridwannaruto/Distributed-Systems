@@ -7,6 +7,8 @@ import com.vishlesha.error.Error;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.RegisterRequest;
+import com.vishlesha.request.Request;
+import com.vishlesha.request.UnregisterRequest;
 
 import java.util.logging.Logger;
 
@@ -17,31 +19,28 @@ public class RegisterErrorHandler extends ErrorHandler {
 
     Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
-    public void handle (Error error){
+    public void handleErrorResponse(Error error){
         Client client = new Client();
         switch (error.getErrorCode()){
             case GlobalConstant.ERR_CODE_REG_USERNAME:
-                log.severe(this.getClass() + " : duplicate username");
-                setRequest(new RegisterRequest(error.getErrorNode()));
-                client.sendTCPRequest(getRequest());
+                log.severe("Node register failed: duplicate username");
+                Request newRequest = new RegisterRequest(error.getErrorNode());
+                client.sendTCPRequest(newRequest);
+                log.info("Resending register request to Bootstrap Node");
                 break;
 
             case GlobalConstant.ERR_CODE_REG_FULL:
-                log.info(this.getClass() + " : registration full");
-                setHandleMessage(GlobalConstant.ERR_HANDLE_REG_FULL);
+                log.severe("Node register failed: registration full");
+                System.out.println(GlobalConstant.ERR_HANDLE_REG_FULL);
                 break;
 
             case GlobalConstant.ERR_CODE_REG_IPPORT:
-                log.info(this.getClass() + " : ip and port already registered");
-                Node temp = GlobalState.getLocalServerNode();
-                temp.setPortNumber(GlobalConstant.PORT_MIN + (int) (GlobalConstant.PORT_RANGE* Math.random()));
-                setRequest(new RegisterRequest(temp));
+                log.severe("Node register failed:ip and port already registered");
+                Request unregReq = new UnregisterRequest(error.getErrorNode());
+                client.sendTCPRequest(unregReq);
+                Request regReq = new RegisterRequest(error.getErrorNode());
+                client.sendTCPRequest(regReq);
                 break;
-
-            default:
-                setRetry(false);
-                setHandleMessage(GlobalConstant.ERR_HANDLE_REG_DEFAULT);
-
 
         }
     }

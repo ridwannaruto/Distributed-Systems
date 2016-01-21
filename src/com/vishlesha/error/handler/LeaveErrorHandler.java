@@ -20,17 +20,9 @@ public class LeaveErrorHandler {
 
     public void handleNodeUnreachable(Request request){
         Node unreachableNode = request.getRecipientNode();
-        Client client = new Client();
         try{
-            int availableNodeCount = GlobalState.getRegisteredNodeCount();
-            if (availableNodeCount > 0){
-                GlobalState.removeRegisteredNode(unreachableNode);
-                final Random rand = new Random();
-                int randIndex = rand.nextInt();
-                Node newJoinNode = GlobalState.getRegisteredNode(randIndex);
-                JoinRequest jr = new JoinRequest(newJoinNode);
-                client.sendUDPRequest(jr);
-            }
+            GlobalState.removeNeighbor(unreachableNode);
+            log.info("Removed neighbor from list " + unreachableNode.toString());
 
         }catch (Exception ex){
             log.severe(ex.getMessage());

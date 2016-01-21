@@ -1,5 +1,9 @@
 package com.vishlesha.error.handler;
 
+import com.vishlesha.error.Error;
+import com.vishlesha.error.RegisterError;
+import com.vishlesha.request.JoinRequest;
+import com.vishlesha.request.LeaveRequest;
 import com.vishlesha.request.Request;
 
 /**
@@ -7,31 +11,27 @@ import com.vishlesha.request.Request;
  */
 public class ErrorHandler {
 
-    protected Request request;
-    protected String handleMessage;
-    protected boolean retry;
-
-    public boolean isRetry() {
-        return retry;
+    public void handleError(Error error){
+        if (error.getClass().equals(RegisterError.class)){
+            RegisterErrorHandler registerErrorHandler = new RegisterErrorHandler();
+            registerErrorHandler.handleErrorResponse(error);
+        }
     }
 
-    public void setRetry(boolean retry) {
-        this.retry = retry;
+    public void handleNodeUnreachable(Request request){
+        if (request.getClass().equals(JoinRequest.class)){
+            JoinErrorHandler joinErrorHandler = new JoinErrorHandler();
+            joinErrorHandler.handleNodeUnreachable(request);
+
+        }else if (request.getClass().equals(LeaveRequest.class)){
+            LeaveErrorHandler leaveErrorHandler = new LeaveErrorHandler();
+            leaveErrorHandler.handleNodeUnreachable(request);
+        }
     }
 
-    public String getHandleMessage() {
-        return handleMessage;
-    }
 
-    public void setHandleMessage(String handleMessage) {
-        this.handleMessage = handleMessage;
-    }
 
-    public Request getRequest() {
-        return request;
-    }
 
-    public void setRequest(Request request) {
-        this.request = request;
-    }
+
+
 }
