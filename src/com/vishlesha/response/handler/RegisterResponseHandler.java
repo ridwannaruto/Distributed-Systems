@@ -26,9 +26,7 @@ public class RegisterResponseHandler {
         if (!registerResponse.isFail()){
             log.info(GlobalConstant.SUCCESS_MSG_REG);
             ArrayList<Node> neighbour = registerResponse.getNodeList();
-            for (int i = 0; i < neighbour.size(); i++) {
-                GlobalState.addNeighbor(neighbour.get(i));
-            }
+
             int j, prev = -1;
             int l = neighbour.size();
             for (j = 0; j < 2 && j < l; j++) {

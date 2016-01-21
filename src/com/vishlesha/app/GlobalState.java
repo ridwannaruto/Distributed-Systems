@@ -17,10 +17,10 @@ public class GlobalState {
     private static boolean testMode;
     private static long roundTripTime;
     private static Node localServerNode;
-    private static Map<Node, List<String>> neighbors = new HashMap<Node, List<String>>();
+    private static Map<Node, List<String>> neighbors = new Hashtable<>();
     private static List<String> localFiles = new ArrayList<String>();
-    private static Map<String,SearchRequest> searchRequestList = new HashMap<String,SearchRequest>();
-    private static Map<String,Request> responsePendingList = new HashMap<String,Request>();
+    private static Map<String,SearchRequest> searchRequestList = new Hashtable<>();
+    private static Map<String,Request> responsePendingList = new Hashtable<>();
 
 
 
