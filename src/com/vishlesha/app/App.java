@@ -106,7 +106,7 @@ public class App {
             // switch to seed-based IP addresses on 127.0.0.1 (local environment)
             Node localServer = new Node();
             String localIp = InetAddress.getLocalHost().getHostAddress();
-            if ("127.0.0.1".equals(localIp)) {
+            if ("172.31.23.116".equals(localIp)) {
                 System.out.print("Enter seed: ");
                 int seed = scanner.nextInt();
                 localServer.setIpaddress("127.0.0." + seed);
