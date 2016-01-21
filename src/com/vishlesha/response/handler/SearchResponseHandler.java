@@ -22,10 +22,16 @@ public class SearchResponseHandler {
     private static final int Number_OF_FORWARDS = 3;
     SearchResponse response;
 
+    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
 
     public void handle(SearchResponse response) {
-        Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
-        Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
+
+        String key = "SER-" + response.getSenderNode().getIpaddress();
+
+        //If result already printed ignore
+        if (!GlobalState.isResponsePending(key))
+            return;
 
         String responseMessage = response.getResponseMessage();
         System.out.println("\nSearch Response Message from " + response.getSenderNode().getIpaddress() + " hops: " + response.getNoOfHops());
@@ -38,11 +44,6 @@ public class SearchResponseHandler {
             if (!GlobalState.isTestMode())
                 System.out.println(GlobalConstant.MSG_SEARCH_NORESULT);
         } else if (token[1].equals("SEROK") && responseCode < 9000) {
-            String key = "SER-" + response.getSenderNode().getIpaddress();
-
-            //If result already printed ignore
-            if (!GlobalState.isResponsePending(key))
-                return;
             List<String> fileList = response.getFileList();
             if (!GlobalState.isTestMode()) {
                 for (int i=0; i<fileList.size();i++){
@@ -58,7 +59,6 @@ public class SearchResponseHandler {
         }
 
         try{
-            String key = "SER-" + response.getSenderNode().getIpaddress();
             GlobalState.removeResponsePendingRequest(key);
             netLog.info("removed request from pending list");
         }catch (Exception ex){
