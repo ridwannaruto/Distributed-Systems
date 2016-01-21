@@ -5,6 +5,7 @@ import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.error.SearchError;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,32 +14,35 @@ import java.util.List;
 public class SearchResponse extends Response {
 
     int responseCode;
+    List<String > fileList = new ArrayList<>();
 
     // decoding response sent from another node
     public SearchResponse (String responseMessage, Node senderNode){
         setSenderNode(senderNode);
+        setResponseMessage(responseMessage);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
         if (token[1].equals("SEROK") && responseCode == 0){
-            setFail(false);
-            if (!GlobalState.isTestMode())
-                System.out.println(GlobalConstant.MSG_SEARCH_NORESULT);
+
         }
 
         else if (token[1].equals("SEROK") && responseCode < 9000){
-            setFail(false);
-            if (!GlobalState.isTestMode())
-                System.out.println(GlobalConstant.SUCCESS_MSG_SEARCH);
+            for (int i=6; i< token.length;i++){
+                fileList.add(token[i]);
+            }
         }
 
         else{
             setFail(true);
             SearchError searchError = new SearchError(responseMessage,senderNode);
-            if (!GlobalState.isTestMode())
-                System.out.println("Search Error: " + searchError.getErrorMessage());
+
         }
 
+    }
+
+    public List<String> getFileList(){
+        return fileList;
     }
 
     // responding with files on local node

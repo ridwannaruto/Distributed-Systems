@@ -37,7 +37,7 @@ public class SearchResponseHandler {
         }
 
         String responseMessage = response.getResponseMessage();
-        System.out.println("\nSearch Response Message from " + response.getSenderNode().getIpaddress() + " :" + responseMessage);
+        System.out.println("\nSearch Response Message from " + response.getSenderNode().getIpaddress() + " : " + responseMessage);
         System.out.println("----------------------------");
 
         String[] token = responseMessage.split(" ");
@@ -47,14 +47,13 @@ public class SearchResponseHandler {
             if (!GlobalState.isTestMode())
                 System.out.println(GlobalConstant.MSG_SEARCH_NORESULT);
         } else if (token[1].equals("SEROK") && responseCode < 9000) {
+            List<String> fileList = response.getFileList();
             if (!GlobalState.isTestMode()) {
-                System.out.println(GlobalConstant.SUCCESS_MSG_SEARCH);
+                for (int i=0; i<fileList.size();i++){
+                    System.out.printf(fileList.get(i));
+                }
             }
-            System.out.println("Host: " + token[3] + ":" + token[4]);
-            System.out.println("Hops: " + token[5]);
-            for (int i = 0; i < responseCode; i++) {
-                System.out.println(token[6 + i]);
-            }
+
         } else {
             SearchError searchError = new SearchError(responseMessage, response.getSenderNode());
             if (!GlobalState.isTestMode())
