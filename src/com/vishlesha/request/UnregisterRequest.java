@@ -18,6 +18,9 @@ public class UnregisterRequest extends Request {
 
     }
 
+    public String getHashCode(){
+        return "UNREG-" + getRecipientNode().getIpaddress();
+    }
 
 
 

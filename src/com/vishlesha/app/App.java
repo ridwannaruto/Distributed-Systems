@@ -59,7 +59,7 @@ public class App {
                 }
                 System.out.print("Enter your search query: ");
                 String searchQuery = scanner.nextLine();
-                SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(), searchQuery, 0);
+                SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(),GlobalState.getLocalServerNode(), searchQuery, 0);
                 client.sendUDPRequest(ser);
                 System.out.printf("searching for file ......");
             }

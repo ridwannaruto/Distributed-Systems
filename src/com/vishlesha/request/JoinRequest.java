@@ -16,7 +16,7 @@ public class JoinRequest extends Request {
         String requestMessage = " JOIN " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber();
         setRequestMessage(requestMessage);
         appendMsgLength();
-        setHashCode("JOIN-" + getRecipientNode().getIpaddress());
+
     }
 
     public JoinRequest (String requestMessage){
@@ -27,6 +27,9 @@ public class JoinRequest extends Request {
         setInitialNode(node);
     }
 
+    public String getHashCode(){
+        return "JOIN-" + getRecipientNode().getIpaddress();
+    }
 
 
 }

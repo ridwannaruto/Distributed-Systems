@@ -111,7 +111,7 @@ public class SearchRequestHandler {
     }
 
     private void sendLocalResult(Map<Node, List<List<String>>> allFileList, SearchRequest request) {
-        log.info("sending local result");
+
         List<List<String>> fileList = allFileList.get(GlobalState.getLocalServerNode());
         List<String> files = new ArrayList<String>();
         StringBuilder s = new StringBuilder();

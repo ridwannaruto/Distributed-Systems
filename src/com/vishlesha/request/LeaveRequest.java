@@ -15,8 +15,13 @@ public class LeaveRequest extends Request {
         String requestMessage = " LEAVE " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber();
         setRequestMessage(requestMessage);
         appendMsgLength();
-        setHashCode("LEAVE" + getInitialNode().getIpaddress());
+
     }
+
+    public String getHashCode(){
+        return "LEAVE-" + getRecipientNode().getIpaddress();
+    }
+
 
     public LeaveRequest (String requestMessage){
         String[] token = requestMessage.split(" ");
@@ -24,7 +29,6 @@ public class LeaveRequest extends Request {
         node.setIpaddress(token[KEY_IP_ADDRESS]);
         node.setPortNumber(Integer.valueOf(token[KEY_PORT_NUM]));
         setInitialNode(node);
-        setHashCode("LEAVE" + getInitialNode().getIpaddress());
     }
 
 

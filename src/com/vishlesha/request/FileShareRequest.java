@@ -35,7 +35,7 @@ public class FileShareRequest extends Request {
         }
         setRequestMessage(builder.substring(0, builder.length() - 1));    // ignore last ' '
         appendMsgLength();
-        setHashCode("FILES-" + getRecipientNode().getIpaddress());
+
 
     }
 
@@ -52,5 +52,9 @@ public class FileShareRequest extends Request {
             files.add(tokens[i]);
         }
         setFiles(files);
+    }
+
+    public String getHashCode(){
+        return "FILES-" + getRecipientNode().getIpaddress();
     }
 }

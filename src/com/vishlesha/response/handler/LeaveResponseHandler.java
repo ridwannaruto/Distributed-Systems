@@ -15,24 +15,31 @@ import java.util.logging.Logger;
 public class LeaveResponseHandler {
 
     Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
-    public void handle(LeaveResponse leaveResponse){
+    Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
 
-        if (!leaveResponse.isFail()){
-            log.info(this.getClass() + " : " + GlobalConstant.SUCCESS_MSG_LEAVE);
-            try{
-                Node oldNeighbour = leaveResponse.getSenderNode();
-                oldNeighbour.setPortNumber(GlobalConstant.PORT_LISTEN);
-                GlobalState.removeNeighbor(oldNeighbour);
-                log.info(this.getClass() + " : removed neighbour " + oldNeighbour.toString() );
+    public void handle(LeaveResponse leaveResponse) {
 
-            }catch (IllegalStateException ex){
-                //TODO
-                log.warning(this.getClass() + " : node doesn't exists");
-            }
-
-        }else{
-            //TODO
+        Node oldNeighbour = leaveResponse.getSenderNode();
+        try {
+            String key = "LEAVE-" + oldNeighbour.getIpaddress();
+            GlobalState.removeResponsePendingRequest(key);
+            netLog.info("removed request from pending list");
+        } catch (Exception ex) {
+            netLog.warning("could not remove request from pending list");
         }
+
+        log.info(GlobalConstant.SUCCESS_MSG_LEAVE);
+        try {
+
+            oldNeighbour.setPortNumber(GlobalConstant.PORT_LISTEN);
+            GlobalState.removeNeighbor(oldNeighbour);
+            log.info("Removed neighbour " + oldNeighbour.toString());
+
+        } catch (IllegalStateException ex) {
+            //TODO
+            log.warning("Node doesn't exists");
+        }
+
 
     }
 

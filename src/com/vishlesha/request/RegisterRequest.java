@@ -27,5 +27,7 @@ public class RegisterRequest extends Request {
         appendMsgLength();
     }
 
-
+    public String getHashCode(){
+        return "REG-" + getRecipientNode().getIpaddress();
+    }
 }

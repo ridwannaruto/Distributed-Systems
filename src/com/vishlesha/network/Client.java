@@ -33,14 +33,17 @@ public class Client extends Base {
             public void run() {
                 try {
 
-                    if (!GlobalState.isResponsePending(request) || request.getRetryCount() == 0)
-                        GlobalState.addResponsePendingRequest(request.getHashCode(),request);
                     DatagramSocket clientSocket = new DatagramSocket();
                     InetAddress IPAddress = InetAddress.getByName(request.getRecipientNode().getIpaddress());
                     int portNumber = request.getRecipientNode().getPortNumber();
                     byte[] sendData;
                     if (IPAddress == null )
                         log.warning("no recipient set for " + request.getClass());
+
+                    if (!GlobalState.isResponsePending(request) || request.getRetryCount() == 0)
+                        GlobalState.addResponsePendingRequest(request.getHashCode(), request);
+
+
                     String requestMessage = request.getRequestMessage();
                     log.info("UDP Request Message: " + requestMessage + " sent to " + request.getRecipientNode().toString());
                     sendData = requestMessage.getBytes();

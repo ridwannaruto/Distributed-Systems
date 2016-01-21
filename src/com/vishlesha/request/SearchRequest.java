@@ -27,15 +27,14 @@ public class SearchRequest extends Request {
         this.noOfHops = noOfHops;
     }
 
-    public SearchRequest(Node initiator, String searchFileName, int numberOfHops){
-        setRecipientNode(initiator);
+    public SearchRequest(Node initiator, Node recipient, String searchFileName, int numberOfHops){
+        setRecipientNode(recipient);
         setFileName(searchFileName);
         setNoOfHops(numberOfHops);
         setInitialNode(initiator);
         String requestMessage = " SER " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
         setRequestMessage(requestMessage);
         appendMsgLength();
-        setHashCode("SER-" + initiator.getIpaddress() + "-" + getFileName());
     }
 
     public SearchRequest (String requestMessage){
@@ -49,14 +48,16 @@ public class SearchRequest extends Request {
         setNoOfHops(Integer.valueOf(token[5]));
         setFileName(token[4]);
         setRequestMessage(requestMessage);
-        setHashCode("SER-" + getInitialNode().getIpaddress() + "-" + getFileName());
-
     }
 
     public void updateRequestMessage(){
         String requestMessage = " SER " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
         setRequestMessage(requestMessage);
         appendMsgLength();
+    }
+
+    public String getHashCode(){
+        return "SER-" + getRecipientNode().getIpaddress();
     }
 
     @Override

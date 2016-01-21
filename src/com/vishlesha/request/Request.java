@@ -5,13 +5,12 @@ import com.vishlesha.dataType.Node;
 /**
  * Created by ridwan on 1/1/16.
  */
-public class Request {
+abstract public class Request {
     private Node recipientNode; //to which node the request is sent
     private Node initialNode; // node which initiated the request / the node in the request message
     private Node senderNode; // which node is sending the request
     private String requestMessage;
     private int retryCount = 0;
-    private String hashCode;
 
     public static final int KEY_MSG_LENGTH = 0;
     public static final int KEY_REQ_TYPE = 1;
@@ -19,13 +18,7 @@ public class Request {
     public static final int KEY_PORT_NUM = 3;
 
 
-    public String getHashCode() {
-        return hashCode;
-    }
-
-    public void setHashCode(String hashCode) {
-        this.hashCode = hashCode;
-    }
+    abstract public String getHashCode();
 
     public int getRetryCount(){
         return retryCount;
