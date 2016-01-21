@@ -61,11 +61,16 @@ public class App {
                 System.out.print("Enter your search query: ");
                 String searchQuery = scanner.nextLine();
                 SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(),GlobalState.getLocalServerNode(), searchQuery, 0);
+                ser.setSenderNode(GlobalState.getLocalServerNode());
                 SearchRequestHandler searchRequestHandler = new SearchRequestHandler();
                 System.out.println("\nLocal search result\n----------------------");
                 List<String> localResult = searchRequestHandler.getLocalResult(ser);
-                for (int i=0 ; i<localResult.size() ;i++)
-                    System.out.printf(localResult.get(i));
+                if (localResult.isEmpty()){
+                    System.out.println("no matching result found");
+                }else {
+                    for (int i=0 ; i<localResult.size() ;i++)
+                        System.out.printf(localResult.get(i));
+                }
                 searchRequestHandler.handle(ser);
                 System.out.printf("\nsearching for file in network ......");
             }
