@@ -8,6 +8,7 @@ import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
 import com.vishlesha.request.*;
+import com.vishlesha.request.handler.SearchRequestHandler;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -60,8 +61,13 @@ public class App {
                 System.out.print("Enter your search query: ");
                 String searchQuery = scanner.nextLine();
                 SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(),GlobalState.getLocalServerNode(), searchQuery, 0);
-                client.sendUDPRequest(ser);
-                System.out.printf("searching for file ......");
+                SearchRequestHandler searchRequestHandler = new SearchRequestHandler();
+                System.out.println("\nLocal search result\n----------------------");
+                List<String> localResult = searchRequestHandler.getLocalResult(ser);
+                for (int i=0 ; i<localResult.size() ;i++)
+                    System.out.printf(localResult.get(i));
+                searchRequestHandler.handle(ser);
+                System.out.printf("\nsearching for file in network ......");
             }
         }
     }
@@ -85,7 +91,7 @@ public class App {
         bootstrapServerNode.setPortNumber(bootstrapPort);
 
 
-        // handle LEAVE and UNREG on shutdown
+        // handleErrorResponse LEAVE and UNREG on shutdown
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 System.out.println("\nUnregistering and leaving the network");
