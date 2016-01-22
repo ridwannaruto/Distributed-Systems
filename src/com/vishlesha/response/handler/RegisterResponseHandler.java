@@ -30,6 +30,16 @@ public class RegisterResponseHandler {
             GlobalState.setRegisteredNodeList(registeredList);
             int j, prev = -1;
             int l = registeredList.size();
+
+            j=l;
+            for (int i=0; i<2;i++){
+                int node = GlobalConstant.topology[l+1][i];
+                if (node != 0){
+                    JoinRequest jr = new JoinRequest(registeredList.get(node));
+                    client.sendUDPRequest(jr);
+                }
+            }
+            /*
             for (j = 0; j < 2 && j < l; j++) {
                 int rand1;
                 if (l < 3) {
@@ -45,6 +55,8 @@ public class RegisterResponseHandler {
                 JoinRequest jr = new JoinRequest(registeredList.get(rand1));
                 client.sendUDPRequest(jr);
             }
+            */
+
             if (j == 0) {
                 log.info("This is the first node");
                 System.out.println("waiting for other nodes to connect..... ");

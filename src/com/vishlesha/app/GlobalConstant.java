@@ -61,6 +61,8 @@ public class GlobalConstant {
 
     public static final String MSG_SEARCH_NORESULT = "No matching result. Searched key not in key table";
 
+    public static final int[][] topology = new int[11][2];
+
     public static final List<String> ALL_FILES = new ArrayList<String>();
     public static final List<String> ALL_QUERIES = new ArrayList<String>();
     static {
@@ -135,6 +137,37 @@ public class GlobalConstant {
         ALL_QUERIES.add("Twilight");
         ALL_QUERIES.add("Hacking");
         ALL_QUERIES.add("King");
+
+
+        topology[0][0] = 0;
+        topology[0][1] = 0;
+        topology[1][0] = 0;
+        topology[1][1] = 0;
+        topology[2][0] = 1;
+        topology[2][1] = 0;
+        topology[3][0] = 1;
+        topology[3][1] = 2;
+        topology[4][0] = 2;
+        topology[4][1] = 3;
+        topology[5][0] = 3;
+        topology[5][1] = 4;
+        topology[6][0] = 4;
+        topology[6][1] = 5;
+        topology[7][0] = 5;
+        topology[7][1] = 6;
+        topology[8][0] = 6;
+        topology[8][1] = 7;
+        topology[9][0] = 7;
+        topology[9][1] = 8;
+        topology[10][0] = 8;
+        topology[10][1] = 9;
+
+
+
     }
+
+
+
+
 
 }
