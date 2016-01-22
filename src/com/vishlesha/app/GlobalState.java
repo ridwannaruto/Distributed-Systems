@@ -23,6 +23,34 @@ public class GlobalState {
     private static Map<String, Request> responsePendingList = new Hashtable<>();
     private static List<Node> registeredNodeList = new ArrayList<>();
 
+    private static int receivedRequestCount= 0;
+    private static int forwardedRequestCount = 0;
+    private static int answeredRequestCount = 0;
+
+    public static int getReceivedRequestCount(){
+        return receivedRequestCount;
+    }
+
+    public static int getForwardedRequestCount(){
+        return forwardedRequestCount;
+    }
+
+    public static int getAnsweredRequestCount(){
+        return answeredRequestCount;
+    }
+
+    public static void incrementReceivedRequestCount(){
+        receivedRequestCount++;
+    }
+
+    public static void incrementForwardedRequestCount(){
+        forwardedRequestCount++;
+    }
+
+    public static void incrementAnsweredRequestCount(){
+        answeredRequestCount++;
+    }
+
     public static void setRegisteredNodeList(ArrayList<Node> list){
         registeredNodeList = list;
     }

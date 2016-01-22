@@ -10,6 +10,7 @@ import com.vishlesha.network.Server;
 import com.vishlesha.request.*;
 import com.vishlesha.request.handler.SearchRequestHandler;
 
+import javax.xml.bind.annotation.XmlElementDecl;
 import java.io.*;
 import java.net.InetAddress;
 import java.util.*;
@@ -98,12 +99,18 @@ public class App {
 
                 // TODO add reasonable blocking mechanism
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(1000 * GlobalState.getNeighbors().size());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 System.out.println("Ready to shut down");
                 log.info(this.getClass() + " : shutting down app");
+
+                System.out.println("System statistics\n-----------------");
+                System.out.println("Number of request received: " + GlobalState.getReceivedRequestCount());
+                System.out.println("Number of request forwarded: " + GlobalState.getForwardedRequestCount());
+                System.out.println("Number of request answered: " + GlobalState.getAnsweredRequestCount());
+
             }
         });
         try {

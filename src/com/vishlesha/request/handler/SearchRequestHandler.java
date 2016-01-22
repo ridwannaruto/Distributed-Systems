@@ -29,6 +29,8 @@ public class SearchRequestHandler {
 
 
     public void handle(SearchRequest request) {
+
+        GlobalState.incrementReceivedRequestCount();
         if (GlobalState.isSearchRequestAlreadyProcessed(request)) {
             networkLog.warning("duplicate request " + request.getRequestMessage());
             return;
@@ -62,7 +64,7 @@ public class SearchRequestHandler {
             Map<Node, List<List<String>>> allFileList = fileIpMapping.searchForFile(query); // Neighbors with results for the query
             Map<Node, List<String>> neighbors = new HashMap<>();
             neighbors.putAll(GlobalState.getNeighbors());
-
+//
             int newNoOfHops = noOfHops + 1;
             for (Node node : allFileList.keySet()) {
                 // ignore if same node as the sender
@@ -73,6 +75,7 @@ public class SearchRequestHandler {
                 //If the user posses any related file respond to user
                 //Forward the request to all neighbours with a result for the query
                 forwardCount++;
+                GlobalState.incrementForwardedRequestCount();
                 Node recipientNode = new Node(node.getIpaddress(), node.getPortNumber());
                 request.setNoOfHops(newNoOfHops);
                 request.setRecipientNode(recipientNode);
@@ -90,6 +93,7 @@ public class SearchRequestHandler {
                     break;
                 } else {
                     forwardCount++;
+                    GlobalState.incrementForwardedRequestCount();
                     request.setNoOfHops(newNoOfHops);
                     Node node = new Node();
                     node.setIpaddress(neighbor.getIpaddress());
@@ -158,11 +162,13 @@ public class SearchRequestHandler {
             final Client client = new Client();
             //send response to Sender
             response.setRecipientNode(request.getSenderNode());
+            GlobalState.incrementAnsweredRequestCount();
             client.sendUDPResponse(response);
             log.info("local search result sent to sender");
 
             //send response to Initiator
             response.setRecipientNode(request.getInitialNode());
+            GlobalState.incrementAnsweredRequestCount();
             client.sendUDPResponse(response);
             log.info("local search result sent to initiator");
 
