@@ -8,9 +8,7 @@ import com.vishlesha.request.*;
 import com.vishlesha.response.SearchResponse;
 import com.vishlesha.search.FileIpMapping;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -62,7 +60,8 @@ public class SearchRequestHandler {
             FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
             final Client client = GlobalState.getClient();// Get from global state
             Map<Node, List<List<String>>> allFileList = fileIpMapping.searchForFile(query); // Neighbors with results for the query
-            Map<Node, List<String>> neighbors = GlobalState.getNeighbors();
+            Map<Node, List<String>> neighbors = new HashMap<>();
+            neighbors.putAll(GlobalState.getNeighbors());
 
             int newNoOfHops = noOfHops + 1;
             for (Node node : allFileList.keySet()) {
