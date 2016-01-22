@@ -25,12 +25,18 @@ public class JoinErrorHandler {
             int availableNodeCount = GlobalState.getRegisteredNodeCount();
             if (availableNodeCount > 0){
                 GlobalState.removeRegisteredNode(unreachableNode);
-                final Random rand = new Random();
-                int randIndex = rand.nextInt();
-                Node newJoinNode = GlobalState.getRegisteredNode(randIndex);
-                JoinRequest jr = new JoinRequest(newJoinNode);
-                client.sendUDPRequest(jr);
-                log.info("New join request sent to " + newJoinNode.toString());
+                availableNodeCount = GlobalState.getRegisteredNodeCount();
+
+                if (availableNodeCount > 0) {
+                    final Random rand = new Random();
+                    int randIndex = rand.nextInt(availableNodeCount);
+                    Node newJoinNode = GlobalState.getRegisteredNode(randIndex);
+                    JoinRequest jr = new JoinRequest(newJoinNode);
+                    client.sendUDPRequest(jr);
+                    log.info("New join request sent to " + newJoinNode.toString());
+                } else {
+                    log.warning("No other reachable nodes to join");
+                }
             }
 
         }catch (Exception ex){
