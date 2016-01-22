@@ -109,7 +109,7 @@ public class SearchRequestHandler {
         }
     }
     public void initiateSearch(String searchQuery){
-        SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(),GlobalState.getLocalServerNode(), searchQuery, 0);
+        SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(),GlobalState.getLocalServerNode(), searchQuery, 1);
         ser.setSenderNode(GlobalState.getLocalServerNode());
         System.out.println("\nLocal search result\n----------------------");
         List<String> localResult = getLocalResult(ser);

@@ -25,7 +25,7 @@ public class SearchResponseHandler {
     Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
     Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
 
-    public void handle(SearchResponse response) {
+    public synchronized void handle(SearchResponse response) {
 
         String key = "SER-" + response.getSenderNode().getIpaddress();
 
