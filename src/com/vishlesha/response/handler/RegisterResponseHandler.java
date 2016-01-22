@@ -35,7 +35,7 @@ public class RegisterResponseHandler {
             for (int i=0; i<2;i++){
                 int node = GlobalConstant.topology[l+1][i];
                 if (node != 0){
-                    JoinRequest jr = new JoinRequest(registeredList.get(node));
+                    JoinRequest jr = new JoinRequest(registeredList.get(node-1));
                     client.sendUDPRequest(jr);
                 }
             }
