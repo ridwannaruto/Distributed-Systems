@@ -4,7 +4,7 @@ import com.vishlesha.dataType.Node;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.Request;
 import com.vishlesha.request.SearchRequest;
-import com.vishlesha.search.FileIpMapping;
+import com.vishlesha.dataType.FileIpMapping;
 
 import java.util.*;
 

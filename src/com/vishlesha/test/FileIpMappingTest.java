@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vishlesha.dataType.Node;
-import com.vishlesha.search.FileIpMapping;
+import com.vishlesha.dataType.FileIpMapping;
 
 /**
  * Created by bhash90 on 1/3/16.

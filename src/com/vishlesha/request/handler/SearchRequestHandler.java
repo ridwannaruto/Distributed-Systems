@@ -6,7 +6,9 @@ import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.*;
 import com.vishlesha.response.SearchResponse;
-import com.vishlesha.search.FileIpMapping;
+import com.vishlesha.dataType.FileIpMapping;
+import com.vishlesha.timer.task.ForgetRequestTask;
+import com.vishlesha.timer.task.RetryRequestTask;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -22,20 +24,26 @@ public class SearchRequestHandler {
     private static final int SEARCH_REQUEST_PORT = 1055;
     private static final int MAX_NUMBER_OF_HOPS = 10;
     private static final int Number_OF_FORWARDS = 3;
+
+    private static final int TIME_TO_FORGET_REQUEST = 3000;
     SearchResponse response;
 
     Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
     Logger networkLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
 
 
-    public void handle(SearchRequest request) {
+    public synchronized void handle(SearchRequest request) {
 
         GlobalState.incrementReceivedRequestCount();
         if (GlobalState.isSearchRequestAlreadyProcessed(request)) {
             networkLog.warning("duplicate request " + request.getRequestMessage());
+            sendLocalResult(request);
             return;
         }
         GlobalState.rememberRequest(request);
+        TimerTask forgetRequestTask = new ForgetRequestTask(request);
+        Timer timer = new Timer();
+        timer.schedule(forgetRequestTask, TIME_TO_FORGET_REQUEST);
 
         try{
             sendLocalResult(request);
@@ -45,7 +53,6 @@ public class SearchRequestHandler {
             log.severe(ex.getMessage());
             ex.printStackTrace();
         }
-        GlobalState.forgetRequest(request);
 
     }
 

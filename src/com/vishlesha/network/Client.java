@@ -6,6 +6,7 @@ import com.vishlesha.log.AppLogger;
 import com.vishlesha.request.Request;
 import com.vishlesha.response.Response;
 import com.vishlesha.response.handler.ResponseHandler;
+import com.vishlesha.timer.task.RetryRequestTask;
 
 import java.io.*;
 import java.net.*;
@@ -49,7 +50,7 @@ public class Client extends Base {
                     sendData = requestMessage.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress,portNumber );
                     clientSocket.send(sendPacket);
-                    TimerTask retryTask = new RetryTask(request);
+                    TimerTask retryTask = new RetryRequestTask(request);
                     Timer timer = new Timer();
                     timer.schedule(retryTask, GlobalState.getRoundTripTime());
 

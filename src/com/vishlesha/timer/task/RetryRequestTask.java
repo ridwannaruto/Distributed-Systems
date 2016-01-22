@@ -1,8 +1,9 @@
-package com.vishlesha.network;
+package com.vishlesha.timer.task;
 
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.error.handler.ErrorHandler;
 import com.vishlesha.log.AppLogger;
+import com.vishlesha.network.Client;
 import com.vishlesha.request.Request;
 
 import java.util.TimerTask;
@@ -11,10 +12,10 @@ import java.util.logging.Logger;
 /**
  * Created by ridwan on 1/20/16.
  */
-public class RetryTask extends TimerTask {
+public class RetryRequestTask extends TimerTask {
     Logger logger = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
     private Request request;
-    public RetryTask(Request request){
+    public RetryRequestTask(Request request){
        this.request = request;
     }
 

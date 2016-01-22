@@ -1,4 +1,4 @@
-package com.vishlesha.search;
+package com.vishlesha.dataType;
 
 import com.vishlesha.dataType.Node;
 
