@@ -19,7 +19,7 @@ public class GlobalState {
     private static Node localServerNode;
     private static Map<Node, List<String>> neighbors = new Hashtable<>();
     private static List<String> localFiles = new ArrayList<String>();
-    private static List<SearchRequest> searchRequestList = new ArrayList<>();
+    private static List<SearchRequest> searchRequestList = new Vector<>();
     private static Map<String, Request> responsePendingList = new Hashtable<>();
     private static List<Node> registeredNodeList = new ArrayList<>();
 
