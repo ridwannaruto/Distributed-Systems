@@ -118,7 +118,7 @@ public class App {
             }
         });
         try {
-            AppLogger.setup();
+//            AppLogger.setup();
 
             // switch to seed-based IP addresses on 127.0.0.1 (local environment)
             Node localServer = new Node();

@@ -30,8 +30,6 @@ public class LeaveResponseHandler {
 
         log.info(GlobalConstant.SUCCESS_MSG_LEAVE);
         try {
-
-            oldNeighbour.setPortNumber(GlobalConstant.PORT_LISTEN);
             GlobalState.removeNeighbor(oldNeighbour);
             log.info("Removed neighbour " + oldNeighbour.toString());
 

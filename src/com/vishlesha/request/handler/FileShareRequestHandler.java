@@ -19,7 +19,6 @@ public class FileShareRequestHandler {
 
     public void handle(FileShareRequest fileShareResponse){
         Node neighbour = fileShareResponse.getRecipientNode();
-        neighbour.setPortNumber(GlobalConstant.PORT_LISTEN);
         GlobalState.addNeighborFiles(neighbour, fileShareResponse.getFiles());
         Client client = new Client();
 

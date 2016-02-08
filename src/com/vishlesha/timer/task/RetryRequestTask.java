@@ -19,7 +19,7 @@ public class RetryRequestTask extends TimerTask {
        this.request = request;
     }
 
-    private static final int MAX_RETRY_COUNT = 5;
+    private static final int MAX_RETRY_COUNT = 2;
 
 
     @Override

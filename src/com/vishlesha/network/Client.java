@@ -2,6 +2,7 @@ package com.vishlesha.network;
 
 import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
+import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.request.Request;
 import com.vishlesha.response.Response;
@@ -33,23 +34,27 @@ public class Client extends Base {
             @Override
             public void run() {
                 try {
+                    Node localServer = GlobalState.getLocalServerNode();
+                    request.setSenderNode(localServer);
+
+                    String requestMessage = request.getRequestMessage();
+                    log.info("UDP Request: " + requestMessage + " sent to " + request.getRecipientNode().toString());
+
                     DatagramSocket clientSocket = new DatagramSocket(0,
-                            InetAddress.getByName(GlobalState.getLocalServerNode().getIpaddress()));
+                            InetAddress.getByName(localServer.getIpaddress()));
                     InetAddress destAddress = InetAddress.getByName(request.getRecipientNode().getIpaddress());
                     int portNumber = request.getRecipientNode().getPortNumber();
                     byte[] sendData;
-                    if (destAddress == null )
-                        log.warning("no recipient set for " + request.getClass());
 
-                    if (!GlobalState.isResponsePending(request) || request.getRetryCount() == 0)
+                    if (!GlobalState.isResponsePending(request) || request.getRetryCount() == 0) {
                         GlobalState.addResponsePendingRequest(request.getHashCode(), request);
+                    }
 
-
-                    String requestMessage = request.getRequestMessage();
-                    log.info("UDP Request Message: " + requestMessage + " sent to " + request.getRecipientNode().toString());
                     sendData = requestMessage.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, destAddress, portNumber);
                     clientSocket.send(sendPacket);
+                    clientSocket.close();
+
                     TimerTask retryTask = new RetryRequestTask(request);
                     Timer timer = new Timer();
                     timer.schedule(retryTask, GlobalState.getRoundTripTime());
@@ -73,16 +78,18 @@ public class Client extends Base {
             @Override
             public void run() {
                 try {
+                    Node localServer = GlobalState.getLocalServerNode();
+                    response.setSenderNode(localServer);
 
-                    DatagramSocket clientSocket = new DatagramSocket();
+                    String responseMessage = response.getResponseMessage();
+                    log.info("UDP Response: " + responseMessage + " to " + response.getRecipientNode().toString());
+
+                    DatagramSocket clientSocket = new DatagramSocket(0,
+                            InetAddress.getByName(GlobalState.getLocalServerNode().getIpaddress()));
                     InetAddress IPAddress = InetAddress.getByName(response.getRecipientNode().getIpaddress());
                     int portNumber = response.getRecipientNode().getPortNumber();
 
-                    if (IPAddress == null )
-                        log.warning("no recipient set for " + response.getClass());
                     byte[] sendData;
-                    String responseMessage = response.getResponseMessage();
-                    log.info("UDP Response Message: " + responseMessage + " sent to " + response.getRecipientNode().toString());
                     sendData = responseMessage.getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, portNumber);
                     clientSocket.send(sendPacket);
@@ -108,14 +115,17 @@ public class Client extends Base {
             public void run() {
                 try {
                     long start, end;
-                    String responseLine = null;
+
+                    String requestMessage = request.getRequestMessage();
+                    log.info("TCP Client: " + requestMessage + " to " + request.getRecipientNode().toString());
+
                     socket = new Socket(request.getRecipientNode().getIpaddress(), request.getRecipientNode().getPortNumber());
                     socket.setTcpNoDelay(true);
                     BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     BufferedWriter outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                    String responseLine = null;
+
                     if (socket != null && outputStream != null && inputStream != null) {
-                        String requestMessage = request.getRequestMessage();
-                        log.info("TCP Client Message Sent: " + requestMessage + " to " + request.getRecipientNode().toString());
                         outputStream.write(requestMessage);
                         start = System.currentTimeMillis();
                         outputStream.flush();
@@ -124,6 +134,7 @@ public class Client extends Base {
                         GlobalState.setRoundTripTime(end-start + 1000);
                         log.info("TCP Client Message Received: " + responseLine + " from " + request.getRecipientNode().toString());
                     }
+
                     inputStream.close();
                     outputStream.close();
                     socket.close();

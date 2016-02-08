@@ -162,16 +162,13 @@ public class SearchRequestHandler {
     }
 
     private void sendLocalResult(SearchRequest request) {
+        Node source = request.getSenderNode();
+        Node initiator = request.getInitialNode();
 
-        try{
+        try {
             List<String > fileList = getLocalResult(request);
             SearchResponse response = new SearchResponse(fileList.size(), request.getNoOfHops(), fileList);
             final Client client = new Client();
-            //send response to Sender
-            response.setRecipientNode(request.getSenderNode());
-            GlobalState.incrementAnsweredRequestCount();
-            client.sendUDPResponse(response);
-            log.info("local search result sent to sender");
 
             //send response to Initiator
             response.setRecipientNode(request.getInitialNode());
@@ -179,7 +176,15 @@ public class SearchRequestHandler {
             client.sendUDPResponse(response);
             log.info("local search result sent to initiator");
 
-        }catch (Exception ex){
+            if (!source.equals(initiator)) {
+                //send response to Sender
+                response.setRecipientNode(request.getSenderNode());
+                GlobalState.incrementAnsweredRequestCount();
+                client.sendUDPResponse(response);
+                log.info("local search result sent to sender");
+            }
+
+        } catch (Exception ex){
             log.severe(ex.getMessage());
             ex.printStackTrace();
         }

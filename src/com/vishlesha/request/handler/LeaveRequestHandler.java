@@ -27,12 +27,12 @@ public class LeaveRequestHandler {
         try{
             GlobalState.removeNeighbor(neighbor);
             log.info(this.getClass() + " : neighbour left " + neighbor.toString());
-            Response leaveResponse = new JoinResponse(RESPOND_CODE_LEAVE_SUCCESS);
+            Response leaveResponse = new LeaveResponse(RESPOND_CODE_LEAVE_SUCCESS);
             leaveResponse.setRecipientNode(neighbor);
             sendResponse(leaveResponse);
         }catch (IllegalStateException ex){
             log.severe(this.getClass() + " : neighbour doesn't exist " + neighbor.toString());
-            Response leaveResponse = new JoinResponse(RESPOND_CODE_LEAVE_SUCCESS);
+            Response leaveResponse = new LeaveResponse(RESPOND_CODE_LEAVE_SUCCESS);
             leaveResponse.setRecipientNode(neighbor);
             sendResponse(leaveResponse);
         }catch (Exception ex){
