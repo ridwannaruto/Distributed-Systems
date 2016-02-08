@@ -76,7 +76,7 @@ public class Server extends Base implements Runnable {
 
                 } catch (IOException ex) {
                     log.severe("Server Exception:  " + ex);
-                    log.severe(ex.getStackTrace().toString());
+                    log.severe(Util.getStackTrace(ex));
                     ex.printStackTrace();
                 }
 
@@ -84,7 +84,7 @@ public class Server extends Base implements Runnable {
 
         } catch (IOException ex) {
             System.out.println("Server Exception:  " + ex);
-            log.severe(ex.getStackTrace().toString());
+            log.severe(Util.getStackTrace(ex));
             ex.printStackTrace();
         }
 

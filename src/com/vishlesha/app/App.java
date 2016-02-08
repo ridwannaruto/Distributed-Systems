@@ -49,7 +49,6 @@ public class App {
 
         while (true) {
             if (GlobalState.getNeighbors().size() > 0) {
-
                 if (print) {
                     System.out.println("connected to network");
                     System.out.println("\nInitiate Search\n---------------------");
@@ -63,6 +62,11 @@ public class App {
                 String searchQuery = scanner.nextLine();
                 SearchRequestHandler searchRequestHandler = new SearchRequestHandler();
                 searchRequestHandler.initiateSearch(searchQuery);
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

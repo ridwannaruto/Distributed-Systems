@@ -33,12 +33,12 @@ public class Client extends Base {
             @Override
             public void run() {
                 try {
-
-                    DatagramSocket clientSocket = new DatagramSocket();
-                    InetAddress IPAddress = InetAddress.getByName(request.getRecipientNode().getIpaddress());
+                    DatagramSocket clientSocket = new DatagramSocket(0,
+                            InetAddress.getByName(GlobalState.getLocalServerNode().getIpaddress()));
+                    InetAddress destAddress = InetAddress.getByName(request.getRecipientNode().getIpaddress());
                     int portNumber = request.getRecipientNode().getPortNumber();
                     byte[] sendData;
-                    if (IPAddress == null )
+                    if (destAddress == null )
                         log.warning("no recipient set for " + request.getClass());
 
                     if (!GlobalState.isResponsePending(request) || request.getRetryCount() == 0)
@@ -48,7 +48,7 @@ public class Client extends Base {
                     String requestMessage = request.getRequestMessage();
                     log.info("UDP Request Message: " + requestMessage + " sent to " + request.getRecipientNode().toString());
                     sendData = requestMessage.getBytes();
-                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress,portNumber );
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, destAddress, portNumber);
                     clientSocket.send(sendPacket);
                     TimerTask retryTask = new RetryRequestTask(request);
                     Timer timer = new Timer();
@@ -58,10 +58,9 @@ public class Client extends Base {
                     log.severe("Unknown Host");
                 } catch (IOException ex) {
                     log.severe("IO exception: " + ex.getMessage());
-                    log.severe(ex.getStackTrace().toString());
-                    ex.printStackTrace();
+                    log.severe(Util.getStackTrace(ex));
                 } catch (Exception ex){
-                    log.severe(ex.getStackTrace().toString());
+                    log.severe(Util.getStackTrace(ex));
                 }
             }
 
@@ -92,10 +91,10 @@ public class Client extends Base {
                     log.severe("Unknown Host");
                 } catch (IOException ex) {
                     log.severe("IO exception: " + ex.getMessage());
-                    log.severe(ex.getStackTrace().toString());
+                    log.severe(Util.getStackTrace(ex));
                     ex.printStackTrace();
                 } catch (Exception ex){
-                    log.severe(ex.getStackTrace().toString());
+                    log.severe(Util.getStackTrace(ex));
                 }
             }
 
@@ -135,10 +134,10 @@ public class Client extends Base {
                     log.severe("Unknown Host");
                 } catch (IOException ex) {
                     log.severe("IO exception: " + ex.getMessage());
-                    log.severe(ex.getStackTrace().toString());
+                    log.severe(Util.getStackTrace(ex));
                     System.out.println("Could not connect to boostrap server");
                 } catch (Exception ex){
-                    log.severe(ex.getStackTrace().toString());
+                    log.severe(Util.getStackTrace(ex));
                 }
             }
         });
