@@ -118,7 +118,7 @@ class App {
                 System.out.println("Ready to shut down");
                 log.info(this.getClass() + " : shutting down app");
 
-                System.out.println("System statistics\n-----------------");
+                System.out.println("\n\nSystem statistics\n-----------------");
                 System.out.println("Number of request received: " + GlobalState.getReceivedRequestCount());
                 System.out.println("Number of request forwarded: " + GlobalState.getForwardedRequestCount());
                 System.out.println("Number of request answered: " + GlobalState.getAnsweredRequestCount());
