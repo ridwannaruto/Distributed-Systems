@@ -12,6 +12,8 @@ import com.vishlesha.request.RegisterRequest;
 import com.vishlesha.request.Request;
 import com.vishlesha.request.UnregisterRequest;
 import com.vishlesha.request.handler.SearchRequestHandler;
+import com.vishlesha.timer.task.HeartBeatMonitorTask;
+import com.vishlesha.timer.task.HeartBeatTask;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -41,6 +43,12 @@ class App {
 
         Request regRequest = new RegisterRequest(bootstrapServerNode);
         client.sendTCPRequest(regRequest);
+
+        HeartBeatTask heartBeatTask = new HeartBeatTask();
+        heartBeatTask.run();
+
+        HeartBeatMonitorTask heartBeatMonitorTask = new HeartBeatMonitorTask();
+        heartBeatMonitorTask.run();
 
         // TODO modify to issue multiple queries
 

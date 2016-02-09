@@ -3,6 +3,7 @@ package com.vishlesha.network;
 import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
+import com.vishlesha.message.MessageHandler.MessageHandler;
 import com.vishlesha.request.handler.RequestHandler;
 import com.vishlesha.response.handler.ResponseHandler;
 
@@ -62,6 +63,9 @@ public class Server implements Runnable {
                             if (token[1].contains("OK")) {
                                 ResponseHandler responseHandler = new ResponseHandler();
                                 responseHandler.handle(message, sender);
+                            } else if (token[1].contains("MSG")) {
+                                MessageHandler messageHandler = new MessageHandler();
+                                messageHandler.handle(message, sender);
                             } else {
                                 RequestHandler requestHandler = new RequestHandler();
                                 requestHandler.handle(message, sender);

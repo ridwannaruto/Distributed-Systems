@@ -4,6 +4,7 @@ import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
+import com.vishlesha.message.Message;
 import com.vishlesha.request.Request;
 import com.vishlesha.response.Response;
 import com.vishlesha.response.handler.ResponseHandler;
@@ -28,6 +29,40 @@ public class Client {
 
     public Socket getSocket() {
         return socket;
+    }
+
+    public void sendUDPMessage (final Message message) {
+        workerPool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Node localServer = GlobalState.getLocalServerNode();
+                    message.setSenderNode(localServer);
+
+                    String requestMessage = message.getMessage();
+                    log.info("UDP Message: " + requestMessage + " sent to " + message.getRecipientNode().toString());
+
+                    DatagramSocket clientSocket = new DatagramSocket(0,
+                            InetAddress.getByName(localServer.getIpaddress()));
+                    InetAddress destAddress = InetAddress.getByName(message.getRecipientNode().getIpaddress());
+                    int portNumber = message.getRecipientNode().getPortNumber();
+                    byte[] sendData;
+
+                    sendData = requestMessage.getBytes();
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, destAddress, portNumber);
+                    clientSocket.send(sendPacket);
+                    clientSocket.close();
+
+                } catch (UnknownHostException ex) {
+                    log.severe("Unknown Host");
+                } catch (IOException ex) {
+                    log.severe("IO exception: " + ex.getMessage());
+                    log.severe(Util.getStackTrace(ex));
+                } catch (Exception ex) {
+                    log.severe(Util.getStackTrace(ex));
+                }
+            }
+        });
     }
 
     public void sendUDPRequest(final Request request) {
