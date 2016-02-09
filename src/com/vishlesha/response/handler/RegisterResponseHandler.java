@@ -29,10 +29,11 @@ class RegisterResponseHandler {
             log.info(GlobalConstant.SUCCESS_MSG_REG);
             try{
                 Timer timer = new Timer();
-                timer.schedule(GlobalState.getHeartBeatTask(),100);
-                log.info("Heart Beating Started");
                 timer.schedule(GlobalState.getHeartBeatMonitorTask(), 100);
                 log.info("Heart Beat Monitor Started");
+                timer.schedule(GlobalState.getHeartBeatTask(),100);
+                log.info("Heart Beating Started");
+
             }catch (Exception ex){
                 ex.printStackTrace();
             }
