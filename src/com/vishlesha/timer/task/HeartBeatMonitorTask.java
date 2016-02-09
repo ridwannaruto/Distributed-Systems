@@ -25,8 +25,9 @@ public class HeartBeatMonitorTask extends TimerTask {
 
     @Override
     public void run() {
+        System.out.println("run");
         while (true) {
-
+            System.out.println("while");
             GlobalState.acquireHeartBeatMonitorLock();
 
             for (Node node : GlobalState.getNeighbors().keySet()) {
