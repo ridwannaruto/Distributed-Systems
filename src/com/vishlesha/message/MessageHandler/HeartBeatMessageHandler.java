@@ -25,6 +25,7 @@ class HeartBeatMessageHandler {
             netLog.info("neighbor count list updated");
         } catch (Exception ex) {
             netLog.warning("could not update neighbor count list");
+            ex.printStackTrace();
         }
     }
 }
