@@ -88,8 +88,9 @@ public class SearchRequestHandler {
             }
             // If already sent to 3 or more neighbors, this will  terminate
             // TODO sort neighbors based on NumberoFNeigbors
-            for (Node neighbor : GlobalState.getNeighborCountList().keySet()) {
+            for (Integer iterator : GlobalState.getNeighborCountList().keySet()) {
 
+                Node neighbor = GlobalState.getNeighborCountList().get(iterator);
                 //ignore if node already sent
                 if(neighbors.containsKey(neighbor)){
                     continue;
