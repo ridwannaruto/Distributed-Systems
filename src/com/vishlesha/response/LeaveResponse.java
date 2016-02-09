@@ -13,7 +13,8 @@ public class LeaveResponse extends Response {
     private int responseCode;
 
     public LeaveResponse(String responseMessage, Node senderNode) {
-        setRecipientNode(senderNode);
+        super(responseMessage, senderNode);
+
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 

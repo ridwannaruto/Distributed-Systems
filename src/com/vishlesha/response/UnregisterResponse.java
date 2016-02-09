@@ -14,7 +14,8 @@ public class UnregisterResponse extends Response {
     private final int responseCode;
 
     public UnregisterResponse(String responseMessage, Node senderNode) {
-        setRecipientNode(senderNode);
+        super(responseMessage, senderNode);
+
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
@@ -28,7 +29,5 @@ public class UnregisterResponse extends Response {
             if (!GlobalState.isTestMode())
                 System.out.println("Unregister Error: " + unregisterError.getErrorMessage());
         }
-
     }
-
 }

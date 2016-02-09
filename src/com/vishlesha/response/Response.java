@@ -20,6 +20,14 @@ abstract public class Response {
     public static final int KEY_IP_ADDRESS = 2;
     public static final int KEY_PORT_NUM = 3;
 
+    public Response(String responseMessage, Node senderNode) {
+        this.responseMessage = responseMessage;
+        this.senderNode = senderNode;
+    }
+
+    public Response() {
+    }
+
     public int getResponseCode() {
         return responseCode;
     }

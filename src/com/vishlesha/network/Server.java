@@ -52,7 +52,6 @@ public class Server implements Runnable {
                     final Node sender = new Node(IPAddress.getHostAddress(), port);
                     log.info("UDP Server Received: " + message + " from " + sender.toString());
 
-
                     workerPool.submit(new Runnable() {
                         @Override
                         public void run() {
@@ -67,8 +66,6 @@ public class Server implements Runnable {
                                 RequestHandler requestHandler = new RequestHandler();
                                 requestHandler.handle(message, sender);
                             }
-
-
                         }
 
 
@@ -79,7 +76,6 @@ public class Server implements Runnable {
                     log.severe(Util.getStackTrace(ex));
                     ex.printStackTrace();
                 }
-
             }
 
         } catch (IOException ex) {
