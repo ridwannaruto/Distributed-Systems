@@ -144,6 +144,7 @@ public class GlobalState {
             throw new IllegalStateException("Neighbor does not exist");
         }
         neighbors.remove(node);
+        neighborCountList.remove(node);
     }
 
     public static FileIpMapping getFileIpMapping() {
@@ -219,5 +220,10 @@ public class GlobalState {
     public static void updateNeighborCount(Node neighbor, Integer count){
        neighborCountList.put(neighbor, count);
     }
+
+    public static TreeMap<Node, Integer> getNeighborCountList() {
+        return neighborCountList;
+    }
+
 
 }
