@@ -21,7 +21,7 @@ public class HeartBeatMonitorTask extends TimerTask {
     public void run() {
         while (true) {
             for (Node node : GlobalState.getNeighbors().keySet()) {
-                int count = GlobalState.getNeighborCountList().get(node);
+                Integer count = GlobalState.getNeighborCountList().get(node);
                 if (count > 0){
                     GlobalState.updateNeighborCount(node,-1);
                 }else if (count == -1){
