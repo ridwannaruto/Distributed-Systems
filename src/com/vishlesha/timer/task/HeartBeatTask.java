@@ -29,9 +29,10 @@ public class HeartBeatTask extends TimerTask {
             Map<Node, List<String>> neighborList = new HashMap<>();
             neighborList.putAll(GlobalState.getNeighbors());
 
-            logger.info(neighborList.keySet().toString());
+
 
             for (Node node : neighborList.keySet()) {
+                logger.info(neighborList.keySet().toString());
                 heartBeatMessage.setRecipientNode(node);
                 client.sendUDPMessage(heartBeatMessage);
             }
