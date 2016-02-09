@@ -5,8 +5,14 @@ import com.vishlesha.dataType.Node;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.Request;
 import com.vishlesha.request.SearchRequest;
+import com.vishlesha.timer.task.HeartBeatMonitorTask;
+import com.vishlesha.timer.task.HeartBeatTask;
 
 import java.util.*;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 
 /**
  * Created by ridwan on 1/1/16.
@@ -17,16 +23,22 @@ public class GlobalState {
     private static boolean testMode;
     private static long roundTripTime;
     private static Node localServerNode;
+    private static Node bootstrapNode;
     private static final Map<Node, List<String>> neighbors = new Hashtable<>();
     private static final Map<Node,Integer> neighborCountList = new HashMap<>();
     private static final List<String> localFiles = new ArrayList<String>();
     private static final List<SearchRequest> searchRequestList = new Vector<>();
     private static final Map<String, Request> responsePendingList = new Hashtable<>();
     private static List<Node> registeredNodeList = new ArrayList<>();
+    private static Semaphore heartBeatMonitorLock = new Semaphore(1);
 
     private static int receivedRequestCount = 0;
     private static int forwardedRequestCount = 0;
     private static int answeredRequestCount = 0;
+
+    private static HeartBeatTask heartBeatTask = new HeartBeatTask();
+    private static HeartBeatMonitorTask heartBeatMonitorTask = new HeartBeatMonitorTask();
+
 
     public static int getReceivedRequestCount() {
         return receivedRequestCount;
@@ -136,6 +148,8 @@ public class GlobalState {
             throw new IllegalStateException("Neighbor already joined");
         }
         neighbors.put(node, new ArrayList<String>());
+        releaseHeartBeatMonitorLock();
+
     }
 
     public static void removeNeighbor(Node node) {
@@ -218,12 +232,44 @@ public class GlobalState {
     }
 
     public static synchronized void updateNeighborCount(Node neighbor, Integer count){
-       neighborCountList.put(neighbor,count);
+       neighborCountList.put(neighbor, count);
     }
 
     public static Map<Node,Integer> getNeighborCountList() {
         return neighborCountList;
     }
 
+
+    public static Node getBootstrapNode() {
+        return bootstrapNode;
+    }
+
+    public static void setBootstrapNode(Node bootstrapNode) {
+        GlobalState.bootstrapNode = bootstrapNode;
+    }
+
+    public static HeartBeatTask getHeartBeatTask() {
+        return heartBeatTask;
+    }
+
+    public static HeartBeatMonitorTask getHeartBeatMonitorTask() {
+        return heartBeatMonitorTask;
+    }
+
+    public static void acquireHeartBeatMonitorLock(){
+        try{
+            heartBeatMonitorLock.acquire();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public static void releaseHeartBeatMonitorLock(){
+        try{
+            heartBeatMonitorLock.release();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
 
 }

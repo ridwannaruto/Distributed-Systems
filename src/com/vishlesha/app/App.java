@@ -35,20 +35,15 @@ class App {
 
     public static void main(final String[] args) throws IOException {
         Client client = new Client();
-        final Node bootstrapServerNode = new Node();
 
         System.out.println("Vishlesha Distributed System");
         System.out.println("----------------------------\n");
-        setup(bootstrapServerNode, client);
+        setup(client);
 
-        Request regRequest = new RegisterRequest(bootstrapServerNode);
+        Request regRequest = new RegisterRequest(GlobalState.getBootstrapNode());
         client.sendTCPRequest(regRequest);
 
-        HeartBeatTask heartBeatTask = new HeartBeatTask();
-        heartBeatTask.run();
-
-        HeartBeatMonitorTask heartBeatMonitorTask = new HeartBeatMonitorTask();
-        heartBeatMonitorTask.run();
+        GlobalState.getHeartBeatTask().run();
 
         // TODO modify to issue multiple queries
 
@@ -81,10 +76,12 @@ class App {
         }
     }
 
-    private static void setup(final Node bootstrapServerNode, final Client client) {
+    private static void setup(final Client client) {
         int bootstrapPort;
         final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
         Server server;
+
+        final Node bootstrapServerNode = new Node();
         bootstrapServerNode.setIpaddress("127.0.0.1");
         try {
             String localIp = InetAddress.getLocalHost().getHostAddress();
@@ -97,6 +94,8 @@ class App {
 
         bootstrapPort = 1033;
         bootstrapServerNode.setPortNumber(bootstrapPort);
+
+        GlobalState.setBootstrapNode(bootstrapServerNode);
 
         // handleErrorResponse LEAVE and UNREG on shutdown
         Runtime.getRuntime().addShutdownHook(new Thread() {
