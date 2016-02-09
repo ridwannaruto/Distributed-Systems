@@ -50,6 +50,7 @@ class App {
         boolean print = true;
 
         while (true) {
+            System.out.printf("ok");
             if (GlobalState.getNeighbors().size() > 0) {
                 if (print) {
                     System.out.println("connected to network");
