@@ -24,15 +24,12 @@ public class HeartBeatTask extends TimerTask {
         Client client = new Client();
         while (true) {
             int neighborCount = GlobalState.getNeighbors().size();
-            HeartBeatMessage heartBeatMessage = new HeartBeatMessage(neighborCount);
 
             Map<Node, List<String>> neighborList = new HashMap<>();
             neighborList.putAll(GlobalState.getNeighbors());
 
-
-
             for (Node node : neighborList.keySet()) {
-                logger.info(neighborList.keySet().toString());
+                HeartBeatMessage heartBeatMessage = new HeartBeatMessage(neighborCount);
                 heartBeatMessage.setRecipientNode(node);
                 client.sendUDPMessage(heartBeatMessage);
             }
