@@ -12,6 +12,7 @@ import com.vishlesha.response.RegisterResponse;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
 import java.util.logging.Logger;
 
 /**
@@ -27,9 +28,10 @@ class RegisterResponseHandler {
         if (!registerResponse.isFail()) {
             log.info(GlobalConstant.SUCCESS_MSG_REG);
             try{
-                GlobalState.getHeartBeatTask().run();
+                Timer timer = new Timer();
+                timer.schedule(GlobalState.getHeartBeatTask(),100);
                 log.info("Heart Beating Started");
-                GlobalState.getHeartBeatMonitorTask().run();
+                timer.schedule(GlobalState.getHeartBeatMonitorTask(), 100);
                 log.info("Heart Beat Monitor Started");
             }catch (Exception ex){
                 ex.printStackTrace();
