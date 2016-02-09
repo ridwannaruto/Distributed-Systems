@@ -26,6 +26,15 @@ class RegisterResponseHandler {
         Client client = new Client();
         if (!registerResponse.isFail()) {
             log.info(GlobalConstant.SUCCESS_MSG_REG);
+            try{
+                GlobalState.getHeartBeatTask().run();
+                log.info("Heart Beating Started");
+                GlobalState.getHeartBeatMonitorTask().run();
+                log.info("Heart Beat Monitor Started");
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+
             ArrayList<Node> registeredList = registerResponse.getNodeList();
             GlobalState.setRegisteredNodeList(registeredList);
             int j, prev = -1;
