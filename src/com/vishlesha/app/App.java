@@ -43,8 +43,7 @@ class App {
         Request regRequest = new RegisterRequest(GlobalState.getBootstrapNode());
         client.sendTCPRequest(regRequest);
 
-        GlobalState.getHeartBeatTask().run();
-        GlobalState.getHeartBeatMonitorTask().run();
+
 
         // TODO modify to issue multiple queries
 
@@ -126,7 +125,7 @@ class App {
             }
         });
         try {
-//            AppLogger.setup();
+           AppLogger.setup();
 
             // switch to seed-based IP addresses on 127.0.0.1 (local environment)
             Node localServer = new Node();
@@ -166,6 +165,11 @@ class App {
             System.out.println("Unable to create log files");
             ex.printStackTrace();
         }
+
+        GlobalState.getHeartBeatTask().run();
+        log.info("Heart Beating Started");
+        GlobalState.getHeartBeatMonitorTask().run();
+        log.info("Heart Beat Monitor Started");
     }
 }
 
