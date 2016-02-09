@@ -8,9 +8,7 @@ import com.vishlesha.message.HeartBeatMessage;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.Request;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -28,14 +26,13 @@ public class HeartBeatTask extends TimerTask {
             int neighborCount = GlobalState.getNeighbors().size();
             HeartBeatMessage heartBeatMessage = new HeartBeatMessage(neighborCount);
 
-            Iterator iterator = GlobalState.getNeighbors().entrySet().iterator();
+            Map<Node, List<String>> neighborList = new HashMap<>();
+            neighborList.putAll(GlobalState.getNeighbors());
 
-            while (iterator.hasNext()) {
-                Map.Entry pair = (Map.Entry)iterator.next();
-                heartBeatMessage.setRecipientNode((Node)pair.getKey());
+            for (Node node : neighborList.keySet()) {
+                heartBeatMessage.setRecipientNode(node);
                 client.sendUDPMessage(heartBeatMessage);
             }
-
             try{
                 Thread.sleep(MSG_INTERVAL);
             }catch (Exception ex){
