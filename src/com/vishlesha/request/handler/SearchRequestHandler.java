@@ -69,6 +69,7 @@ public class SearchRequestHandler {
             Map<Node, List<List<String>>> allFileList = fileIpMapping.searchForFile(query); // Neighbors with results for the query
             Map<Node, List<String>> neighbors = new HashMap<>();
             neighbors.putAll(GlobalState.getNeighbors());
+
 //
             int newNoOfHops = noOfHops + 1;
             for (Node node : allFileList.keySet()) {
@@ -76,7 +77,6 @@ public class SearchRequestHandler {
                 if (node.equals(sender) || node.equals(initiator) || node.equals(GlobalState.getLocalServerNode())) {
                     continue;
                 }
-                neighbors.remove(node);
                 //If the user posses any related file respond to user
                 //Forward the request to all neighbours with a result for the query
                 forwardCount++;
@@ -88,7 +88,13 @@ public class SearchRequestHandler {
             }
             // If already sent to 3 or more neighbors, this will  terminate
             // TODO sort neighbors based on NumberoFNeigbors
-            for (Node neighbor : neighbors.keySet()) {
+            for (Node neighbor : GlobalState.getNeighborCountList().keySet()) {
+
+                //ignore if node already sent
+                if(neighbors.containsKey(neighbor)){
+                    continue;
+                }
+
                 // ignore if same node as the sender
                 if (neighbor.equals(sender) || neighbor.equals(initiator) || neighbor.equals(GlobalState.getLocalServerNode())) {
                     continue;
