@@ -22,9 +22,9 @@ class HeartBeatMessageHandler {
         Node neighbor = heartBeatMessage.getSenderNode();
         try {
             GlobalState.updateNeighborCount(neighbor,neighborCount);
-            netLog.info("neighbor count list updated");
+            netLog.info("neighbor count list of " + neighbor + " updated to " + neighborCount);
         } catch (Exception ex) {
-            netLog.warning("could not update neighbor count list");
+            netLog.warning("could not update neighbor count list of " + neighbor);
             ex.printStackTrace();
         }
     }

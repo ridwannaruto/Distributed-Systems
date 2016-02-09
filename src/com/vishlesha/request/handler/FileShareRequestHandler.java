@@ -26,9 +26,9 @@ class FileShareRequestHandler {
             log.info("added files from neighbor " + fileShareResponse.getSenderNode().toString());
             client.sendUDPResponse(new FileShareResponse(neighbour, GlobalState.getLocalFiles()));
         } catch (IllegalStateException ex) {
-            log.warning(ex.getMessage() + " sent by " + neighbour.toString());
+            log.warning(ex.getMessage() + " request sent by " + neighbour.toString());
         } catch (RuntimeException ex) {
-            log.warning(ex.getMessage() + " sent by " + neighbour.toString());
+            log.warning(ex.getMessage() + " request sent by " + neighbour.toString());
             client.sendUDPResponse(new FileShareResponse(neighbour, GlobalState.getLocalFiles()));
         } catch (Exception ex) {
             log.severe(ex.getMessage());

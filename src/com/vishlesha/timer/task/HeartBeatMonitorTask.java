@@ -30,6 +30,7 @@ public class HeartBeatMonitorTask extends TimerTask {
             GlobalState.acquireHeartBeatMonitorLock();
 
             for (Node node : GlobalState.getNeighbors().keySet()) {
+                logger.info("Heart beat monitored for " + node);
                 Integer count = GlobalState.getNeighborCountList().get(node);
                 if (count > 0){
                     GlobalState.updateNeighborCount(node,-1);
