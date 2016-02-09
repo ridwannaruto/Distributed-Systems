@@ -44,6 +44,7 @@ class App {
         client.sendTCPRequest(regRequest);
 
         GlobalState.getHeartBeatTask().run();
+        GlobalState.getHeartBeatMonitorTask().run();
 
         // TODO modify to issue multiple queries
 
