@@ -34,7 +34,6 @@ public class HeartBeatTask extends TimerTask {
                 Map.Entry pair = (Map.Entry)iterator.next();
                 heartBeatMessage.setRecipientNode((Node)pair.getKey());
                 client.sendUDPMessage(heartBeatMessage);
-                iterator.remove(); // avoids a ConcurrentModificationException
             }
 
             try{
