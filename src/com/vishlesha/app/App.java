@@ -35,6 +35,7 @@ class App {
 
     public static void main(final String[] args) throws IOException {
         Client client = new Client();
+        final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
         System.out.println("Vishlesha Distributed System");
         System.out.println("----------------------------\n");
@@ -43,6 +44,15 @@ class App {
         Request regRequest = new RegisterRequest(GlobalState.getBootstrapNode());
         client.sendTCPRequest(regRequest);
 
+
+        try{
+            GlobalState.getHeartBeatTask().run();
+            log.info("Heart Beating Started");
+            GlobalState.getHeartBeatMonitorTask().run();
+            log.info("Heart Beat Monitor Started");
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
 
 
         // TODO modify to issue multiple queries
@@ -166,14 +176,7 @@ class App {
             ex.printStackTrace();
         }
 
-        try{
-            GlobalState.getHeartBeatTask().run();
-            log.info("Heart Beating Started");
-            GlobalState.getHeartBeatMonitorTask().run();
-            log.info("Heart Beat Monitor Started");
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+
     }
 }
 
