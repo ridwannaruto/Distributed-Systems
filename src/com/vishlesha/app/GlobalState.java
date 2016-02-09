@@ -18,6 +18,7 @@ public class GlobalState {
     private static long roundTripTime;
     private static Node localServerNode;
     private static final Map<Node, List<String>> neighbors = new Hashtable<>();
+    private static final TreeMap<Node,Integer> neighborCountList = new TreeMap<>();
     private static final List<String> localFiles = new ArrayList<String>();
     private static final List<SearchRequest> searchRequestList = new Vector<>();
     private static final Map<String, Request> responsePendingList = new Hashtable<>();
@@ -213,6 +214,10 @@ public class GlobalState {
 
     public static void forgetRequest(SearchRequest request) {
         searchRequestList.remove(request);
+    }
+
+    public static void updateNeighborCount(Node neighbor, Integer count){
+       neighborCountList.put(neighbor, count);
     }
 
 }
