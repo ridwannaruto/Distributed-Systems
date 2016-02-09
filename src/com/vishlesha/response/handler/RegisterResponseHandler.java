@@ -28,10 +28,11 @@ class RegisterResponseHandler {
         if (!registerResponse.isFail()) {
             log.info(GlobalConstant.SUCCESS_MSG_REG);
             try{
-                Timer timer = new Timer();
-                timer.schedule(GlobalState.getHeartBeatMonitorTask(), 100);
+                Timer timerForMonitor = new Timer();
+                timerForMonitor.schedule(GlobalState.getHeartBeatMonitorTask(), 100);
                 log.info("Heart Beat Monitor Started");
-                timer.schedule(GlobalState.getHeartBeatTask(),100);
+                Timer timerForBeat = new Timer();
+                timerForBeat.schedule(GlobalState.getHeartBeatTask(),100);
                 log.info("Heart Beating Started");
 
             }catch (Exception ex){
