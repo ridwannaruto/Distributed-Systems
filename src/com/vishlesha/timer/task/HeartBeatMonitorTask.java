@@ -39,15 +39,18 @@ public class HeartBeatMonitorTask extends TimerTask {
                 }else if (count == -1){
                     GlobalState.removeNeighbor(node);
                     logger.info("Unreachable node removed " + node.toString());
+                    if (GlobalState.getNeighbors().size() == 0){
+                        GlobalState.setNeighborUnreachable(true);
+                    }
                 }
             }
 
-            if(GlobalState.getNeighbors().isEmpty()){
+            if(GlobalState.getNeighbors().isEmpty() && GlobalState.isNeighborUnreachable()){
                 Request unregReq = new UnregisterRequest(GlobalState.getBootstrapNode());
                 client.sendTCPRequest(unregReq);
                 Request regReq = new RegisterRequest(GlobalState.getBootstrapNode());
                 client.sendTCPRequest(regReq);
-                logger.info("Re-registered to the network");
+                logger.info("Re-registering to the network");
                 GlobalState.acquireHeartBeatMonitorLock();
             }
 

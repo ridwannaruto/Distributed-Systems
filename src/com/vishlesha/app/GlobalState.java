@@ -10,9 +10,6 @@ import com.vishlesha.timer.task.HeartBeatTask;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
 
 /**
  * Created by ridwan on 1/1/16.
@@ -31,6 +28,7 @@ public class GlobalState {
     private static final Map<String, Request> responsePendingList = new Hashtable<>();
     private static List<Node> registeredNodeList = new ArrayList<>();
     private static Semaphore heartBeatMonitorLock = new Semaphore(1);
+    private static boolean neighborUnreachable = false;
 
     private static int receivedRequestCount = 0;
     private static int forwardedRequestCount = 0;
@@ -148,6 +146,7 @@ public class GlobalState {
             throw new IllegalStateException("Neighbor already joined");
         }
         neighbors.put(node, new ArrayList<String>());
+        setNeighborUnreachable(false);
         releaseHeartBeatMonitorLock();
 
     }
@@ -272,4 +271,11 @@ public class GlobalState {
         }
     }
 
+    public static boolean isNeighborUnreachable() {
+        return neighborUnreachable;
+    }
+
+    public static void setNeighborUnreachable(boolean neighborUnreachable) {
+        GlobalState.neighborUnreachable = neighborUnreachable;
+    }
 }
