@@ -166,10 +166,14 @@ class App {
             ex.printStackTrace();
         }
 
-        GlobalState.getHeartBeatTask().run();
-        log.info("Heart Beating Started");
-        GlobalState.getHeartBeatMonitorTask().run();
-        log.info("Heart Beat Monitor Started");
+        try{
+            GlobalState.getHeartBeatTask().run();
+            log.info("Heart Beating Started");
+            GlobalState.getHeartBeatMonitorTask().run();
+            log.info("Heart Beat Monitor Started");
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }
 
