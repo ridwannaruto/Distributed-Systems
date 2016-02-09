@@ -1,10 +1,10 @@
 package com.vishlesha.app;
 
+import com.vishlesha.dataType.FileIpMapping;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.Request;
 import com.vishlesha.request.SearchRequest;
-import com.vishlesha.dataType.FileIpMapping;
 
 import java.util.*;
 
@@ -17,69 +17,62 @@ public class GlobalState {
     private static boolean testMode;
     private static long roundTripTime;
     private static Node localServerNode;
-    private static Map<Node, List<String>> neighbors = new Hashtable<>();
-    private static List<String> localFiles = new ArrayList<String>();
-    private static List<SearchRequest> searchRequestList = new Vector<>();
-    private static Map<String, Request> responsePendingList = new Hashtable<>();
+    private static final Map<Node, List<String>> neighbors = new Hashtable<>();
+    private static final List<String> localFiles = new ArrayList<String>();
+    private static final List<SearchRequest> searchRequestList = new Vector<>();
+    private static final Map<String, Request> responsePendingList = new Hashtable<>();
     private static List<Node> registeredNodeList = new ArrayList<>();
 
-    private static int receivedRequestCount= 0;
+    private static int receivedRequestCount = 0;
     private static int forwardedRequestCount = 0;
     private static int answeredRequestCount = 0;
 
-    public static int getReceivedRequestCount(){
+    public static int getReceivedRequestCount() {
         return receivedRequestCount;
     }
 
-    public static int getForwardedRequestCount(){
+    public static int getForwardedRequestCount() {
         return forwardedRequestCount;
     }
 
-    public static int getAnsweredRequestCount(){
+    public static int getAnsweredRequestCount() {
         return answeredRequestCount;
     }
 
-    public static void incrementReceivedRequestCount(){
+    public static void incrementReceivedRequestCount() {
         receivedRequestCount++;
     }
 
-    public static void incrementForwardedRequestCount(){
+    public static void incrementForwardedRequestCount() {
         forwardedRequestCount++;
     }
 
-    public static void incrementAnsweredRequestCount(){
+    public static void incrementAnsweredRequestCount() {
         answeredRequestCount++;
     }
 
-    public static void setRegisteredNodeList(ArrayList<Node> list){
+    public static void setRegisteredNodeList(ArrayList<Node> list) {
         registeredNodeList = list;
     }
 
-
-    public static void removeRegisteredNode(Node node){
+    public static void removeRegisteredNode(Node node) {
         registeredNodeList.remove(node);
     }
 
-    public static Node getRegisteredNode(int index){
+    public static Node getRegisteredNode(int index) {
         return registeredNodeList.get(index);
     }
 
-    public static int getRegisteredNodeCount(){
+    public static int getRegisteredNodeCount() {
         return registeredNodeList.size();
     }
 
     public static boolean isResponsePending(Request request) {
-        if (responsePendingList.containsValue(request)) {
-            return true;
-        }
-        return false;
+        return responsePendingList.containsValue(request);
     }
 
     public static boolean isResponsePending(String key) {
-        if (responsePendingList.containsKey(key)) {
-            return true;
-        }
-        return false;
+        return responsePendingList.containsKey(key);
     }
 
     public static void addResponsePendingRequest(String key, Request request) {
@@ -193,7 +186,6 @@ public class GlobalState {
             fileIpMapping.addFile(file,node);
          }*/
     }
-
 
     public static Client getClient() {
         return client;

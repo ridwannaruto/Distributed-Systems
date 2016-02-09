@@ -1,11 +1,11 @@
 package com.vishlesha.response;
 
-import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.error.SearchError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,56 +13,48 @@ import java.util.List;
  */
 public class SearchResponse extends Response {
 
-    int responseCode;
-    List<String > fileList = new ArrayList<>();
-    int noOfHops;
+    private int responseCode;
+    private final List<String> fileList = new ArrayList<>();
+    private int noOfHops;
 
     // decoding response sent from another node
-    public SearchResponse (String responseMessage, Node senderNode){
+    public SearchResponse(String responseMessage, Node senderNode) {
         setSenderNode(senderNode);
         setResponseMessage(responseMessage);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
         setNoOfHops(Integer.valueOf(token[5]));
 
-        if (token[1].equals("SEROK") && responseCode == 0){
+        if (token[1].equals("SEROK") && responseCode == 0) {
 
-        }
-
-        else if (token[1].equals("SEROK") && responseCode < 9000){
-            for (int i=6; i< token.length;i++){
-                fileList.add(token[i]);
-            }
-        }
-
-        else{
+        } else if (token[1].equals("SEROK") && responseCode < 9000) {
+            fileList.addAll(Arrays.asList(token).subList(6, token.length));
+        } else {
             setFail(true);
-            SearchError searchError = new SearchError(responseMessage,senderNode);
-
+            SearchError searchError = new SearchError(responseMessage, senderNode);
         }
-
     }
 
     public int getNoOfHops() {
         return noOfHops;
     }
 
-    public void setNoOfHops(int noOfHops) {
+    void setNoOfHops(int noOfHops) {
         this.noOfHops = noOfHops;
     }
 
-    public List<String> getFileList(){
+    public List<String> getFileList() {
         return fileList;
     }
 
     // responding with files on local node
-    public SearchResponse(int responseCode, int noOfHops, List<String> fileList){
-        String fileNameList ="";
-        for (int i=0; i<fileList.size(); i++)
-            fileNameList += " " + fileList.get(i);
+    public SearchResponse(int responseCode, int noOfHops, List<String> fileList) {
+        String fileNameList = "";
+        for (String aFileList : fileList) {
+            fileNameList += " " + aFileList;
+        }
         String responseMessage = " SEROK " + responseCode + " " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + noOfHops + fileNameList;
         setResponseMessage(responseMessage);
         appendMsgLength();
     }
-
 }

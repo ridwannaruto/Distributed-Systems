@@ -13,10 +13,11 @@ import java.util.logging.Logger;
  * Created by ridwan on 1/20/16.
  */
 public class RetryRequestTask extends TimerTask {
-    Logger logger = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
-    private Request request;
-    public RetryRequestTask(Request request){
-       this.request = request;
+    private final Logger logger = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
+    private final Request request;
+
+    public RetryRequestTask(Request request) {
+        this.request = request;
     }
 
     private static final int MAX_RETRY_COUNT = 2;
@@ -24,13 +25,13 @@ public class RetryRequestTask extends TimerTask {
 
     @Override
     public void run() {
-        if (GlobalState.isResponsePending(request)){
-            if (request.getRetryCount() < MAX_RETRY_COUNT){
+        if (GlobalState.isResponsePending(request)) {
+            if (request.getRetryCount() < MAX_RETRY_COUNT) {
                 request.incrementRetryCount();
                 Client client = new Client();
                 logger.info("Resending Request: retry count " + request.getRetryCount() + " " + request.getRequestMessage() + " to " + request.getRecipientNode().toString());
                 client.sendUDPRequest(request);
-            }else{
+            } else {
                 ErrorHandler errorHandler = new ErrorHandler();
                 errorHandler.handleNodeUnreachable(request);
             }

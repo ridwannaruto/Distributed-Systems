@@ -1,6 +1,5 @@
 package com.vishlesha.request.handler;
 
-import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
@@ -13,11 +12,11 @@ import java.util.logging.Logger;
 /**
  * Created by ridwan on 1/21/16.
  */
-public class FileShareRequestHandler {
+class FileShareRequestHandler {
 
-    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    private final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
-    public void handle(FileShareRequest fileShareResponse){
+    public void handle(FileShareRequest fileShareResponse) {
         Node neighbour = fileShareResponse.getRecipientNode();
         GlobalState.addNeighborFiles(neighbour, fileShareResponse.getFiles());
         Client client = new Client();
@@ -26,12 +25,12 @@ public class FileShareRequestHandler {
             GlobalState.addNeighborFiles(neighbour, fileShareResponse.getFiles());
             log.info("added files from neighbor " + fileShareResponse.getSenderNode().toString());
             client.sendUDPResponse(new FileShareResponse(neighbour, GlobalState.getLocalFiles()));
-        }catch (IllegalStateException ex) {
+        } catch (IllegalStateException ex) {
             log.warning(ex.getMessage() + " sent by " + neighbour.toString());
-        }catch (RuntimeException ex){
+        } catch (RuntimeException ex) {
             log.warning(ex.getMessage() + " sent by " + neighbour.toString());
             client.sendUDPResponse(new FileShareResponse(neighbour, GlobalState.getLocalFiles()));
-        }catch(Exception ex){
+        } catch (Exception ex) {
             log.severe(ex.getMessage());
         }
     }

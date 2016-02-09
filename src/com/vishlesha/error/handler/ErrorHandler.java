@@ -11,27 +11,21 @@ import com.vishlesha.request.Request;
  */
 public class ErrorHandler {
 
-    public void handleError(Error error){
-        if (error.getClass().equals(RegisterError.class)){
+    public void handleError(Error error) {
+        if (error.getClass().equals(RegisterError.class)) {
             RegisterErrorHandler registerErrorHandler = new RegisterErrorHandler();
             registerErrorHandler.handleErrorResponse(error);
         }
     }
 
-    public void handleNodeUnreachable(Request request){
-        if (request.getClass().equals(JoinRequest.class)){
+    public void handleNodeUnreachable(Request request) {
+        if (request.getClass().equals(JoinRequest.class)) {
             JoinErrorHandler joinErrorHandler = new JoinErrorHandler();
             joinErrorHandler.handleNodeUnreachable(request);
 
-        }else if (request.getClass().equals(LeaveRequest.class)){
+        } else if (request.getClass().equals(LeaveRequest.class)) {
             LeaveErrorHandler leaveErrorHandler = new LeaveErrorHandler();
             leaveErrorHandler.handleNodeUnreachable(request);
         }
     }
-
-
-
-
-
-
 }

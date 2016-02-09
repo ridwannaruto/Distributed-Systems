@@ -11,22 +11,20 @@ import com.vishlesha.error.UnregisterError;
 
 public class UnregisterResponse extends Response {
 
-    int responseCode;
+    private final int responseCode;
 
-    public UnregisterResponse(String responseMessage, Node senderNode){
+    public UnregisterResponse(String responseMessage, Node senderNode) {
         setRecipientNode(senderNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
-        if (token[1].equals("UNROK") && responseCode == 0){
+        if (token[1].equals("UNROK") && responseCode == 0) {
             setFail(false);
             if (!GlobalState.isTestMode())
                 System.out.println(GlobalConstant.SUCCESS_MSG_UNREG);
-        }
-
-        else{
+        } else {
             setFail(true);
-            UnregisterError unregisterError = new UnregisterError(responseMessage,senderNode);
+            UnregisterError unregisterError = new UnregisterError(responseMessage, senderNode);
             if (!GlobalState.isTestMode())
                 System.out.println("Unregister Error: " + unregisterError.getErrorMessage());
         }

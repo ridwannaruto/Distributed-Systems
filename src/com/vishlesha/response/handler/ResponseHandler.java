@@ -12,18 +12,18 @@ import java.util.logging.Logger;
  */
 public class ResponseHandler {
 
-    protected static final int KEY_MSG_LENGTH = 0;
-    protected static final int KEY_RESPONSE_TYPE = 1;
+    private static final int KEY_MSG_LENGTH = 0;
+    private static final int KEY_RESPONSE_TYPE = 1;
 
-    protected static final String RESPONSE_TYPE_REGISTER= "REGOK";
-    protected static final String RESPONSE_TYPE_JOIN = "JOINOK";
-    protected static final String RESPONSE_TYPE_LEAVE = "LEAVEOK";
-    protected static final String RESPONSE_TYPE_SEARCH = "SEROK";
-    protected static final String RESPONSE_TYPE_FILE_SHARE = "FILESOK";
+    private static final String RESPONSE_TYPE_REGISTER = "REGOK";
+    private static final String RESPONSE_TYPE_JOIN = "JOINOK";
+    private static final String RESPONSE_TYPE_LEAVE = "LEAVEOK";
+    private static final String RESPONSE_TYPE_SEARCH = "SEROK";
+    private static final String RESPONSE_TYPE_FILE_SHARE = "FILESOK";
 
-    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    private final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
-    public void handle(String responseMessage , Node sender) {
+    public void handle(String responseMessage, Node sender) {
 
         String[] token = responseMessage.split(" ");
         int lengthOfMessage = Integer.valueOf(token[KEY_MSG_LENGTH]);
@@ -33,17 +33,17 @@ public class ResponseHandler {
             sendResponse(new ErrorResponse());
         } else {
             if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_REGISTER)) {
-                RegisterResponse registerResponse = new RegisterResponse(responseMessage,sender);
+                RegisterResponse registerResponse = new RegisterResponse(responseMessage, sender);
                 RegisterResponseHandler registerResponseHandler = new RegisterResponseHandler();
                 registerResponseHandler.handle(registerResponse);
 
-            }else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_JOIN)) {
-                JoinResponse joinResponse = new JoinResponse(responseMessage,sender);
+            } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_JOIN)) {
+                JoinResponse joinResponse = new JoinResponse(responseMessage, sender);
                 JoinResponseHandler joinResponseHandler = new JoinResponseHandler();
                 joinResponseHandler.handle(joinResponse);
 
             } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_LEAVE)) {
-                LeaveResponse leaveResponse = new LeaveResponse(responseMessage,sender);
+                LeaveResponse leaveResponse = new LeaveResponse(responseMessage, sender);
                 LeaveResponseHandler leaveResponseHandler = new LeaveResponseHandler();
                 leaveResponseHandler.handle(leaveResponse);
 
@@ -54,7 +54,7 @@ public class ResponseHandler {
 
             } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_SEARCH)) {
 
-                SearchResponse searchResponse = new SearchResponse(responseMessage,sender);
+                SearchResponse searchResponse = new SearchResponse(responseMessage, sender);
                 SearchResponseHandler searchResponseHandler = new SearchResponseHandler();
                 searchResponseHandler.handle(searchResponse);
 
@@ -65,7 +65,7 @@ public class ResponseHandler {
         }
     }
 
-    private void sendResponse(Response response){
+    private void sendResponse(Response response) {
         Client client = new Client();
         client.sendUDPResponse(response);
     }

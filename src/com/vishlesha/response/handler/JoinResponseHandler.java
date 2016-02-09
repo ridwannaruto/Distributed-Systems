@@ -1,13 +1,11 @@
 package com.vishlesha.response.handler;
 
-import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Util;
 import com.vishlesha.request.FileShareRequest;
-import com.vishlesha.response.FileShareResponse;
 import com.vishlesha.response.JoinResponse;
 
 import java.util.logging.Logger;
@@ -15,10 +13,10 @@ import java.util.logging.Logger;
 /**
  * Created by ridwan on 1/18/16.
  */
-public class JoinResponseHandler {
+class JoinResponseHandler {
 
-    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
-    Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
+    private final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    private final Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
 
     public void handle(JoinResponse joinResponse) {
         Node newNeighbour = joinResponse.getSenderNode();
@@ -35,7 +33,7 @@ public class JoinResponseHandler {
             GlobalState.removeRegisteredNode(joinResponse.getSenderNode());
             log.info("removed Node from registered nodes list");
 
-        } catch (Exception ex){
+        } catch (Exception ex) {
             netLog.warning("could not remove request from pending list");
             netLog.severe(Util.getStackTrace(ex));
         }
@@ -49,12 +47,8 @@ public class JoinResponseHandler {
         } catch (IllegalStateException ex) {
             //TODO
             log.warning("node already exists " + newNeighbour.toString());
-        } catch (Exception ex){
+        } catch (Exception ex) {
             log.severe(ex.getMessage());
         }
-
-
     }
-
-
 }

@@ -10,12 +10,11 @@ public class SearchRequest extends Request {
     private String fileName;
     private int noOfHops;
 
-
-   public String getFileName() {
+    public String getFileName() {
         return fileName;
     }
 
-    public void setFileName(String fileName) {
+    void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
@@ -27,7 +26,7 @@ public class SearchRequest extends Request {
         this.noOfHops = noOfHops;
     }
 
-    public SearchRequest(Node initiator, Node recipient, String searchFileName, int numberOfHops){
+    public SearchRequest(Node initiator, Node recipient, String searchFileName, int numberOfHops) {
         setRecipientNode(recipient);
         setFileName(searchFileName);
         setNoOfHops(numberOfHops);
@@ -37,7 +36,7 @@ public class SearchRequest extends Request {
         appendMsgLength();
     }
 
-    public SearchRequest (String requestMessage){
+    public SearchRequest(String requestMessage) {
         String[] token = requestMessage.split(" ");
 
         Node node = new Node();
@@ -50,13 +49,13 @@ public class SearchRequest extends Request {
         setRequestMessage(requestMessage);
     }
 
-    public void updateRequestMessage(){
+    public void updateRequestMessage() {
         String requestMessage = " SER " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
         setRequestMessage(requestMessage);
         appendMsgLength();
     }
 
-    public String getHashCode(){
+    public String getHashCode() {
         return "SER-" + getRecipientNode().getIpaddress();
     }
 
@@ -68,7 +67,8 @@ public class SearchRequest extends Request {
         SearchRequest that = (SearchRequest) o;
 
         if (!fileName.equals(that.fileName)) return false;
-        if (getInitialNode() != null ? !getInitialNode().equals(that.getInitialNode()) : that.getInitialNode() != null) return false;
+        if (getInitialNode() != null ? !getInitialNode().equals(that.getInitialNode()) : that.getInitialNode() != null)
+            return false;
 
         return true;
     }

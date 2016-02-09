@@ -13,17 +13,17 @@ import java.util.logging.Logger;
 /**
  * Created by ridwan on 1/21/16.
  */
-public class JoinErrorHandler {
+class JoinErrorHandler {
 
-    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    private final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
 
-    public void handleNodeUnreachable(Request request){
+    public void handleNodeUnreachable(Request request) {
         Node unreachableNode = request.getRecipientNode();
         Client client = new Client();
-        try{
+        try {
             int availableNodeCount = GlobalState.getRegisteredNodeCount();
-            if (availableNodeCount > 0){
+            if (availableNodeCount > 0) {
                 GlobalState.removeRegisteredNode(unreachableNode);
                 availableNodeCount = GlobalState.getRegisteredNodeCount();
 
@@ -39,7 +39,7 @@ public class JoinErrorHandler {
                 }
             }
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             log.severe(ex.getMessage());
         }
 

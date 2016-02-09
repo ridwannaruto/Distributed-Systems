@@ -5,33 +5,36 @@ import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
-import com.vishlesha.request.*;
+import com.vishlesha.request.JoinRequest;
+import com.vishlesha.request.LeaveRequest;
 
 import java.net.InetAddress;
 
 /**
  * Created by ridwan on 1/1/16.
  */
-public class OverlayNetworkTest {
+class OverlayNetworkTest {
 
     String responseMessage;
-    Node bootstrapServer, localServer;
-    Client clientInstance;
-    Server serverInstance;
-    String bootstrapIP = "127.0.0.1";
-    int bootstrapPort = 1040;
+    private Node bootstrapServer;
+    private Node localServer;
+    private Client clientInstance;
+    private Server serverInstance;
+    private final String bootstrapIP = "127.0.0.1";
+    private final int bootstrapPort = 1040;
 
-    int shortSleepDuration = 3000, longSleepDuration = 10000;
+    private final int shortSleepDuration = 3000;
+    int longSleepDuration = 10000;
 
     public void runTest() {
         GlobalState.setTestMode(true);
         initialize();
         System.out.println("Running register user test");
-    //    testRegister();
+        //    testRegister();
         System.out.println("Running register same user test");
-    //    testRegisterSameUserName();
+        //    testRegisterSameUserName();
         System.out.println("Running unregister user test");
-    //    testUnregister();
+        //    testUnregister();
         System.out.println("Running join server test");
         testJoinServer();
         System.out.println("Running leave server test");
@@ -39,30 +42,27 @@ public class OverlayNetworkTest {
         terminate();
     }
 
-
-
-    private void terminate(){
+    private void terminate() {
         serverInstance.Stop();
         clientInstance.stop();
-
     }
 
-    private void initialize(){
+    private void initialize() {
         bootstrapServer = new Node();
         bootstrapServer.setIpaddress(bootstrapIP);
         bootstrapServer.setPortNumber(bootstrapPort);
 
-        try{
+        try {
             localServer = new Node();
             localServer.setIpaddress(InetAddress.getLocalHost().getHostAddress());
             localServer.setPortNumber(GlobalConstant.PORT_LISTEN);
-        }catch (Exception ex){
-            System.out.println(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         GlobalState.setLocalServerNode(localServer);
         clientInstance = new Client();
-        serverInstance = new Server(new Node(null,0));
+        serverInstance = new Server(new Node(null, 0));
         serverInstance.start();
     }
 
@@ -123,26 +123,23 @@ public class OverlayNetworkTest {
 
     */
 
-    private void testJoinServer(){
+    private void testJoinServer() {
         JoinRequest joinRequest = new JoinRequest(localServer);
         clientInstance.sendUDPRequest(joinRequest);
         sleep(shortSleepDuration);
     }
 
-
-
-    private void testLeaveServer(){
+    private void testLeaveServer() {
         LeaveRequest leaveRequest = new LeaveRequest(localServer);
         clientInstance.sendUDPRequest(leaveRequest);
         sleep(shortSleepDuration);
     }
 
-
-    public void sleep(int duratrion){
-        try{
+    void sleep(int duratrion) {
+        try {
             Thread.sleep(duratrion);
-        }catch (Exception ex){
-
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

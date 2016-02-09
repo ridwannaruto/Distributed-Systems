@@ -10,29 +10,27 @@ import com.vishlesha.error.LeaveError;
  */
 public class LeaveResponse extends Response {
 
-    int responseCode;
+    private int responseCode;
 
-    public LeaveResponse(String responseMessage, Node senderNode){
+    public LeaveResponse(String responseMessage, Node senderNode) {
         setRecipientNode(senderNode);
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
-        if (token[1].equals("LEAVEOK") && responseCode == 0){
+        if (token[1].equals("LEAVEOK") && responseCode == 0) {
             setFail(false);
             if (!GlobalState.isTestMode())
                 System.out.println(GlobalConstant.SUCCESS_MSG_LEAVE);
-        }
-
-        else{
+        } else {
             setFail(true);
-            LeaveError leaveError = new LeaveError(responseMessage,senderNode);
+            LeaveError leaveError = new LeaveError(responseMessage, senderNode);
             if (!GlobalState.isTestMode())
                 System.out.println("Leave Error: " + leaveError.getErrorMessage());
         }
 
     }
 
-    public LeaveResponse(int responseCode){
+    public LeaveResponse(int responseCode) {
         String responseMessage = " LEAVEOK " + responseCode;
         setResponseMessage(responseMessage);
         appendMsgLength();

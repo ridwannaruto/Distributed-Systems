@@ -20,31 +20,31 @@ abstract public class Request {
 
     abstract public String getHashCode();
 
-    public int getRetryCount(){
+    public int getRetryCount() {
         return retryCount;
     }
 
-    public void incrementRetryCount(){
+    public void incrementRetryCount() {
         retryCount++;
     }
+
     public Node getInitialNode() {
         return initialNode;
     }
 
-    public void setInitialNode(Node initialNode) {
+    void setInitialNode(Node initialNode) {
         this.initialNode = initialNode;
     }
 
     public Node getSenderNode() {
-      return senderNode;
-   }
+        return senderNode;
+    }
 
-   public void setSenderNode(Node senderNode) {
-      this.senderNode = senderNode;
-   }
+    public void setSenderNode(Node senderNode) {
+        this.senderNode = senderNode;
+    }
 
-
-   public Node getRecipientNode() {
+    public Node getRecipientNode() {
         return recipientNode;
     }
 
@@ -52,17 +52,15 @@ abstract public class Request {
         this.recipientNode = recipientNode;
     }
 
-    public String getRequestMessage(){
+    public String getRequestMessage() {
         return requestMessage;
     }
 
-   public void setRequestMessage(String requestMessage) {
-      this.requestMessage = requestMessage;
-   }
-
-   protected void appendMsgLength(){
-        requestMessage = String.format("%04d", requestMessage.length()+4) + requestMessage;
+    void setRequestMessage(String requestMessage) {
+        this.requestMessage = requestMessage;
     }
 
-
+    void appendMsgLength() {
+        requestMessage = String.format("%04d", requestMessage.length() + 4) + requestMessage;
+    }
 }

@@ -4,18 +4,18 @@ package com.vishlesha.dataType;
  * Created by ridwan on 1/1/16.
  */
 public class Node {
-    String ipaddress;
-    int portNumber;
+    private String ipaddress;
+    private int portNumber;
 
-   public Node() {
-   }
+    public Node() {
+    }
 
-   public Node(String ipaddress, int portNumber) {
-      this.ipaddress = ipaddress;
-      this.portNumber = portNumber;
-   }
+    public Node(String ipaddress, int portNumber) {
+        this.ipaddress = ipaddress;
+        this.portNumber = portNumber;
+    }
 
-   public String getIpaddress() {
+    public String getIpaddress() {
         return ipaddress;
     }
 
@@ -45,8 +45,7 @@ public class Node {
         if (o == null || getClass() != o.getClass()) return false;
 
         Node node = (Node) o;
-        if (!ipaddress.equals(node.ipaddress)) return false;
-        return true;
+        return ipaddress.equals(node.ipaddress);
     }
 
     @Override

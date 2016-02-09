@@ -20,11 +20,12 @@ import java.util.logging.Logger;
 /**
  * Created by ridwan on 1/1/16.
  */
-public class Client extends Base {
+public class Client {
 
-    Socket socket = null;
-    ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_CLIENT_WORKER_POOL);
-    Logger log = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
+    private Socket socket = null;
+    private final ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_CLIENT_WORKER_POOL);
+    private final Logger log = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
+
     public Socket getSocket() {
         return socket;
     }
@@ -64,12 +65,10 @@ public class Client extends Base {
                 } catch (IOException ex) {
                     log.severe("IO exception: " + ex.getMessage());
                     log.severe(Util.getStackTrace(ex));
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     log.severe(Util.getStackTrace(ex));
                 }
             }
-
-
         });
     }
 
@@ -100,12 +99,10 @@ public class Client extends Base {
                     log.severe("IO exception: " + ex.getMessage());
                     log.severe(Util.getStackTrace(ex));
                     ex.printStackTrace();
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     log.severe(Util.getStackTrace(ex));
                 }
             }
-
-
         });
     }
 
@@ -125,13 +122,13 @@ public class Client extends Base {
                     BufferedWriter outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     String responseLine = null;
 
-                    if (socket != null && outputStream != null && inputStream != null) {
+                    if (socket != null) {
                         outputStream.write(requestMessage);
                         start = System.currentTimeMillis();
                         outputStream.flush();
                         responseLine = inputStream.readLine();
                         end = System.currentTimeMillis();
-                        GlobalState.setRoundTripTime(end-start + 1000);
+                        GlobalState.setRoundTripTime(end - start + 1000);
                         log.info("TCP Client Message Received: " + responseLine + " from " + request.getRecipientNode().toString());
                     }
 
@@ -147,14 +144,14 @@ public class Client extends Base {
                     log.severe("IO exception: " + ex.getMessage());
                     log.severe(Util.getStackTrace(ex));
                     System.out.println("Could not connect to boostrap server");
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     log.severe(Util.getStackTrace(ex));
                 }
             }
         });
     }
 
-    public void stop(){
+    public void stop() {
         workerPool.shutdown();
     }
 }

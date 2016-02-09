@@ -13,38 +13,36 @@ import java.util.logging.Logger;
 /**
  * Created by ridwan on 1/2/16.
  */
-public class JoinRequestHandler {
+class JoinRequestHandler {
 
     private static final int RESPOND_CODE_JOIN_SUCCESS = 0;
     private static final int RESPOND_CODE_JOIN_ERROR = 9999;
 
-    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    private final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
-    public void handle(JoinRequest request){
+    public void handle(JoinRequest request) {
         // add as neighbor
         Node neighbor = request.getInitialNode();
-        try{
+        try {
             GlobalState.addNeighbor(neighbor);
             log.info("New neighbour joined " + neighbor.toString());
-            Response joinResponse =new JoinResponse(RESPOND_CODE_JOIN_SUCCESS);
+            Response joinResponse = new JoinResponse(RESPOND_CODE_JOIN_SUCCESS);
             joinResponse.setRecipientNode(neighbor);
             sendResponse(joinResponse);
-        }catch (IllegalStateException ex){
+        } catch (IllegalStateException ex) {
             log.warning("Neighbour already exists " + neighbor.toString());
             Response joinResponse = new JoinResponse(RESPOND_CODE_JOIN_SUCCESS);
             joinResponse.setRecipientNode(neighbor);
             sendResponse(joinResponse);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             log.severe("Could not add neighbour " + neighbor.toString());
             Response joinResponse = new JoinResponse(RESPOND_CODE_JOIN_ERROR);
             joinResponse.setRecipientNode(neighbor);
             sendResponse(joinResponse);
         }
-
-
     }
 
-    private void sendResponse(Response response){
+    private void sendResponse(Response response) {
         Client client = new Client();
         client.sendUDPResponse(response);
     }

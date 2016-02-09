@@ -8,12 +8,12 @@ import com.vishlesha.error.Error;
  */
 
 abstract public class Response {
-    protected Node recipientNode;
-    protected Node senderNode;
-    protected String responseMessage;
-    protected int responseCode;
-    protected boolean fail;
-    protected Error error;
+    private Node recipientNode;
+    private Node senderNode;
+    private String responseMessage;
+    private int responseCode;
+    private boolean fail;
+    private Error error;
 
     public static final int KEY_MSG_LENGTH = 0;
     public static final int KEY_RESPONSE_TYPE = 1;
@@ -32,7 +32,7 @@ abstract public class Response {
         return error;
     }
 
-    public void setError(Error error) {
+    void setError(Error error) {
         this.error = error;
     }
 
@@ -52,7 +52,7 @@ abstract public class Response {
         this.recipientNode = recipientNode;
     }
 
-    public String getResponseMessage(){
+    public String getResponseMessage() {
         return responseMessage;
     }
 
@@ -60,15 +60,15 @@ abstract public class Response {
         return fail;
     }
 
-    public void setFail(boolean fail) {
+    void setFail(boolean fail) {
         this.fail = fail;
     }
 
-    public void appendMsgLength(){
-        responseMessage = String.format("%04d", responseMessage.length()+4) + responseMessage;
+    void appendMsgLength() {
+        responseMessage = String.format("%04d", responseMessage.length() + 4) + responseMessage;
     }
 
-    public void setResponseMessage(String responseMessage) {
+    void setResponseMessage(String responseMessage) {
         this.responseMessage = responseMessage;
     }
 }

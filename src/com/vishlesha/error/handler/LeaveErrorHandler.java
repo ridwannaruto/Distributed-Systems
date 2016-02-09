@@ -3,28 +3,25 @@ package com.vishlesha.error.handler;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
-import com.vishlesha.network.Client;
-import com.vishlesha.request.JoinRequest;
 import com.vishlesha.request.Request;
 
-import java.util.Random;
 import java.util.logging.Logger;
 
 /**
  * Created by ridwan on 1/21/16.
  */
-public class LeaveErrorHandler {
+class LeaveErrorHandler {
 
-    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    private final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
 
-    public void handleNodeUnreachable(Request request){
+    public void handleNodeUnreachable(Request request) {
         Node unreachableNode = request.getRecipientNode();
-        try{
+        try {
             GlobalState.removeNeighbor(unreachableNode);
             log.info("Removed neighbor from list " + unreachableNode.toString());
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             log.severe(ex.getMessage());
         }
 

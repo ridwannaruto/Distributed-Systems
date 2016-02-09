@@ -13,28 +13,29 @@ import java.util.ArrayList;
 
 public class RegisterResponse extends Response {
 
-    ArrayList<Node> nodeList;
-    int noOfNodes;
-    public RegisterResponse(String responseMessage, Node recipientNode){
+    private ArrayList<Node> nodeList;
+    private final int noOfNodes;
+
+    public RegisterResponse(String responseMessage, Node recipientNode) {
         setRecipientNode(recipientNode);
         String[] token = responseMessage.split(" ");
         noOfNodes = Integer.valueOf(token[2]);
-        if (token[1].equals("REGOK") && noOfNodes <9000){
+        if (token[1].equals("REGOK") && noOfNodes < 9000) {
             setFail(false);
             if (!GlobalState.isTestMode())
                 System.out.println(GlobalConstant.SUCCESS_MSG_REG);
 
             nodeList = new ArrayList<Node>();
 
-            for (int i=3; i< 3+ (noOfNodes*3); i+=3){
+            for (int i = 3; i < 3 + (noOfNodes * 3); i += 3) {
                 Node node = new Node();
                 node.setIpaddress(token[i]);
                 node.setPortNumber(Integer.valueOf(token[i + 1]));
                 nodeList.add(node);
             }
-        }else{
+        } else {
             setFail(true);
-            RegisterError registerError = new RegisterError(responseMessage,recipientNode);
+            RegisterError registerError = new RegisterError(responseMessage, recipientNode);
             setError(registerError);
             if (!GlobalState.isTestMode())
                 System.out.println("Register Error: " + registerError.getErrorMessage());

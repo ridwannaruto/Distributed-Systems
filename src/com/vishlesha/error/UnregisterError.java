@@ -6,18 +6,18 @@ import com.vishlesha.dataType.Node;
 /**
  * Created by ridwan on 1/1/16.
  */
-public class UnregisterError extends Error{
+public class UnregisterError extends Error {
 
-    public UnregisterError (String errorMessage, Node errorNode){
+    public UnregisterError(String errorMessage, Node errorNode) {
         super(errorNode);
         String[] token = errorMessage.split(" ");
 
-        if (token[1].equals("ERROR")){
+        if (token[1].equals("ERROR")) {
             setErrorCode(0);
             setErrorMessage(GlobalConstant.ERR_MSG_GENERAL);
-        }else{
+        } else {
             int errorCode = Integer.valueOf(token[2]);
-            switch (errorCode){
+            switch (errorCode) {
                 case 9999:
                     setErrorCode(GlobalConstant.ERR_CODE_UNREG_INVALID);
                     setErrorMessage(GlobalConstant.ERR_MSG_UNREG_INVALID);

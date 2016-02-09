@@ -7,13 +7,18 @@ import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
-import com.vishlesha.request.*;
+import com.vishlesha.request.LeaveRequest;
+import com.vishlesha.request.RegisterRequest;
+import com.vishlesha.request.Request;
+import com.vishlesha.request.UnregisterRequest;
 import com.vishlesha.request.handler.SearchRequestHandler;
 
-import javax.xml.bind.annotation.XmlElementDecl;
-import java.io.*;
+import java.io.IOException;
 import java.net.InetAddress;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /*
@@ -22,16 +27,13 @@ import java.util.logging.Logger;
     * Connects to server and displays the responseMessage
 */
 
-public class App {
+class App {
 
-
-    final GlobalConstant globalConstant = new GlobalConstant();
-    final static Scanner scanner = new Scanner(System.in);
+    private final static Scanner scanner = new Scanner(System.in);
 
     public static void main(final String[] args) throws IOException {
         Client client = new Client();
         final Node bootstrapServerNode = new Node();
-
 
         System.out.println("Vishlesha Distributed System");
         System.out.println("----------------------------\n");
@@ -43,7 +45,6 @@ public class App {
         // TODO modify to issue multiple queries
 
         System.out.println("connecting to the network..........");
-
 
         boolean print = true;
 
@@ -63,6 +64,7 @@ public class App {
                 SearchRequestHandler searchRequestHandler = new SearchRequestHandler();
                 searchRequestHandler.initiateSearch(searchQuery);
             }
+
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -72,7 +74,6 @@ public class App {
     }
 
     private static void setup(final Node bootstrapServerNode, final Client client) {
-        int nodeId;
         int bootstrapPort;
         final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
         Server server;
@@ -88,7 +89,6 @@ public class App {
 
         bootstrapPort = 1033;
         bootstrapServerNode.setPortNumber(bootstrapPort);
-
 
         // handleErrorResponse LEAVE and UNREG on shutdown
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -154,12 +154,10 @@ public class App {
             }
             System.out.println("File list generated\n");
 
-
         } catch (IOException ex) {
             System.out.println("Unable to create log files");
             ex.printStackTrace();
         }
-
     }
 }
 

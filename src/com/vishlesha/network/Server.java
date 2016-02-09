@@ -1,7 +1,6 @@
 package com.vishlesha.network;
 
 import com.vishlesha.app.GlobalConstant;
-import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.request.handler.RequestHandler;
@@ -18,17 +17,18 @@ import java.util.logging.Logger;
 /**
  * Created by ridwan on 1/1/16.
  */
-public class Server extends Base implements Runnable {
+public class Server implements Runnable {
+
+    private final ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_SERVER_WORKER_POOL);
+    private final Logger log = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
+    private DatagramSocket serverSocket;
+    private final Node node;
 
 
-    ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_SERVER_WORKER_POOL);
-    Logger log = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
-    DatagramSocket serverSocket;
-    Node node;
-
-    public Server(Node node){
+    public Server(Node node) {
         this.node = node;
     }
+
     public void start() {
         Thread t = new Thread(this);
         t.setDaemon(true);
@@ -87,16 +87,10 @@ public class Server extends Base implements Runnable {
             log.severe(Util.getStackTrace(ex));
             ex.printStackTrace();
         }
-
     }
-
 
     public void Stop() {
-
         workerPool.shutdown();
         serverSocket.close();
-
     }
-
-
 }

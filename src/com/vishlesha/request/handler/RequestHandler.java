@@ -17,15 +17,15 @@ import java.util.logging.Logger;
  */
 public class RequestHandler {
 
-    protected static final int KEY_MSG_LENGTH = 0;
-    protected static final int KEY_REQ_TYPE = 1;
+    private static final int KEY_MSG_LENGTH = 0;
+    private static final int KEY_REQ_TYPE = 1;
 
-    protected static final String REQ_TYPE_JOIN = "JOIN";
-    protected static final String REQ_TYPE_LEAVE = "LEAVE";
-    protected static final String REQ_TYPE_SEARCH = "SER";
-    protected static final String REQ_TYPE_FILES = "FILES";
+    private static final String REQ_TYPE_JOIN = "JOIN";
+    private static final String REQ_TYPE_LEAVE = "LEAVE";
+    private static final String REQ_TYPE_SEARCH = "SER";
+    private static final String REQ_TYPE_FILES = "FILES";
 
-    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    private final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
     public void handle(String requestMessage, Node sender) {
 

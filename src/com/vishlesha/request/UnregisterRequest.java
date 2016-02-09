@@ -9,8 +9,7 @@ import com.vishlesha.dataType.Node;
 
 public class UnregisterRequest extends Request {
 
-
-    public UnregisterRequest(Node node){
+    public UnregisterRequest(Node node) {
         setRecipientNode(node);
         String requestMessage = " UNREG " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + GlobalState.getUsername();
         setRequestMessage(requestMessage);
@@ -18,10 +17,7 @@ public class UnregisterRequest extends Request {
 
     }
 
-    public String getHashCode(){
+    public String getHashCode() {
         return "UNREG-" + getRecipientNode().getIpaddress();
     }
-
-
-
 }

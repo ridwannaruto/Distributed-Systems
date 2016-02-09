@@ -11,12 +11,12 @@ import java.util.Date;
 
 public class RegisterRequest extends Request {
 
-    public RegisterRequest(Node node, String ... params){
+    public RegisterRequest(Node node, String... params) {
         setRecipientNode(node);
         String userName;
-        if (params.length > 0){
-            userName =  params[0];
-        }else{
+        if (params.length > 0) {
+            userName = params[0];
+        } else {
             String currentTime = String.valueOf(new Date().getTime());
             userName = currentTime.substring(currentTime.length() - 8);
         }
@@ -27,7 +27,7 @@ public class RegisterRequest extends Request {
         appendMsgLength();
     }
 
-    public String getHashCode(){
+    public String getHashCode() {
         return "REG-" + getRecipientNode().getIpaddress();
     }
 }

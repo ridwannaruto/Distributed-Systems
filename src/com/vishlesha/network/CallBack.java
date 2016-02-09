@@ -7,10 +7,12 @@ import com.vishlesha.dataType.Node;
  */
 abstract public class CallBack {
 
-   public  static  final  CallBack emptyCallback = new CallBack() {
-      @Override public void run(String message, Node node) {
+    public static final CallBack emptyCallback = new CallBack() {
+        @Override
+        public void run(String message, Node node) {
 
-      }
-   };
+        }
+    };
+
     abstract public void run(String message, Node node);
 }

@@ -4,7 +4,6 @@ import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
-import com.vishlesha.response.JoinResponse;
 import com.vishlesha.response.LeaveResponse;
 
 import java.util.logging.Logger;
@@ -12,10 +11,10 @@ import java.util.logging.Logger;
 /**
  * Created by ridwan on 1/18/16.
  */
-public class LeaveResponseHandler {
+class LeaveResponseHandler {
 
-    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
-    Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
+    private final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    private final Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
 
     public void handle(LeaveResponse leaveResponse) {
 
@@ -37,8 +36,5 @@ public class LeaveResponseHandler {
             //TODO
             log.warning("Node doesn't exists");
         }
-
-
     }
-
 }

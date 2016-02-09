@@ -1,16 +1,16 @@
 package com.vishlesha.error;
-import com.vishlesha.app.GlobalConstant;
+
 import com.vishlesha.dataType.Node;
 
 /**
  * Created by ridwan on 1/1/16.
  */
 public class Error {
-    protected Node errorNode;
-    protected int errorCode;
-    protected String errorMessage;
+    private Node errorNode;
+    private int errorCode;
+    private String errorMessage;
 
-    public Error (Node errorNode){
+    Error(Node errorNode) {
         setErrorNode(errorNode);
     }
 
@@ -18,7 +18,7 @@ public class Error {
         return errorNode;
     }
 
-    public void setErrorNode(Node node) {
+    void setErrorNode(Node node) {
         this.errorNode = node;
     }
 
@@ -26,7 +26,7 @@ public class Error {
         return errorCode;
     }
 
-    public void setErrorCode(int errorCode) {
+    void setErrorCode(int errorCode) {
         this.errorCode = errorCode;
     }
 
@@ -34,7 +34,7 @@ public class Error {
         return errorMessage;
     }
 
-    public void setErrorMessage(String errorMessage) {
+    void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 }

@@ -1,7 +1,5 @@
 package com.vishlesha.app;
 
-import com.vishlesha.dataType.Node;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +25,6 @@ public class GlobalConstant {
     public static final int ERR_CODE_SEARCH_GENERAL = 50;
     public static final int ERR_CODE_SEARCH_UNREACHABLE = 51;
 
-
     public static final int NUM_THREADS_CLIENT_WORKER_POOL = 100;
     public static final int NUM_THREADS_SERVER_WORKER_POOL = 100;
     public static final int PORT_MIN = 1050;
@@ -51,8 +48,6 @@ public class GlobalConstant {
     public static final String ERR_HANDLE_REG_FULL = "Bootstrap server is full. Try again later.";
     public static final String ERR_HANDLE_REG_DEFAULT = "Some fail in command";
 
-
-
     public static final String SUCCESS_MSG_REG = "Successfully registered to the system";
     public static final String SUCCESS_MSG_UNREG = "Successfully unregistered from the system";
     public static final String SUCCESS_MSG_JOIN = "Successfully joined server node";
@@ -64,7 +59,8 @@ public class GlobalConstant {
     public static final int[][] topology = new int[11][2];
 
     public static final List<String> ALL_FILES = new ArrayList<String>();
-    public static final List<String> ALL_QUERIES = new ArrayList<String>();
+    private static final List<String> ALL_QUERIES = new ArrayList<String>();
+
     static {
         ALL_FILES.add("Adventures_of_Tintin");
         ALL_FILES.add("Jack_and_Jill");
@@ -138,7 +134,6 @@ public class GlobalConstant {
         ALL_QUERIES.add("Hacking");
         ALL_QUERIES.add("King");
 
-
         topology[0][0] = 0;
         topology[0][1] = 0;
         topology[1][0] = 0;
@@ -161,13 +156,5 @@ public class GlobalConstant {
         topology[9][1] = 8;
         topology[10][0] = 8;
         topology[10][1] = 9;
-
-
-
     }
-
-
-
-
-
 }

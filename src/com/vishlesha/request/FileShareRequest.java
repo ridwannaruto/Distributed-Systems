@@ -4,6 +4,7 @@ import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,12 +18,12 @@ public class FileShareRequest extends Request {
         return files;
     }
 
-    public void setFiles(List<String> files) {
+    void setFiles(List<String> files) {
         this.files = files;
     }
 
     // response sent out by this node
-    public FileShareRequest(Node node, List<String> files){
+    public FileShareRequest(Node node, List<String> files) {
         setRecipientNode(node);
         setFiles(files);
         StringBuilder builder = new StringBuilder(" FILES ");
@@ -30,17 +31,15 @@ public class FileShareRequest extends Request {
                 .append(" ")
                 .append(GlobalState.getLocalServerNode().getPortNumber())
                 .append(" ");
-        for (String file: files) {
+        for (String file : files) {
             builder.append(file).append(" ");   // FIXME assuming no spaces in file names
         }
         setRequestMessage(builder.substring(0, builder.length() - 1));    // ignore last ' '
         appendMsgLength();
-
-
     }
 
     // request from a different node
-    public FileShareRequest(String requestMessage){
+    public FileShareRequest(String requestMessage) {
         String[] tokens = requestMessage.split(" ");
         Node node = new Node();
         node.setIpaddress(tokens[Request.KEY_IP_ADDRESS]);
@@ -48,13 +47,11 @@ public class FileShareRequest extends Request {
         setRecipientNode(node);
 
         List<String> files = new ArrayList<>();
-        for (int i = Request.KEY_PORT_NUM + 1; i < tokens.length; i++) {
-            files.add(tokens[i]);
-        }
+        files.addAll(Arrays.asList(tokens).subList(Request.KEY_PORT_NUM + 1, tokens.length));
         setFiles(files);
     }
 
-    public String getHashCode(){
+    public String getHashCode() {
         return "FILES-" + getRecipientNode().getIpaddress();
     }
 }

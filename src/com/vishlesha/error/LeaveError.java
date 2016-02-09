@@ -8,16 +8,16 @@ import com.vishlesha.dataType.Node;
  */
 public class LeaveError extends Error {
 
-    public LeaveError (String errorMessage, Node errorNode){
+    public LeaveError(String errorMessage, Node errorNode) {
         super(errorNode);
         String[] token = errorMessage.split(" ");
 
-        if (token[1].equals("ERROR")){
+        if (token[1].equals("ERROR")) {
             setErrorCode(0);
             setErrorMessage(GlobalConstant.ERR_MSG_GENERAL);
-        }else{
+        } else {
             int errorCode = Integer.valueOf(token[2]);
-            switch (errorCode){
+            switch (errorCode) {
                 case 9999:
                     setErrorCode(GlobalConstant.ERR_CODE_LEAVE);
                     setErrorMessage(GlobalConstant.ERR_MSG_LEAVE);

@@ -5,7 +5,6 @@ import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.error.RegisterError;
 import com.vishlesha.error.handler.ErrorHandler;
-import com.vishlesha.error.handler.RegisterErrorHandler;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.JoinRequest;
@@ -18,24 +17,25 @@ import java.util.logging.Logger;
 /**
  * Created by ridwan on 1/18/16.
  */
-public class RegisterResponseHandler {
+class RegisterResponseHandler {
 
-    Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
-    public void handle(RegisterResponse registerResponse){
+    private final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+
+    public void handle(RegisterResponse registerResponse) {
         final Random rand = new Random();
         Client client = new Client();
-        if (!registerResponse.isFail()){
+        if (!registerResponse.isFail()) {
             log.info(GlobalConstant.SUCCESS_MSG_REG);
             ArrayList<Node> registeredList = registerResponse.getNodeList();
             GlobalState.setRegisteredNodeList(registeredList);
             int j, prev = -1;
             int l = registeredList.size();
 
-            j=l;
-            for (int i=0; i<2;i++){
-                int node = GlobalConstant.topology[l+1][i];
-                if (node != 0){
-                    JoinRequest jr = new JoinRequest(registeredList.get(node-1));
+            j = l;
+            for (int i = 0; i < 2; i++) {
+                int node = GlobalConstant.topology[l + 1][i];
+                if (node != 0) {
+                    JoinRequest jr = new JoinRequest(registeredList.get(node - 1));
                     client.sendUDPRequest(jr);
                 }
             }
@@ -62,8 +62,8 @@ public class RegisterResponseHandler {
                 System.out.println("waiting for other nodes to connect..... ");
             }
 
-        }else{
-            RegisterError registerError = new RegisterError(registerResponse.getResponseMessage(),registerResponse.getRecipientNode());
+        } else {
+            RegisterError registerError = new RegisterError(registerResponse.getResponseMessage(), registerResponse.getRecipientNode());
             ErrorHandler errorHandler = new ErrorHandler();
             errorHandler.handleError(registerError);
         }

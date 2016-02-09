@@ -8,8 +8,7 @@ import com.vishlesha.dataType.Node;
  */
 public class LeaveRequest extends Request {
 
-
-    public LeaveRequest(Node node){
+    public LeaveRequest(Node node) {
         setRecipientNode(node);
         setInitialNode(GlobalState.getLocalServerNode());
         String requestMessage = " LEAVE " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber();
@@ -18,18 +17,15 @@ public class LeaveRequest extends Request {
 
     }
 
-    public String getHashCode(){
+    public String getHashCode() {
         return "LEAVE-" + getRecipientNode().getIpaddress();
     }
 
-
-    public LeaveRequest (String requestMessage){
+    public LeaveRequest(String requestMessage) {
         String[] token = requestMessage.split(" ");
         Node node = new Node();
         node.setIpaddress(token[KEY_IP_ADDRESS]);
         node.setPortNumber(Integer.valueOf(token[KEY_PORT_NUM]));
         setInitialNode(node);
     }
-
-
 }

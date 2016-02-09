@@ -14,16 +14,16 @@ public class RegisterError extends Error {
     private static final int ERR_CODE_BSFULL = 9996;
 
 
-    public RegisterError(String errorMessage, Node errorNode){
+    public RegisterError(String errorMessage, Node errorNode) {
         super(errorNode);
         String[] token = errorMessage.split(" ");
 
-        if (token[1].equals("ERROR")){
+        if (token[1].equals("ERROR")) {
             setErrorCode(GlobalConstant.ERR_CODE_GENERAL);
             setErrorMessage(GlobalConstant.ERR_MSG_GENERAL);
-        }else{
+        } else {
             int errorCode = Integer.valueOf(token[2]);
-            switch (errorCode){
+            switch (errorCode) {
                 case ERR_CODE_COMMAND:
                     setErrorCode(GlobalConstant.ERR_CODE_REG_COMMAND);
                     setErrorMessage(GlobalConstant.ERR_MSG_REG_COMMAND);
