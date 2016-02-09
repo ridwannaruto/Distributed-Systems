@@ -19,8 +19,8 @@ public class SearchResponse extends Response {
 
     // decoding response sent from another node
     public SearchResponse(String responseMessage, Node senderNode) {
-        setSenderNode(senderNode);
-        setResponseMessage(responseMessage);
+        super(responseMessage, senderNode);
+
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
         setNoOfHops(Integer.valueOf(token[5]));
@@ -53,7 +53,8 @@ public class SearchResponse extends Response {
         for (String aFileList : fileList) {
             fileNameList += " " + aFileList;
         }
-        String responseMessage = " SEROK " + responseCode + " " + GlobalState.getLocalServerNode().getIpaddress() + " " + GlobalState.getLocalServerNode().getPortNumber() + " " + noOfHops + fileNameList;
+        String responseMessage = " SEROK " + responseCode + " " + GlobalState.getLocalServerNode().getIpaddress() +
+                " " + GlobalState.getLocalServerNode().getPortNumber() + " " + noOfHops + fileNameList;
         setResponseMessage(responseMessage);
         appendMsgLength();
     }

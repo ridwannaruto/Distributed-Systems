@@ -39,6 +39,7 @@ public class SearchRequestHandler {
             sendLocalResult(request);
             return;
         }
+
         GlobalState.rememberRequest(request);
         TimerTask forgetRequestTask = new ForgetRequestTask(request);
         Timer timer = new Timer();
@@ -70,22 +71,25 @@ public class SearchRequestHandler {
             Map<Node, List<String>> neighbors = new HashMap<>();
             neighbors.putAll(GlobalState.getNeighbors());
 
-//
             int newNoOfHops = noOfHops + 1;
             for (Node node : allFileList.keySet()) {
                 // ignore if same node as the sender
                 if (node.equals(sender) || node.equals(initiator) || node.equals(GlobalState.getLocalServerNode())) {
                     continue;
                 }
+
                 //If the user posses any related file respond to user
                 //Forward the request to all neighbours with a result for the query
                 forwardCount++;
                 GlobalState.incrementForwardedRequestCount();
-                Node recipientNode = new Node(node.getIpaddress(), node.getPortNumber());
-                request.setNoOfHops(newNoOfHops);
-                request.setRecipientNode(recipientNode);
-                client.sendUDPRequest(request);// Change callback?
+
+                // since client is async we need new request objects for each call
+                Node recipient = new Node(node.getIpaddress(), node.getPortNumber());
+                SearchRequest newRequest = new SearchRequest(initiator, recipient, query, newNoOfHops);
+                networkLog.info("Filelist forward: " + sender.toString() + " to " + recipient.toString());
+                client.sendUDPRequest(newRequest);
             }
+
             // If already sent to 3 or more neighbors, this will  terminate
             // TODO sort neighbors based on NumberoFNeigbors
             Map<Node,Integer> sortedMap = sortByValues(GlobalState.getNeighborCountList());
@@ -107,13 +111,12 @@ public class SearchRequestHandler {
                     forwardCount++;
                     GlobalState.incrementForwardedRequestCount();
                     request.setNoOfHops(newNoOfHops);
-                    Node node = new Node();
-                    node.setIpaddress(neighbor.getIpaddress());
-                    node.setPortNumber(neighbor.getPortNumber()); //Todo change port
-                    request.setRecipientNode(node);
-                    request.updateRequestMessage();
+
+                    Node recipient = new Node(neighbor.getIpaddress(), neighbor.getPortNumber());
+                    SearchRequest newRequest = new SearchRequest(initiator, recipient, query, newNoOfHops);
+                    networkLog.info("Locality forward: " + sender.toString() + " to " + recipient.toString());
                     networkLog.info(sender.toString() + " forwarding to : " + neighbor.toString());
-                    client.sendUDPRequest(request);
+                    client.sendUDPRequest(newRequest);
                 }
             }
         } else {
@@ -178,18 +181,18 @@ public class SearchRequestHandler {
             SearchResponse response = new SearchResponse(fileList.size(), request.getNoOfHops(), fileList);
             final Client client = new Client();
 
-            //send response to Initiator
-            response.setRecipientNode(request.getInitialNode());
+            //send response to Sender
+            response.setRecipientNode(request.getSenderNode());
             GlobalState.incrementAnsweredRequestCount();
             client.sendUDPResponse(response);
-            log.info("local search result sent to initiator");
+            log.info("local search result sent to sender");
 
             if (!source.equals(initiator)) {
-                //send response to Sender
-                response.setRecipientNode(request.getSenderNode());
+                //send response to Initiator
+                response.setRecipientNode(request.getInitialNode());
                 GlobalState.incrementAnsweredRequestCount();
                 client.sendUDPResponse(response);
-                log.info("local search result sent to sender");
+                log.info("local search result sent to initiator");
             }
 
         } catch (Exception ex) {

@@ -14,7 +14,8 @@ public class JoinResponse extends Response {
     private final Logger logger = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
 
     public JoinResponse(String responseMessage, Node senderNode) {
-        setSenderNode(senderNode);
+        super(responseMessage, senderNode);
+
         String[] token = responseMessage.split(" ");
         responseCode = Integer.valueOf(token[2]);
 
@@ -28,8 +29,7 @@ public class JoinResponse extends Response {
     }
 
     public JoinResponse(int responseCode) {
-        String responseMessage = " JOINOK " + responseCode;
-        setResponseMessage(responseMessage);
+        setResponseMessage(" JOINOK " + responseCode);
         appendMsgLength();
     }
 }
