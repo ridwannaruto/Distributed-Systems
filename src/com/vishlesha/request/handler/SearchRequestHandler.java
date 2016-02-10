@@ -201,21 +201,20 @@ public class SearchRequestHandler {
         }
     }
 
-    private static Map sortByValues(Map map) {
-        List list = new LinkedList(map.entrySet());
+    private static Map<Node,Integer> sortByValues(Map<Node,Integer> map) {
+        List<Map.Entry<Node,Integer>> list = new LinkedList<>(map.entrySet());
         // Defined Custom Comparator here
-        Collections.sort(list, new Comparator() {
-            public int compare(Object o1, Object o2) {
-                return ((Comparable) ((Map.Entry) (o1)).getValue())
-                        .compareTo(((Map.Entry) (o2)).getValue());
+        Collections.sort(list, new Comparator<Map.Entry<Node,Integer>>() {
+            public int compare(Map.Entry<Node,Integer> o1, Map.Entry<Node,Integer> o2) {
+                return   o1.getValue().compareTo(o2.getValue());
             }
         });
 
         // Here I am copying the sorted list in HashMap
         // using LinkedHashMap to preserve the insertion order
-        HashMap sortedHashMap = new LinkedHashMap();
-        for (Iterator it = list.iterator(); it.hasNext();) {
-            Map.Entry entry = (Map.Entry) it.next();
+        HashMap<Node,Integer> sortedHashMap = new LinkedHashMap<>();
+        for (Iterator<Map.Entry<Node,Integer>> it = list.iterator(); it.hasNext();) {
+            Map.Entry<Node,Integer> entry = it.next();
             sortedHashMap.put(entry.getKey(), entry.getValue());
         }
         return sortedHashMap;
