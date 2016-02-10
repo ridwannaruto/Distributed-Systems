@@ -1,0 +1,4 @@
+javac -Xlint:unchecked -sourcepath src/ -s ./src -d ./output/ src/com/vishlesha/webservice/**/*.java
+wsgen -cp output -d output -s src/ -r resources/ -wsdl  -keep com.vishlesha.webservice.server.MovieFinderImpl
+wsimport -keep -d output/ -s src/ -p com.vishlesha.webservice.client  resources/MovieFinderImplService.wsdl
+javac -Xlint:unchecked -sourcepath src/ -s ./src -d ./output/ src/com/vishlesha/**/*.java
