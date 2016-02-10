@@ -1,7 +1,7 @@
 package com.vishlesha.webservice.server;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.response.SearchResponse;
-import com.vishlesha.webservice.client.MovieFinderImplService;
+import com.vishlesha.webservice.client.gen.MovieFinderImplService;
 import com.vishlesha.webservice.commons.SearchResponseBean;
 import com.vishlesha.webservice.commons.SearchRequestBean;
 import com.vishlesha.webservice.commons.SearchResponseBean;
@@ -74,15 +74,15 @@ public class MovieFinderImpl implements MovieFinder {
 					MovieFinderImplService mis = new MovieFinderImplService(url, qname);
 
 
-					com.vishlesha.webservice.client.MovieFinder mf =
+					com.vishlesha.webservice.client.gen.MovieFinder mf =
 							mis.getMovieFinderImplPort();  // Get the stub
 
-					com.vishlesha.webservice.client.SearchResponseBean sb=new com.vishlesha.webservice.client.SearchResponseBean();
+					com.vishlesha.webservice.client.gen.SearchResponseBean sb=new com.vishlesha.webservice.client.gen.SearchResponseBean();
 					sb.setPort(""+GlobalState.getLocalServerNode().getPortNumber());
 					sb.setIP(GlobalState.getLocalServerNode().getIpaddress());
 					sb.setHops(hops);
 					sb.setNoFiles(files.size());
-					sb.setFiles(new com.vishlesha.webservice.client.SearchResponseBean.Files());
+					sb.setFiles(new com.vishlesha.webservice.client.gen.SearchResponseBean.Files());
 					for(String s : files){
 						sb.getFiles().getFile().add(s);
 					}
