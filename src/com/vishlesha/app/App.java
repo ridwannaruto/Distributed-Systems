@@ -14,7 +14,8 @@ import com.vishlesha.request.UnregisterRequest;
 import com.vishlesha.request.handler.SearchRequestHandler;
 import com.vishlesha.timer.task.HeartBeatMonitorTask;
 import com.vishlesha.timer.task.HeartBeatTask;
-
+import com.vishlesha.webservice.model.SearchContext;
+import com.vishlesha.webservice.server.ServicePublisher;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.HashSet;
@@ -46,9 +47,22 @@ class App {
         // TODO modify to issue multiple queries
 
         System.out.println("connecting to the network..........");
+        System.out.println("connecting to the network..........");
+        if (args.length > 0) {
+            if (args[0].equals("-ws")) {
+                webServiceBasedFlow();
+            }
+            else {
+                socketBasedFlow();
+            }
+        }else {
+            socketBasedFlow();
+        }
 
+    }
+
+    private static void socketBasedFlow() {
         boolean print = true;
-
         while (true) {
             if (GlobalState.getNeighbors().size() > 0) {
                 if (print) {
@@ -72,8 +86,33 @@ class App {
                 e.printStackTrace();
             }
         }
+
     }
 
+    private static void webServiceBasedFlow() {
+        System.out.println("LOCAL IP "+GlobalState.getLocalServerNode().getIpaddress());
+        ServicePublisher.publish(GlobalState.getLocalServerNode().getIpaddress(), 8888); //Server for handling incomming requests
+
+        System.out.println(GlobalState.getNeighbors().keySet());
+        //        mf.searchFile();
+
+        boolean print = true;
+        while (true) {
+            if (GlobalState.getNeighbors().size() > 0) {
+                if (print) {
+                    System.out.println("connected to network");
+                    System.out.println("\nInitiate Search\n---------------------");
+                    print = false;
+                }
+                if (scanner.hasNextLine()) {
+                    scanner.nextLine();
+                }
+                System.out.print("Enter your search query: ");
+                String searchQuery = scanner.nextLine();
+                SearchContext.initiateSearch(GlobalState.getLocalServerNode().getIpaddress(),GlobalState.getLocalServerNode().getPortNumber()+"",searchQuery,0);
+            }
+        }
+    }
     private static void setup(final Client client) {
         int bootstrapPort;
         final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
@@ -123,7 +162,7 @@ class App {
             }
         });
         try {
-           AppLogger.setup();
+           //AppLogger.setup();
 
             // switch to seed-based IP addresses on 127.0.0.1 (local environment)
             Node localServer = new Node();

@@ -41,7 +41,6 @@ public class Client {
 
                     String requestMessage = message.getMessage();
                     log.info("UDP Message: " + requestMessage + " sent to " + message.getRecipientNode().toString());
-
                     DatagramSocket clientSocket = new DatagramSocket(0,
                             InetAddress.getByName(localServer.getIpaddress()));
                     InetAddress destAddress = InetAddress.getByName(message.getRecipientNode().getIpaddress());
