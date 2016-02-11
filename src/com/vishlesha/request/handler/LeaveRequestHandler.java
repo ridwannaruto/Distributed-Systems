@@ -5,6 +5,9 @@ import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.LeaveRequest;
+import com.vishlesha.request.RegisterRequest;
+import com.vishlesha.request.Request;
+import com.vishlesha.request.UnregisterRequest;
 import com.vishlesha.response.JoinResponse;
 import com.vishlesha.response.LeaveResponse;
 import com.vishlesha.response.Response;
@@ -30,6 +33,17 @@ class LeaveRequestHandler {
             Response leaveResponse = new LeaveResponse(RESPOND_CODE_LEAVE_SUCCESS);
             leaveResponse.setRecipientNode(neighbor);
             sendResponse(leaveResponse);
+            if (GlobalState.getNeighbors().size() == 0) {
+
+                Client client = GlobalState.getClient();
+                Request unregReq = new UnregisterRequest(GlobalState.getBootstrapNode());
+                client.sendTCPRequest(unregReq);
+                Request regReq = new RegisterRequest(GlobalState.getBootstrapNode());
+                client.sendTCPRequest(regReq);
+                log.info("Re-registering to the network");
+
+            }
+
         } catch (IllegalStateException ex) {
             log.severe(this.getClass() + " : neighbour doesn't exist " + neighbor.toString());
             Response leaveResponse = new LeaveResponse(RESPOND_CODE_LEAVE_SUCCESS);

@@ -35,16 +35,6 @@ class LeaveResponseHandler {
 		try {
 			GlobalState.removeNeighbor(oldNeighbour);
 			log.info("Removed neighbour " + oldNeighbour.toString());
-			if (GlobalState.getNeighbors().size() == 0) {
-
-				Client client = GlobalState.getClient();
-				Request unregReq = new UnregisterRequest(GlobalState.getBootstrapNode());
-				client.sendTCPRequest(unregReq);
-				Request regReq = new RegisterRequest(GlobalState.getBootstrapNode());
-				client.sendTCPRequest(regReq);
-				log.info("Re-registering to the network");
-
-			}
 
 		} catch (IllegalStateException ex) {
 			//TODO
