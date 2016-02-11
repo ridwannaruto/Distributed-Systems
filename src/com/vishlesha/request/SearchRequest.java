@@ -2,6 +2,8 @@ package com.vishlesha.request;
 
 import com.vishlesha.dataType.Node;
 
+import java.util.Date;
+
 /**
  * Created by ridwan on 1/1/16.
  */
@@ -9,6 +11,15 @@ public class SearchRequest extends Request {
 
     private String fileName;
     private int noOfHops;
+    private long timestamp;
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public String getFileName() {
         return fileName;

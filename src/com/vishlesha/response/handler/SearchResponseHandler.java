@@ -6,6 +6,7 @@ import com.vishlesha.error.SearchError;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.response.SearchResponse;
 
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -27,35 +28,39 @@ class SearchResponseHandler {
 
     public synchronized void handle(SearchResponse response) {
 
+        response.setTimestamp(new Date().getTime());
         String key = "SER-" + response.getSenderNode().getIpaddress();
-
+        GlobalState.addSearchResponse(response);
+        /*
         //If result already printed ignore
         if (!GlobalState.isResponsePending(key))
             return;
 
-        String responseMessage = response.getResponseMessage();
-        System.out.println("\nSearch Response Message from " + response.getSenderNode().getIpaddress() + " hops: " + response.getNoOfHops());
-        System.out.println("----------------------------");
+            */
 
-        String[] token = responseMessage.split(" ");
-        int responseCode = Integer.valueOf(token[2]);
-
-        if (token[1].equals("SEROK") && responseCode == 0) {
-            if (!GlobalState.isTestMode())
-                System.out.println(GlobalConstant.MSG_SEARCH_NORESULT);
-        } else if (token[1].equals("SEROK") && responseCode < 9000) {
-            List<String> fileList = response.getFileList();
-            if (!GlobalState.isTestMode()) {
-                for (String aFileList : fileList) {
-                    System.out.println(aFileList);
-                }
-            }
-
-        } else {
-            SearchError searchError = new SearchError(responseMessage, response.getSenderNode());
-            if (!GlobalState.isTestMode())
-                System.out.println("Search Error: " + searchError.getErrorMessage());
-        }
+//        String responseMessage = response.getResponseMessage();
+//        System.out.println("\nSearch Response Message from " + response.getSenderNode().getIpaddress() + " hops: " + response.getNoOfHops());
+//        System.out.println("----------------------------");
+//
+//        String[] token = responseMessage.split(" ");
+//        int responseCode = Integer.valueOf(token[2]);
+//
+//        if (token[1].equals("SEROK") && responseCode == 0) {
+//            if (!GlobalState.isTestMode())
+//                System.out.println(GlobalConstant.MSG_SEARCH_NORESULT);
+//        } else if (token[1].equals("SEROK") && responseCode < 9000) {
+//            List<String> fileList = response.getFileList();
+//            if (!GlobalState.isTestMode()) {
+//                for (String aFileList : fileList) {
+//                    System.out.println(aFileList);
+//                }
+//            }
+//
+//        } else {
+//            SearchError searchError = new SearchError(responseMessage, response.getSenderNode());
+//            if (!GlobalState.isTestMode())
+//                System.out.println("Search Error: " + searchError.getErrorMessage());
+//        }
 
         try {
             GlobalState.removeResponsePendingRequest(key);

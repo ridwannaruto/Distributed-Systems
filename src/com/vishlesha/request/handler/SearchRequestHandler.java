@@ -8,6 +8,7 @@ import com.vishlesha.network.Client;
 import com.vishlesha.request.SearchRequest;
 import com.vishlesha.response.SearchResponse;
 import com.vishlesha.timer.task.ForgetRequestTask;
+import com.vishlesha.timer.task.PrintResponseTask;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -126,9 +127,11 @@ public class SearchRequestHandler {
         }
     }
 
+
     public void initiateSearch(String searchQuery) {
         SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(), GlobalState.getLocalServerNode(), searchQuery, 0);
         ser.setSenderNode(GlobalState.getLocalServerNode());
+        ser.setTimestamp(new Date().getTime());
         System.out.println("\nLocal search result\n----------------------");
         List<String> localResult = getLocalResult(ser);
         if (localResult.isEmpty()) {
@@ -139,7 +142,20 @@ public class SearchRequestHandler {
             }
         }
         System.out.printf("\n\n\nsearching for file in network ......\n\n");
+        GlobalState.setCurrentSearchingRequest(ser);
+
+        /*
+        Timer timer = new Timer();
+        timer.schedule(new PrintResponseTask(),30000);
+        */
         forwardSearchRequest(ser);
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        TimerTask printTask = new PrintResponseTask();
+        printTask.run();
     }
 
     public SearchResponse getResponse() {
