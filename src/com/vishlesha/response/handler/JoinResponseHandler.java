@@ -41,8 +41,7 @@ class JoinResponseHandler {
         try {
             GlobalState.addNeighbor(newNeighbour);
             log.info("new neighbour added " + newNeighbour.toString());
-            Client client = new Client();
-            client.sendUDPRequest(new FileShareRequest(newNeighbour, GlobalState.getLocalFiles()));
+            GlobalState.getClient().sendUDPRequest(new FileShareRequest(newNeighbour, GlobalState.getLocalFiles()));
             log.info("local file list sent to " + newNeighbour.toString());
         } catch (IllegalStateException ex) {
             //TODO

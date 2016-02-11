@@ -1,5 +1,6 @@
 package com.vishlesha.response.handler;
 
+import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
@@ -34,27 +35,31 @@ public class ResponseHandler {
         } else {
             if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_REGISTER)) {
                 RegisterResponse registerResponse = new RegisterResponse(responseMessage, sender);
+                registerResponse.setSenderNode(sender);
                 RegisterResponseHandler registerResponseHandler = new RegisterResponseHandler();
                 registerResponseHandler.handle(registerResponse);
 
             } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_JOIN)) {
                 JoinResponse joinResponse = new JoinResponse(responseMessage, sender);
+                joinResponse.setSenderNode(sender);
                 JoinResponseHandler joinResponseHandler = new JoinResponseHandler();
                 joinResponseHandler.handle(joinResponse);
 
             } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_LEAVE)) {
                 LeaveResponse leaveResponse = new LeaveResponse(responseMessage, sender);
+                leaveResponse.setSenderNode(sender);
                 LeaveResponseHandler leaveResponseHandler = new LeaveResponseHandler();
                 leaveResponseHandler.handle(leaveResponse);
 
             } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_FILE_SHARE)) {
                 FileShareResponse fileShareResponse = new FileShareResponse(responseMessage);
+                fileShareResponse.setSenderNode(sender);
                 FileShareResponseHandler fileShareResponseHandler = new FileShareResponseHandler();
                 fileShareResponseHandler.handle(fileShareResponse);
 
             } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_SEARCH)) {
-
                 SearchResponse searchResponse = new SearchResponse(responseMessage, sender);
+                searchResponse.setSenderNode(sender);
                 SearchResponseHandler searchResponseHandler = new SearchResponseHandler();
                 searchResponseHandler.handle(searchResponse);
 
@@ -66,8 +71,7 @@ public class ResponseHandler {
     }
 
     private void sendResponse(Response response) {
-        Client client = new Client();
-        client.sendUDPResponse(response);
+        GlobalState.getClient().sendUDPResponse(response);
     }
 
 }

@@ -47,9 +47,8 @@ class SearchResponseHandler {
             List<String> fileList = response.getFileList();
             if (!GlobalState.isTestMode()) {
                 for (String aFileList : fileList) {
-                    System.out.printf(aFileList);
+                    System.out.println(aFileList);
                 }
-                System.out.println();
             }
 
         } else {

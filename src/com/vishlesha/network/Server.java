@@ -1,6 +1,7 @@
 package com.vishlesha.network;
 
 import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.message.MessageHandler.MessageHandler;
@@ -23,12 +24,6 @@ public class Server implements Runnable {
     private final ExecutorService workerPool = Executors.newFixedThreadPool(GlobalConstant.NUM_THREADS_SERVER_WORKER_POOL);
     private final Logger log = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
     private DatagramSocket serverSocket;
-    private final Node node;
-
-
-    public Server(Node node) {
-        this.node = node;
-    }
 
     public void start() {
         Thread t = new Thread(this);
@@ -39,7 +34,7 @@ public class Server implements Runnable {
     public void run() {
 
         try {
-            serverSocket = new DatagramSocket(node.getPortNumber());
+            serverSocket = GlobalState.getSocket();
             log.info("Server socket created and waiting for requests..");
             while (!serverSocket.isClosed()) {
                 try {
@@ -47,6 +42,7 @@ public class Server implements Runnable {
                     byte[] receiveData = new byte[GlobalConstant.MSG_BYTE_MAX_LENGTH];
                     final DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     serverSocket.receive(receivePacket);
+
                     final String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
                     InetAddress IPAddress = receivePacket.getAddress();
                     int port = receivePacket.getPort();
@@ -89,7 +85,7 @@ public class Server implements Runnable {
         }
     }
 
-    public void Stop() {
+    public void stop() {
         workerPool.shutdown();
         serverSocket.close();
     }

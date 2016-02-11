@@ -106,26 +106,12 @@ public class SearchContext {
 	}
 
 	public static List<String> getLocalResult(String searchQuery) {
-		FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
-		Map<Node, List<List<String>>> fileMap = fileIpMapping.searchForFile(searchQuery);
-		List<List<String>> fileListList;
-		List<String> fileList = new ArrayList<String>();
-		try {
-			fileListList = fileMap.get(GlobalState.getLocalServerNode());
-			StringBuilder s = new StringBuilder();
-			if (fileListList != null) {
-				for (List<String> stringList : fileListList) {
-					for (String string : stringList) {
-						s.append(string);
-						s.append(" ");
-					}
-					fileList.add(s.toString().trim());
-					//System.out.println(s);
-				}
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return fileList;
+        FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
+        Map<Node, List<String>> fileMap = fileIpMapping.searchForFile(searchQuery);
+        List<String> fileList = fileMap.get(GlobalState.getLocalServerNode());
+        if (fileList == null) {
+            fileList = Collections.EMPTY_LIST;
+        }
+        return fileList;
 	}
 }

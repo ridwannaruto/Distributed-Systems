@@ -1,5 +1,6 @@
 package com.vishlesha.request.handler;
 
+import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
@@ -38,21 +39,23 @@ public class RequestHandler {
         } else {
             if (token[KEY_REQ_TYPE].equals(REQ_TYPE_JOIN)) {
                 JoinRequest joinRequest = new JoinRequest(requestMessage);
+                joinRequest.setSenderNode(sender);
                 JoinRequestHandler joinRequestHandler = new JoinRequestHandler();
                 joinRequestHandler.handle(joinRequest);
 
             } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_LEAVE)) {
                 LeaveRequest leaveRequest = new LeaveRequest(requestMessage);
+                leaveRequest.setSenderNode(sender);
                 LeaveRequestHandler leaveRequestHandler = new LeaveRequestHandler();
                 leaveRequestHandler.handle(leaveRequest);
 
             } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_FILES)) {
                 FileShareRequest fileShareRequest = new FileShareRequest(requestMessage);
+                fileShareRequest.setSenderNode(sender);
                 FileShareRequestHandler fileShareRequestHandler = new FileShareRequestHandler();
                 fileShareRequestHandler.handle(fileShareRequest);
 
             } else if (token[KEY_REQ_TYPE].equals(REQ_TYPE_SEARCH)) {
-
                 SearchRequest searchRequest = new SearchRequest(requestMessage);
                 searchRequest.setSenderNode(sender);
                 SearchRequestHandler searchRequestHandler = new SearchRequestHandler();
@@ -66,8 +69,7 @@ public class RequestHandler {
     }
 
     private void sendErrorResponse(Response response) {
-        Client client = new Client();
-        client.sendUDPResponse(response);
+        GlobalState.getClient().sendUDPResponse(response);
     }
 
 }

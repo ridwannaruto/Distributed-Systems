@@ -12,8 +12,6 @@ import com.vishlesha.request.RegisterRequest;
 import com.vishlesha.request.Request;
 import com.vishlesha.request.UnregisterRequest;
 import com.vishlesha.request.handler.SearchRequestHandler;
-import com.vishlesha.timer.task.HeartBeatMonitorTask;
-import com.vishlesha.timer.task.HeartBeatTask;
 import com.vishlesha.webservice.model.SearchContext;
 import com.vishlesha.webservice.server.ServicePublisher;
 import java.io.IOException;
@@ -35,7 +33,7 @@ class App {
     private final static Scanner scanner = new Scanner(System.in);
 
     public static void main(final String[] args) throws IOException {
-        Client client = new Client();
+        Client client = GlobalState.getClient();
 
         System.out.println("Vishlesha Distributed System");
         System.out.println("----------------------------\n");
@@ -45,8 +43,6 @@ class App {
         client.sendTCPRequest(regRequest);
 
         // TODO modify to issue multiple queries
-
-        System.out.println("connecting to the network..........");
         System.out.println("connecting to the network..........");
         if (args.length > 0) {
             if (args[0].equals("-ws")) {
@@ -178,7 +174,7 @@ class App {
             }
 
             GlobalState.setLocalServerNode(localServer);
-            server = new Server(localServer);
+            server = GlobalState.getServer();
             server.start();
 
             System.out.println("Generating local file list\n................................");
@@ -202,8 +198,6 @@ class App {
             System.out.println("Unable to create log files");
             ex.printStackTrace();
         }
-
-
     }
 }
 

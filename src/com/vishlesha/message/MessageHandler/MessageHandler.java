@@ -1,5 +1,6 @@
 package com.vishlesha.message.MessageHandler;
 
+import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.message.HeartBeatMessage;
@@ -43,8 +44,7 @@ public class MessageHandler {
     }
 
     private void sendResponse(Response response) {
-        Client client = new Client();
-        client.sendUDPResponse(response);
+        GlobalState.getClient().sendUDPResponse(response);
     }
 
 }

@@ -24,7 +24,7 @@ class RegisterResponseHandler {
 
     public void handle(RegisterResponse registerResponse) {
         final Random rand = new Random();
-        Client client = new Client();
+        Client client = GlobalState.getClient();
         if (!registerResponse.isFail()) {
             log.info(GlobalConstant.SUCCESS_MSG_REG);
             try{

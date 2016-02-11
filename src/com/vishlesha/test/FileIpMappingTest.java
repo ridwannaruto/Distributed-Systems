@@ -44,7 +44,7 @@ class FileIpMappingTest {
     }
 
     private int testQuery(String query) {
-        Map<Node, List<List<String>>> nodes = fim.searchForFile(query);
+        Map<Node, List<String>> nodes = fim.searchForFile(query);
         int size = nodes.size();
         System.out.println(size);
         for (Node node : nodes.keySet()) {

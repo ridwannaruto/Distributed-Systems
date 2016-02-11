@@ -3,11 +3,16 @@ package com.vishlesha.app;
 import com.vishlesha.dataType.FileIpMapping;
 import com.vishlesha.dataType.Node;
 import com.vishlesha.network.Client;
+import com.vishlesha.network.Server;
 import com.vishlesha.request.Request;
 import com.vishlesha.request.SearchRequest;
 import com.vishlesha.timer.task.HeartBeatMonitorTask;
 import com.vishlesha.timer.task.HeartBeatTask;
 
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -37,6 +42,20 @@ public class GlobalState {
     private static HeartBeatTask heartBeatTask = new HeartBeatTask();
     private static HeartBeatMonitorTask heartBeatMonitorTask = new HeartBeatMonitorTask();
 
+    private static DatagramSocket socket;
+
+    private static Client client;
+    //private static FileIpMapping fileIpMapping = new FileIpMapping();
+
+    private static Server server;
+
+    public static DatagramSocket getSocket() throws SocketException, UnknownHostException {
+        if (socket == null) {
+            Node localServer = getLocalServerNode();
+            socket = new DatagramSocket(localServer.getPortNumber(), InetAddress.getByName(localServer.getIpaddress()));
+        }
+        return socket;
+    }
 
     public static int getReceivedRequestCount() {
         return receivedRequestCount;
@@ -106,9 +125,6 @@ public class GlobalState {
         GlobalState.roundTripTime = roundTripTime;
     }
 
-    private static Client client = new Client();
-    //private static FileIpMapping fileIpMapping = new FileIpMapping();
-
     public static Map<Node, List<String>> getNeighbors() {
         return neighbors;
     }
@@ -142,13 +158,15 @@ public class GlobalState {
     }
 
     public static void addNeighbor(Node node) {
-        if (neighbors.containsKey(node)) {
-            throw new IllegalStateException("Neighbor already joined");
+        try {
+            if (neighbors.containsKey(node)) {
+                throw new IllegalStateException("Neighbor already joined");
+            }
+            neighbors.put(node, new ArrayList<String>());
+            setNeighborUnreachable(false);
+        } finally {
+            releaseHeartBeatMonitorLock();
         }
-        neighbors.put(node, new ArrayList<String>());
-        setNeighborUnreachable(false);
-        releaseHeartBeatMonitorLock();
-
     }
 
     public static void removeNeighbor(Node node) {
@@ -203,11 +221,17 @@ public class GlobalState {
     }
 
     public static Client getClient() {
+        if (client == null) {
+            client = new Client();
+        }
         return client;
     }
 
-    public static void setClient(Client client) {
-        GlobalState.client = client;
+    public static Server getServer() {
+        if (server == null) {
+            server = new Server();
+        }
+        return server;
     }
 
     public static List<String> getLocalFiles() {
@@ -256,19 +280,15 @@ public class GlobalState {
     }
 
     public static void acquireHeartBeatMonitorLock(){
-        try{
+        try {
             heartBeatMonitorLock.acquire();
-        }catch (Exception ex){
+        } catch (Exception ex){
             ex.printStackTrace();
         }
     }
 
     public static void releaseHeartBeatMonitorLock(){
-        try{
-            heartBeatMonitorLock.release();
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+        heartBeatMonitorLock.release();
     }
 
     public static boolean isNeighborUnreachable() {
