@@ -16,10 +16,7 @@ import com.vishlesha.webservice.model.SearchContext;
 import com.vishlesha.webservice.server.ServicePublisher;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 /*
@@ -59,6 +56,7 @@ class App {
 
     private static void socketBasedFlow() {
         boolean print = true;
+
         while (true) {
             if (GlobalState.getNeighbors().size() > 0) {
                 if (print) {
@@ -67,13 +65,19 @@ class App {
                     print = false;
                 }
 
-                if (scanner.hasNextLine()) {
-                    scanner.nextLine();
+                System.out.print("\nEnter your search query (or _TABLE = neighbor table, _FILES = file list, _STATS = stats): ");
+                String query = scanner.nextLine();
+
+                if (query.startsWith("_TABLE")) {
+                    showNeighborTable();
+                } else if (query.startsWith("_FILES")) {
+                    showFileList();
+                } else if (query.startsWith("_STATS")) {
+                    showStats();
+                } else {
+                    SearchRequestHandler searchRequestHandler = new SearchRequestHandler();
+                    searchRequestHandler.initiateSearch(query);
                 }
-                System.out.print("Enter your search query: ");
-                String searchQuery = scanner.nextLine();
-                SearchRequestHandler searchRequestHandler = new SearchRequestHandler();
-                searchRequestHandler.initiateSearch(searchQuery);
             }
 
             try {
@@ -82,7 +86,40 @@ class App {
                 e.printStackTrace();
             }
         }
+    }
 
+    private static void showNeighborTable() {
+        System.out.println("\nNeighbor table:\n");
+        Map<Node, Integer> neighborConnections = GlobalState.getNeighborCountList();
+        System.out.printf("%9s:%-4s  %2s  %s\n\n", "IP_ADDR", "PRT", "NC", " FILES");
+
+        for (Map.Entry<Node, List<String>> neighbor : GlobalState.getNeighbors().entrySet()) {
+            Node node = neighbor.getKey();
+            List<String> files = neighbor.getValue();
+
+            Integer neighborCount = neighborConnections.get(node);
+            if (neighborCount == null) {
+                neighborCount = -1;
+            }
+            System.out.printf("%9s:%-4d  %2d  %s\n", node.getIpaddress(), node.getPortNumber(), neighborCount, files);
+        }
+        System.out.println();
+    }
+
+    private static void showFileList() {
+        System.out.println("\nLocal files:\n");
+        for (String file : GlobalState.getLocalFiles()) {
+            System.out.println(file);
+        }
+        System.out.println();
+    }
+
+    private static void showStats() {
+        System.out.println("\nSystem statistics\n-----------------");
+        System.out.println("Number of request received: " + GlobalState.getReceivedRequestCount());
+        System.out.println("Number of request forwarded: " + GlobalState.getForwardedRequestCount());
+        System.out.println("Number of request answered: " + GlobalState.getAnsweredRequestCount());
+        System.out.println();
     }
 
     private static void webServiceBasedFlow() {
@@ -109,6 +146,7 @@ class App {
             }
         }
     }
+
     private static void setup(final Client client) {
         int bootstrapPort;
         final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
@@ -150,11 +188,7 @@ class App {
                 System.out.println("Ready to shut down");
                 log.info(this.getClass() + " : shutting down app");
 
-                System.out.println("\n\nSystem statistics\n-----------------");
-                System.out.println("Number of request received: " + GlobalState.getReceivedRequestCount());
-                System.out.println("Number of request forwarded: " + GlobalState.getForwardedRequestCount());
-                System.out.println("Number of request answered: " + GlobalState.getAnsweredRequestCount());
-
+                showStats();
             }
         });
         try {
@@ -165,7 +199,7 @@ class App {
             String localIp = InetAddress.getLocalHost().getHostAddress();
             if ("127.0.0.1".equals(localIp)) {
                 System.out.print("Enter seed: ");
-                int seed = scanner.nextInt();
+                int seed = Integer.parseInt(scanner.nextLine().trim());
                 localServer.setIpaddress("127.0.0." + seed);
                 localServer.setPortNumber(GlobalConstant.PORT_MIN + seed);
             } else {

@@ -68,6 +68,7 @@ public class SearchRequestHandler {
             FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
             final Client client = GlobalState.getClient();// Get from global state
             Map<Node, List<String>> allFileList = fileIpMapping.searchForFile(query); // Neighbors with results for the query
+
             List<Node> sentNodes = new ArrayList<>();
 
             int newNoOfHops = noOfHops + 1;
