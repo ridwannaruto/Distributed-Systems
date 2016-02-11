@@ -36,7 +36,5 @@ class FileShareResponseHandler {
         } catch (Exception ex) {
             log.severe(ex.getMessage());
         }
-
     }
-
 }

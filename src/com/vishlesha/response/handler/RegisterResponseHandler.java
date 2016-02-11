@@ -24,7 +24,7 @@ class RegisterResponseHandler {
 
     public void handle(RegisterResponse registerResponse) {
         final Random rand = new Random();
-        Client client = new Client();
+        Client client = GlobalState.getClient();
         if (!registerResponse.isFail()) {
             log.info(GlobalConstant.SUCCESS_MSG_REG);
             try{
@@ -44,6 +44,7 @@ class RegisterResponseHandler {
             int j, prev = -1;
             int l = registeredList.size();
 
+            /*
             j = l;
             for (int i = 0; i < 2; i++) {
                 int node = GlobalConstant.topology[l + 1][i];
@@ -52,7 +53,7 @@ class RegisterResponseHandler {
                     client.sendUDPRequest(jr);
                 }
             }
-            /*
+            */
             for (j = 0; j < 2 && j < l; j++) {
                 int rand1;
                 if (l < 3) {
@@ -68,7 +69,6 @@ class RegisterResponseHandler {
                 JoinRequest jr = new JoinRequest(registeredList.get(rand1));
                 client.sendUDPRequest(jr);
             }
-            */
 
             if (j == 0) {
                 log.info("This is the first node");

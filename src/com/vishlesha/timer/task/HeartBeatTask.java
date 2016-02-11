@@ -21,7 +21,7 @@ public class HeartBeatTask extends TimerTask {
 
     @Override
     public void run() {
-        Client client = new Client();
+        Client client = GlobalState.getClient();
         while (true) {
             int neighborCount = GlobalState.getNeighbors().size();
 

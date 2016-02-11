@@ -18,8 +18,7 @@ class FileShareRequestHandler {
 
     public void handle(FileShareRequest fileShareResponse) {
         Node neighbour = fileShareResponse.getRecipientNode();
-        GlobalState.addNeighborFiles(neighbour, fileShareResponse.getFiles());
-        Client client = new Client();
+        Client client = GlobalState.getClient();
 
         try {
             GlobalState.addNeighborFiles(neighbour, fileShareResponse.getFiles());

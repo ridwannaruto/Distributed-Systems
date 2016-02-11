@@ -20,8 +20,7 @@ public class HeartBeatMonitorTask extends TimerTask {
 
     private static final int MONITOR_INTERVAL = 60000; //seconds
 
-    Client client = new Client();
-
+    Client client = GlobalState.getClient();
 
     @Override
     public void run() {

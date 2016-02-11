@@ -1,6 +1,7 @@
 package com.vishlesha.error.handler;
 
 import com.vishlesha.app.GlobalConstant;
+import com.vishlesha.app.GlobalState;
 import com.vishlesha.error.Error;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
@@ -18,7 +19,7 @@ class RegisterErrorHandler extends ErrorHandler {
     private final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
     public void handleErrorResponse(Error error) {
-        Client client = new Client();
+        Client client = GlobalState.getClient();
         switch (error.getErrorCode()) {
             case GlobalConstant.ERR_CODE_REG_USERNAME:
                 log.severe("Node register failed: duplicate username");

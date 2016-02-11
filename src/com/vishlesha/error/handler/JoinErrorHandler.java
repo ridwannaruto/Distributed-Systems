@@ -20,7 +20,7 @@ class JoinErrorHandler {
 
     public void handleNodeUnreachable(Request request) {
         Node unreachableNode = request.getRecipientNode();
-        Client client = new Client();
+        Client client = GlobalState.getClient();
         try {
             int availableNodeCount = GlobalState.getRegisteredNodeCount();
             if (availableNodeCount > 0) {

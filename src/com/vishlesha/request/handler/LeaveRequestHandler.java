@@ -45,7 +45,6 @@ class LeaveRequestHandler {
     }
 
     private void sendResponse(Response response) {
-        Client client = new Client();
-        client.sendUDPResponse(response);
+        GlobalState.getClient().sendUDPResponse(response);
     }
 }

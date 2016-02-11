@@ -67,9 +67,9 @@ public class SearchRequestHandler {
         if (noOfHops < MAX_NUMBER_OF_HOPS) {
             FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
             final Client client = GlobalState.getClient();// Get from global state
-            Map<Node, List<List<String>>> allFileList = fileIpMapping.searchForFile(query); // Neighbors with results for the query
-            Map<Node, List<String>> neighbors = new HashMap<>();
-            neighbors.putAll(GlobalState.getNeighbors());
+            Map<Node, List<String>> allFileList = fileIpMapping.searchForFile(query); // Neighbors with results for the query
+
+            List<Node> sentNodes = new ArrayList<>();
 
             int newNoOfHops = noOfHops + 1;
             for (Node node : allFileList.keySet()) {
@@ -88,15 +88,15 @@ public class SearchRequestHandler {
                 SearchRequest newRequest = new SearchRequest(initiator, recipient, query, newNoOfHops);
                 networkLog.info("Filelist forward: " + sender.toString() + " to " + recipient.toString());
                 client.sendUDPRequest(newRequest);
+                sentNodes.add(node);
             }
 
             // If already sent to 3 or more neighbors, this will  terminate
             // TODO sort neighbors based on NumberoFNeigbors
             Map<Node,Integer> sortedMap = sortByValues(GlobalState.getNeighborCountList());
             for (Node neighbor : sortedMap.keySet()) {
-
                 //ignore if node already sent
-                if(neighbors.containsKey(neighbor)){
+                if(sentNodes.contains(neighbor)){
                     continue;
                 }
 
@@ -104,6 +104,7 @@ public class SearchRequestHandler {
                 if (neighbor.equals(sender) || neighbor.equals(initiator) || neighbor.equals(GlobalState.getLocalServerNode())) {
                     continue;
                 }
+
                 if (forwardCount >= Number_OF_FORWARDS) {
                     networkLog.info(this.getClass() + " : Forward count reached...");
                     break;
@@ -117,6 +118,7 @@ public class SearchRequestHandler {
                     networkLog.info("Locality forward: " + sender.toString() + " to " + recipient.toString());
                     networkLog.info(sender.toString() + " forwarding to : " + neighbor.toString());
                     client.sendUDPRequest(newRequest);
+                    sentNodes.add(neighbor);
                 }
             }
         } else {
@@ -125,7 +127,7 @@ public class SearchRequestHandler {
     }
 
     public void initiateSearch(String searchQuery) {
-        SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(), GlobalState.getLocalServerNode(), searchQuery, 1);
+        SearchRequest ser = new SearchRequest(GlobalState.getLocalServerNode(), GlobalState.getLocalServerNode(), searchQuery, 0);
         ser.setSenderNode(GlobalState.getLocalServerNode());
         System.out.println("\nLocal search result\n----------------------");
         List<String> localResult = getLocalResult(ser);
@@ -148,26 +150,12 @@ public class SearchRequestHandler {
         this.response = response;
     }
 
-    List<String> getLocalResult(SearchRequest request) {
+    public List<String> getLocalResult(SearchRequest request) {
         FileIpMapping fileIpMapping = GlobalState.getFileIpMapping();
-        Map<Node, List<List<String>>> fileMap = fileIpMapping.searchForFile(request.getFileName());
-        List<List<String>> fileListList;
-        List<String> fileList = new ArrayList<String>();
-        try {
-            fileListList = fileMap.get(GlobalState.getLocalServerNode());
-            StringBuilder s = new StringBuilder();
-            if (fileListList != null) {
-                for (List<String> stringList : fileListList) {
-                    for (String string : stringList) {
-                        s.append(string);
-                        s.append(" ");
-                    }
-                    fileList.add(s.toString().trim());
-                    //System.out.println(s);
-                }
-            }
-        } catch (Exception ex) {
-            log.severe(ex.getMessage());
+        Map<Node, List<String>> fileMap = fileIpMapping.searchForFile(request.getFileName());
+        List<String> fileList = fileMap.get(GlobalState.getLocalServerNode());
+        if (fileList == null) {
+            fileList = Collections.EMPTY_LIST;
         }
         return fileList;
     }
@@ -179,7 +167,7 @@ public class SearchRequestHandler {
         try {
             List<String> fileList = getLocalResult(request);
             SearchResponse response = new SearchResponse(fileList.size(), request.getNoOfHops(), fileList);
-            final Client client = new Client();
+            final Client client = GlobalState.getClient();
 
             //send response to Sender
             response.setRecipientNode(request.getSenderNode());
@@ -219,6 +207,4 @@ public class SearchRequestHandler {
         }
         return sortedHashMap;
     }
-
-
 }

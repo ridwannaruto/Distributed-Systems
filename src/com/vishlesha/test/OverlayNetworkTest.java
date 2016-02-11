@@ -43,7 +43,7 @@ class OverlayNetworkTest {
     }
 
     private void terminate() {
-        serverInstance.Stop();
+        serverInstance.stop();
         clientInstance.stop();
     }
 
@@ -61,8 +61,8 @@ class OverlayNetworkTest {
         }
 
         GlobalState.setLocalServerNode(localServer);
-        clientInstance = new Client();
-        serverInstance = new Server(new Node(null, 0));
+        clientInstance = GlobalState.getClient();
+        serverInstance = GlobalState.getServer();
         serverInstance.start();
     }
 
