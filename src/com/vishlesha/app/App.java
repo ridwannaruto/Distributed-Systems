@@ -119,10 +119,10 @@ class App {
         Server server;
 
         final Node bootstrapServerNode = new Node();
-        bootstrapServerNode.setIpaddress("127.0.0.1");
+        bootstrapServerNode.setIpaddress("127.0.1.1");
         try {
             String localIp = InetAddress.getLocalHost().getHostAddress();
-            if (!"127.0.0.1".equals(localIp))
+            if (!"127.0.1.1".equals(localIp))
                 bootstrapServerNode.setIpaddress("172.31.23.116");
 
         } catch (Exception ex) {
@@ -162,15 +162,15 @@ class App {
             }
         });
         try {
-           //AppLogger.setup();
+           AppLogger.setup();
 
             // switch to seed-based IP addresses on 127.0.0.1 (local environment)
             Node localServer = new Node();
             String localIp = InetAddress.getLocalHost().getHostAddress();
-            if ("127.0.0.1".equals(localIp)) {
+            if ("127.0.1.1".equals(localIp)) {
                 System.out.print("Enter seed: ");
                 int seed = scanner.nextInt();
-                localServer.setIpaddress("127.0.0." + seed);
+                localServer.setIpaddress("127.0.1." + seed);
                 localServer.setPortNumber(GlobalConstant.PORT_MIN + seed);
             } else {
                 localServer.setIpaddress(localIp);

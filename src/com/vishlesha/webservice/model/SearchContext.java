@@ -3,13 +3,16 @@ package com.vishlesha.webservice.model;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.dataType.FileIpMapping;
 import com.vishlesha.dataType.Node;
+import com.vishlesha.log.AppLogger;
 import com.vishlesha.webservice.client.gen.MovieFinder;
 import com.vishlesha.webservice.client.gen.MovieFinderImplService;
+import com.vishlesha.webservice.client.gen.SearchResponseBean;
 
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by tharindu on 2/8/16.
@@ -17,25 +20,28 @@ import java.util.*;
 public class SearchContext {
 
 	public static List<QueuedSearchRequest> processingRequest = new Vector<QueuedSearchRequest>();
-	public static int maxHopCount = 10;
+	public static Map<String, Map<String, Vector<IPhopes>>> searchHistory = new Hashtable<>();
+	public static Vector<String> queryHistory=new Vector<>();
+	public static Logger log= Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
-	public static void addProcessingRequest(QueuedSearchRequest qsr)
-	{
+	public static int maxHopCount = 10;
+	public static void addProcessingRequest(QueuedSearchRequest qsr) {
 		processingRequest.add(qsr);
 		qsr.setIndex(processingRequest.indexOf(qsr));
 	}
+
 	public static boolean forwardSearchRequest(String inIp, String ip, String port,
 	                                           String request,
 	                                           int numHops) {
 		boolean forwarded = false;
 
-		System.out.printf("\n\n\nForward request...\n\n");
+		//		System.out.printf("\n\n\nForward request...\n\n");
 		Map<Node, List<String>> neighbors = new Hashtable<>();
 		neighbors.putAll(GlobalState.getNeighbors());
 		QueuedSearchRequest queuedSearchRequest = new QueuedSearchRequest();
 		queuedSearchRequest.setInitiator(ip);
 		queuedSearchRequest.setQuery(request);
-		System.out.println("");
+		//		System.out.println("");
 		QueuedSearchRequest qre = SearchContext.processingRequest
 				.get(SearchContext.processingRequest.indexOf(queuedSearchRequest));
 
@@ -53,33 +59,34 @@ public class SearchContext {
 					MovieFinderImplService mis = new MovieFinderImplService(url, qname);
 					MovieFinder mf = mis.getMovieFinderImplPort();  // Get the stub
 
-					boolean newStatus=mf.searchFile(GlobalState.getLocalServerNode().getIpaddress(), ip, port,
-					                                request,
-					                                numHops + 1); //call service methods
+					boolean newStatus =
+							mf.searchFile(GlobalState.getLocalServerNode().getIpaddress(), ip, port,
+							              request,
+							              numHops + 1); //call service methods
 					//			System.out.println(neighbor.toString() + sr.getFiles());
 
-					if(newStatus)
-					{
-						forwarded=newStatus;
+					if (newStatus) {
+						forwarded = newStatus;
 					}
 
-					System.out.println(request + "@" + ip + " to" + neighbor.toString());
+					log.info(request + "@" + ip + " to" + neighbor.toString());
 					forwarded = true;
-				}else
-				{
-					System.out.println(neighbor.toString()+" is the incomming! "+request + "@" + ip + " to" + neighbor.toString());
+				} else {
+					log.info(
+							neighbor.toString() + " is the incomming! " + request + "@" + ip +
+							" to" + neighbor.toString());
 				}
 
 			} catch (javax.xml.ws.WebServiceException e) {
-				System.out.println(neighbor+" Is DOWN");
+				System.out.println(neighbor + " Is DOWN");
 				//				neighbors.remove(neighbor);
 				GlobalState.getNeighbors().remove(neighbor);
-				if(!forwarded)
-					forwarded=false;
-			}catch (Exception e){
+				if (!forwarded)
+					forwarded = false;
+			} catch (Exception e) {
 				e.printStackTrace();
-				if(!forwarded)
-					forwarded=false;
+				if (!forwarded)
+					forwarded = false;
 			}
 
 		}
@@ -87,15 +94,55 @@ public class SearchContext {
 		return forwarded;
 	}
 
+	public static void showResult(String query)
+	{
+		System.out.println("Query:"+query);
+		Set s=searchHistory.get(query).keySet();
+		Iterator it=s.iterator();
+		while(it.hasNext())
+		{
+			String f=(String)it.next();
+
+			System.out.println("\t File:"+f);
+
+			Vector<IPhopes> nodes=searchHistory.get(query).get(f);
+
+			for(int i=0;i<nodes.size();i++)
+			{
+				System.out.println("\t\t"+nodes.get(i).IP+" "+nodes.get(i).numHopes);
+
+			}
+		}
+
+	}
 	public static void initiateSearch(String ip, String port, String searchQuery, int numHops) {
+
+		if (searchHistory.get(searchQuery) != null)
+			searchHistory.remove(searchQuery);
+		else
+			searchHistory.put(searchQuery, new Hashtable<String, Vector<IPhopes>>());
+
+		queryHistory.add(searchQuery);
+
 		System.out.println("\nLocal search result\n----------------------");
 		List<String> localResult = getLocalResult(searchQuery);
+
 		if (localResult.isEmpty()) {
 			System.out.println("no matching result found");
 		} else {
-			for (int i = 0; i < localResult.size(); i++)
-				System.out.printf(localResult.get(i));
+			for (int i = 0; i < localResult.size(); i++) {
+				//System.out.printf(localResult.get(i));
+
+				if (searchHistory.get(searchQuery).get(localResult.get(i))==null)
+				{
+					searchHistory.get(searchQuery).put(localResult.get(i), new Vector<IPhopes>());
+				}
+
+				((Vector)(searchHistory.get(searchQuery).get(localResult.get(i)))).add(new IPhopes(GlobalState.getLocalServerNode().getIpaddress(),0));
+
+			}
 		}
+		showResult(searchQuery);
 		System.out.printf("\n\n\nsearching for file in network ......\n\n");
 		QueuedSearchRequest queuedSearchRequest = new QueuedSearchRequest();
 		queuedSearchRequest.setInitiator(ip);
@@ -127,5 +174,15 @@ public class SearchContext {
 			ex.printStackTrace();
 		}
 		return fileList;
+	}
+
+	public static class IPhopes {
+		String IP;
+		int numHopes;
+
+		public IPhopes(String IP, int numHopes) {
+			this.IP = IP;
+			this.numHopes = numHopes;
+		}
 	}
 }
