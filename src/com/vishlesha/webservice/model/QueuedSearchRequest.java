@@ -27,7 +27,12 @@ public class QueuedSearchRequest {
 				new java.util.TimerTask() {
 					@Override
 					public void run() {
-						SearchContext.processingRequest.remove(i);
+						try {
+							SearchContext.processingRequest.remove(i);
+						}catch (Exception e)
+						{
+
+						}
 					}
 				},
 				5000
