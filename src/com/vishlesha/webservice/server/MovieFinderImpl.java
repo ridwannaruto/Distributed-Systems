@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import javax.jws.*;
 import javax.xml.ws.*;
@@ -41,12 +44,12 @@ public class MovieFinderImpl implements MovieFinder {
 	@Resource
 	private WebServiceContext wsctx;
 
-	@Override public boolean searchFile(String ipHop, String ip, String port, String fileName,
-	                                    int hops) {
+	@Override public boolean searchFile(final String ipHop, final String ip, final String port,
+	                                    final String fileName,
+	                                    final int hops) {
 		QueuedSearchRequest queuedSearchRequest = new QueuedSearchRequest();
 		queuedSearchRequest.setInitiator(ip);
 		queuedSearchRequest.setQuery(fileName);
-
 
 		final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
@@ -93,9 +96,9 @@ public class MovieFinderImpl implements MovieFinder {
 					sb.setMessage(fileName);
 					mf.searchResult(sb);
 
-//					System.out.println(
-//							"Result sending flow started:" + fileName + "@" + ip + " from:" +
-//							ipHop);
+					//					System.out.println(
+					//							"Result sending flow started:" + fileName + "@" + ip + " from:" +
+					//							ipHop);
 					st = true;
 				} catch (Exception e) {
 					st = false;
@@ -107,10 +110,15 @@ public class MovieFinderImpl implements MovieFinder {
 
 				log.info("forwarding flow started :" + fileName + "@" + ip + " from:" + ipHop);
 
-				st = SearchContext.forwardSearchRequest(ipHop, ip, port, fileName, hops + 1);
+				Executor executor = Executors.newSingleThreadExecutor();
+				executor.execute(new Runnable() {
+					public void run() {
+						SearchContext.forwardSearchRequest(ipHop, ip, port, fileName, hops + 1);
+					}
+				});
+
 			} else {
 				log.info("Max hope count reached :" + fileName + "@" + ip + " from:" + ipHop);
-
 				st = false;
 
 			}
@@ -126,14 +134,16 @@ public class MovieFinderImpl implements MovieFinder {
 	}
 
 	@Override public void searchResult(SearchResponseBean resp) {
-//		System.out.println("IP:" + resp.getIP() + "\nPort" + resp.getPort() + "\nFiles:" +
-//		                   resp.getFileNames().toString());
+		//		System.out.println("IP:" + resp.getIP() + "\nPort" + resp.getPort() + "\nFiles:" +
+		//		                   resp.getFileNames().toString());
 		for (String fname : resp.getFileNames()) {
-			if(SearchContext.searchHistory.get(resp.getMessage()).get(fname)==null)
-			{
-				SearchContext.searchHistory.get(resp.getMessage()).put(fname, new Vector<SearchContext.IPhopes>());
+			if (SearchContext.searchHistory.get(resp.getMessage()).get(fname) == null) {
+				SearchContext.searchHistory.get(resp.getMessage())
+				                           .put(fname, new Vector<SearchContext.IPhopes>());
 			}
-			SearchContext.searchHistory.get(resp.getMessage()).get(fname).add(new SearchContext.IPhopes(resp.getIP(),resp.getHops()));
+			SearchContext.searchHistory.get(resp.getMessage()).get(fname)
+			                           .add(new SearchContext.IPhopes(resp.getIP(),
+			                                                          resp.getHops()));
 		}
 		SearchContext.showResult(resp.getMessage());
 	}

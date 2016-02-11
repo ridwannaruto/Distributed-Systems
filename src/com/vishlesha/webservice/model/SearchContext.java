@@ -119,8 +119,8 @@ public class SearchContext {
 
 		if (searchHistory.get(searchQuery) != null)
 			searchHistory.remove(searchQuery);
-		else
-			searchHistory.put(searchQuery, new Hashtable<String, Vector<IPhopes>>());
+
+		searchHistory.put(searchQuery, new Hashtable<String, Vector<IPhopes>>());
 
 		queryHistory.add(searchQuery);
 
@@ -157,7 +157,7 @@ public class SearchContext {
         Map<Node, List<String>> fileMap = fileIpMapping.searchForFile(searchQuery);
         List<String> fileList = fileMap.get(GlobalState.getLocalServerNode());
         if (fileList == null) {
-            fileList = Collections.EMPTY_LIST;
+            fileList = new ArrayList<>();
         }
         return fileList;
 	}
