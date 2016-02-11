@@ -24,42 +24,48 @@ public class HeartBeatMonitorTask extends TimerTask {
 
     @Override
     public void run() {
-        while (true) {
-            GlobalState.acquireHeartBeatMonitorLock();
 
-            for (Node node : GlobalState.getNeighbors().keySet()) {
-                logger.info("Heart beat monitored for " + node);
-                Integer count = GlobalState.getNeighborCountList().get(node);
-                if (count == null){
-                    continue;
-                }
-                if (count > 0){
-                    GlobalState.updateNeighborCount(node,-1);
-                }else if (count == -1){
-                    GlobalState.removeNeighbor(node);
-                    logger.info("Unreachable node removed " + node.toString());
-                    if (GlobalState.getNeighbors().size() == 0){
-                        GlobalState.setNeighborUnreachable(true);
+        while (true) {
+            try {
+                GlobalState.acquireHeartBeatMonitorLock();
+
+                for (Node node : GlobalState.getNeighbors().keySet()) {
+                    logger.info("Heart beat monitored for " + node);
+                    Integer count = GlobalState.getNeighborCountList().get(node);
+                    if (count == null) {
+                        continue;
+                    }
+                    if (count > 0) {
+                        GlobalState.updateNeighborCount(node, -1);
+                    } else if (count == -1) {
+                        GlobalState.removeNeighbor(node);
+                        logger.info("Unreachable node removed " + node.toString());
+                        if (GlobalState.getNeighbors().size() == 0) {
+                            GlobalState.setNeighborUnreachable(true);
+                        }
                     }
                 }
-            }
 
-            if(GlobalState.getNeighbors().isEmpty() && GlobalState.isNeighborUnreachable()){
-                Request unregReq = new UnregisterRequest(GlobalState.getBootstrapNode());
-                client.sendTCPRequest(unregReq);
-                Request regReq = new RegisterRequest(GlobalState.getBootstrapNode());
-                client.sendTCPRequest(regReq);
-                logger.info("Re-registering to the network");
-                GlobalState.acquireHeartBeatMonitorLock();
-            }
+                if (GlobalState.getNeighbors().isEmpty() && GlobalState.isNeighborUnreachable()) {
+                    Request unregReq = new UnregisterRequest(GlobalState.getBootstrapNode());
+                    client.sendTCPRequest(unregReq);
+                    Request regReq = new RegisterRequest(GlobalState.getBootstrapNode());
+                    client.sendTCPRequest(regReq);
+                    logger.info("Re-registering to the network");
+                    GlobalState.acquireHeartBeatMonitorLock();
+                }
 
-            try{
-                Thread.sleep(MONITOR_INTERVAL);
-            }catch (Exception ex){
-                logger.severe("Heart Beat Monitor Failed");
-            }
+                try {
+                    Thread.sleep(MONITOR_INTERVAL);
+                } catch (Exception ex) {
+                    logger.severe("Heart Beat Monitor Failed");
+                }
 
-            GlobalState.releaseHeartBeatMonitorLock();
+                GlobalState.releaseHeartBeatMonitorLock();
+            }catch(Exception e)
+            {
+                logger.warning(e.getMessage());
+            }
         }
     }
 }
