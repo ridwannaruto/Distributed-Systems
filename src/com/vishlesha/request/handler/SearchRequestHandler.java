@@ -138,7 +138,7 @@ public class SearchRequestHandler {
             System.out.println("no matching result found");
         } else {
             for (String aLocalResult : localResult) {
-                System.out.printf(aLocalResult);
+                System.out.println(aLocalResult);
             }
         }
         System.out.printf("\n\n\nsearching for file in network ......\n\n");

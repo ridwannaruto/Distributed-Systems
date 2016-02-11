@@ -91,7 +91,7 @@ class App {
     private static void showNeighborTable() {
         System.out.println("\nNeighbor table:\n");
         Map<Node, Integer> neighborConnections = GlobalState.getNeighborCountList();
-        System.out.printf("%9s:%-4s  %2s  %s\n\n", "IP_ADDR", "PRT", "NC", " FILES");
+        System.out.printf("%15s:%-5s  %2s  %s\n\n", "IP_ADDR", "PRT", "NC", " FILES");
 
         for (Map.Entry<Node, List<String>> neighbor : GlobalState.getNeighbors().entrySet()) {
             Node node = neighbor.getKey();
@@ -101,7 +101,7 @@ class App {
             if (neighborCount == null) {
                 neighborCount = -1;
             }
-            System.out.printf("%9s:%-4d  %2d  %s\n", node.getIpaddress(), node.getPortNumber(), neighborCount, files);
+            System.out.printf("%15s:%-5d  %2d  %s\n", node.getIpaddress(), node.getPortNumber(), neighborCount, files);
         }
         System.out.println();
     }
