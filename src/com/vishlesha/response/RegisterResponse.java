@@ -27,8 +27,9 @@ public class RegisterResponse extends Response {
 
             nodeList = new ArrayList<Node>();
 
-            for (int i = 3; i < 3 + (noOfNodes * 3); i += 3) {
+            for (int i = 3; i < 3 + (noOfNodes * 3) && i<token.length; i += 3) {
                 Node node = new Node();
+
                 node.setIpaddress(token[i]);
                 node.setPortNumber(Integer.valueOf(token[i + 1]));
                 nodeList.add(node);
