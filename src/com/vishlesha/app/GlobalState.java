@@ -6,6 +6,7 @@ import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
 import com.vishlesha.request.Request;
 import com.vishlesha.request.SearchRequest;
+import com.vishlesha.response.SearchResponse;
 import com.vishlesha.timer.task.HeartBeatMonitorTask;
 import com.vishlesha.timer.task.HeartBeatTask;
 
@@ -30,6 +31,9 @@ public class GlobalState {
     private static final Map<Node,Integer> neighborCountList = new HashMap<>();
     private static final List<String> localFiles = new ArrayList<String>();
     private static final List<SearchRequest> searchRequestList = new Vector<>();
+    private static final Map<String,SearchResponse> searchResponseList = new HashMap<>();
+    private static SearchRequest currentSearchingRequest;
+
     private static final Map<String, Request> responsePendingList = new Hashtable<>();
     private static List<Node> registeredNodeList = new ArrayList<>();
     private static Semaphore heartBeatMonitorLock = new Semaphore(1);
@@ -48,6 +52,14 @@ public class GlobalState {
     //private static FileIpMapping fileIpMapping = new FileIpMapping();
 
     private static Server server;
+
+    public static SearchRequest getCurrentSearchingRequest() {
+        return currentSearchingRequest;
+    }
+
+    public static void setCurrentSearchingRequest(SearchRequest currentSearchingRequest) {
+        GlobalState.currentSearchingRequest = currentSearchingRequest;
+    }
 
     public static DatagramSocket getSocket() throws SocketException, UnknownHostException {
         if (socket == null) {
@@ -297,5 +309,31 @@ public class GlobalState {
 
     public static void setNeighborUnreachable(boolean neighborUnreachable) {
         GlobalState.neighborUnreachable = neighborUnreachable;
+    }
+
+    public static void addSearchResponse(SearchResponse searchResponse){
+
+        if (!searchResponse.getFileList().isEmpty()){
+            String fileName = searchResponse.getFileList().get(0);
+
+            SearchRequest lastRequest = getCurrentSearchingRequest();
+            if (lastRequest == null) {
+                return;
+            }
+
+            if (fileName.toLowerCase().contains(lastRequest.getFileName().toLowerCase())){
+                if(!searchResponseList.containsKey(searchResponse.getSenderNode().getIpaddress())){
+                    searchResponseList.put(searchResponse.getSenderNode().getIpaddress(),searchResponse);
+                }
+            }
+        }
+    }
+
+    public static void clearResponseList(){
+        searchResponseList.clear();
+    }
+
+    public static Map<String, SearchResponse> getSearchResponseList() {
+        return searchResponseList;
     }
 }

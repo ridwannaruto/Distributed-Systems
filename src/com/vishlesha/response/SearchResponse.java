@@ -6,6 +6,7 @@ import com.vishlesha.error.SearchError;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,6 +17,18 @@ public class SearchResponse extends Response {
     private int responseCode;
     private final List<String> fileList = new ArrayList<>();
     private int noOfHops;
+
+
+    private long timestamp;
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
 
     // decoding response sent from another node
     public SearchResponse(String responseMessage, Node senderNode) {
