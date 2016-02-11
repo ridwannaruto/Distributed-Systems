@@ -171,7 +171,7 @@ public class SearchRequestHandler {
         Map<Node, List<String>> fileMap = fileIpMapping.searchForFile(request.getFileName());
         List<String> fileList = fileMap.get(GlobalState.getLocalServerNode());
         if (fileList == null) {
-            fileList = Collections.EMPTY_LIST;
+            fileList = new ArrayList<>();
         }
         return fileList;
     }

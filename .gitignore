@@ -7,5 +7,5 @@ network.log
 output.zip
 output/
 resources
-src/com/vishlesha/webservice/client/gen/
+src/com/vishlesha/webservice/client/gen/*.java
 src/com/vishlesha/webservice/server/jaxws/
