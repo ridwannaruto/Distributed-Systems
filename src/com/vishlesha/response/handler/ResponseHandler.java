@@ -17,6 +17,7 @@ public class ResponseHandler {
     private static final int KEY_RESPONSE_TYPE = 1;
 
     private static final String RESPONSE_TYPE_REGISTER = "REGOK";
+    private static final String RESPONSE_TYPE_UNREGISTER = "UNROK";
     private static final String RESPONSE_TYPE_JOIN = "JOINOK";
     private static final String RESPONSE_TYPE_LEAVE = "LEAVEOK";
     private static final String RESPONSE_TYPE_SEARCH = "SEROK";
@@ -38,6 +39,9 @@ public class ResponseHandler {
                 registerResponse.setSenderNode(sender);
                 RegisterResponseHandler registerResponseHandler = new RegisterResponseHandler();
                 registerResponseHandler.handle(registerResponse);
+
+            } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_UNREGISTER)) {
+                // successfully unregistered; do nothing
 
             } else if (token[KEY_RESPONSE_TYPE].equals(RESPONSE_TYPE_JOIN)) {
                 JoinResponse joinResponse = new JoinResponse(responseMessage, sender);
@@ -64,7 +68,7 @@ public class ResponseHandler {
                 searchResponseHandler.handle(searchResponse);
 
             } else {
-                log.severe(this.getClass() + " : unknown message format");
+                log.severe(this.getClass() + " : unknown message format: " + responseMessage);
                 sendResponse(new ErrorResponse());
             }
         }

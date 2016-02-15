@@ -24,7 +24,7 @@ class RegisterErrorHandler extends ErrorHandler {
             case GlobalConstant.ERR_CODE_REG_USERNAME:
                 log.severe("Node register failed: duplicate username");
                 Request newRequest = new RegisterRequest(error.getErrorNode());
-                client.sendTCPRequest(newRequest);
+                client.sendTCPRequest(newRequest, true);
                 log.info("Resending register request to Bootstrap Node");
                 break;
 
@@ -36,9 +36,9 @@ class RegisterErrorHandler extends ErrorHandler {
             case GlobalConstant.ERR_CODE_REG_IPPORT:
                 log.severe("Node register failed:ip and port already registered");
                 Request unregReq = new UnregisterRequest(error.getErrorNode());
-                client.sendTCPRequest(unregReq);
+                client.sendTCPRequest(unregReq, false);
                 Request regReq = new RegisterRequest(error.getErrorNode());
-                client.sendTCPRequest(regReq);
+                client.sendTCPRequest(regReq, true);
                 break;
 
         }

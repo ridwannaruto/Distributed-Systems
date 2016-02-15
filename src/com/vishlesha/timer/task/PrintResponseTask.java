@@ -4,7 +4,6 @@ import com.vishlesha.app.GlobalConstant;
 import com.vishlesha.app.GlobalState;
 import com.vishlesha.error.SearchError;
 import com.vishlesha.log.AppLogger;
-import com.vishlesha.request.SearchRequest;
 import com.vishlesha.response.SearchResponse;
 
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class PrintResponseTask extends TimerTask {
     public void run() {
         long initiatedTimeStamp = GlobalState.getCurrentSearchingRequest().getTimestamp();
         try {
-            System.out.println("\nSearch Responses for request " + GlobalState.getCurrentSearchingRequest().getFileName());
+            System.out.println("\nSearch Responses for request " + GlobalState.getCurrentSearchingRequest().getQuery());
             System.out.println("----------------------------------------------------");
             Map<String,SearchResponse> responseList = new HashMap<>();
             responseList.putAll(GlobalState.getSearchResponseList());

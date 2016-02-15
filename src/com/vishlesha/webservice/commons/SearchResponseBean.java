@@ -73,8 +73,8 @@ public class SearchResponseBean {
 		this.port = port;
 	}
 
-	public void setHops(int hopes) {
-		this.hops = hopes;
+	public void setHops(int hops) {
+		this.hops = hops;
 	}
 
 	public void setFileNames(ArrayList<String> fileNames) {

@@ -32,7 +32,7 @@ class JoinErrorHandler {
                     int randIndex = rand.nextInt(availableNodeCount);
                     Node newJoinNode = GlobalState.getRegisteredNode(randIndex);
                     JoinRequest jr = new JoinRequest(newJoinNode);
-                    client.sendUDPRequest(jr);
+                    client.sendUDPRequest(jr, true);
                     log.info("New join request sent to " + newJoinNode.toString());
                 } else {
                     log.warning("No other reachable nodes to join");

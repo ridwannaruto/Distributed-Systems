@@ -66,7 +66,7 @@ class OverlayNetworkTest {
         serverInstance.start();
     }
 
-    /*
+/*
     private void testRegister (){
         RegisterRequest registerRequest = new RegisterRequest(bootstrapServer);
         clientInstance.sendTCPRequest(registerRequest, new CallBack() {
@@ -120,19 +120,16 @@ class OverlayNetworkTest {
 
         sleep(shortSleepDuration);
     }
-
-    */
+*/
 
     private void testJoinServer() {
         JoinRequest joinRequest = new JoinRequest(localServer);
-        clientInstance.sendUDPRequest(joinRequest);
-        sleep(shortSleepDuration);
+        clientInstance.sendUDPRequest(joinRequest, false);
     }
 
     private void testLeaveServer() {
         LeaveRequest leaveRequest = new LeaveRequest(localServer);
-        clientInstance.sendUDPRequest(leaveRequest);
-        sleep(shortSleepDuration);
+        clientInstance.sendUDPRequest(leaveRequest, false);
     }
 
     void sleep(int duratrion) {

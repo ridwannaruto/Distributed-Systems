@@ -57,8 +57,8 @@ public class Client {
         });
     }
 
-    public void sendUDPRequest(final Request request) {
-        workerPool.submit(new Runnable() {
+    public void sendUDPRequest(final Request request, boolean async) {
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 try {
@@ -94,7 +94,14 @@ public class Client {
                     log.severe(Util.getStackTrace(ex));
                 }
             }
-        });
+        };
+
+        // run on same thread if not async
+        if (async) {
+            workerPool.submit(runnable);
+        } else {
+            runnable.run();
+        }
     }
 
     public void sendUDPResponse(final Response response) {
@@ -130,8 +137,8 @@ public class Client {
         });
     }
 
-    public void sendTCPRequest(final Request request) {
-        workerPool.submit(new Runnable() {
+    public void sendTCPRequest(final Request request, boolean async) {
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 try {
@@ -172,7 +179,14 @@ public class Client {
                     log.severe(Util.getStackTrace(ex));
                 }
             }
-        });
+        };
+
+        // run on same thread if not async
+        if (async) {
+            workerPool.submit(runnable);
+        } else {
+            runnable.run();
+        }
     }
 
     public void stop() {

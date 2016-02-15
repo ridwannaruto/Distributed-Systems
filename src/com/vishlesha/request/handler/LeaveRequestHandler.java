@@ -33,15 +33,15 @@ class LeaveRequestHandler {
             Response leaveResponse = new LeaveResponse(RESPOND_CODE_LEAVE_SUCCESS);
             leaveResponse.setRecipientNode(neighbor);
             sendResponse(leaveResponse);
-            if (GlobalState.getNeighbors().size() == 0) {
 
+            if (GlobalState.getNeighbors().size() == 0) {
                 Client client = GlobalState.getClient();
                 Request unregReq = new UnregisterRequest(GlobalState.getBootstrapNode());
-                client.sendTCPRequest(unregReq);
-                Request regReq = new RegisterRequest(GlobalState.getBootstrapNode());
-                client.sendTCPRequest(regReq);
-                log.info("Re-registering to the network");
+                client.sendTCPRequest(unregReq, false);
 
+                Request regReq = new RegisterRequest(GlobalState.getBootstrapNode());
+                client.sendTCPRequest(regReq, true);
+                log.info("Re-registering to the network");
             }
 
         } catch (IllegalStateException ex) {

@@ -27,40 +27,9 @@ class SearchResponseHandler {
     private final Logger netLog = Logger.getLogger(AppLogger.NETWORK_LOGGER_NAME);
 
     public synchronized void handle(SearchResponse response) {
-
         response.setTimestamp(new Date().getTime());
         String key = "SER-" + response.getSenderNode().getIpaddress();
         GlobalState.addSearchResponse(response);
-        /*
-        //If result already printed ignore
-        if (!GlobalState.isResponsePending(key))
-            return;
-
-            */
-
-//        String responseMessage = response.getResponseMessage();
-//        System.out.println("\nSearch Response Message from " + response.getSenderNode().getIpaddress() + " hops: " + response.getNoOfHops());
-//        System.out.println("----------------------------");
-//
-//        String[] token = responseMessage.split(" ");
-//        int responseCode = Integer.valueOf(token[2]);
-//
-//        if (token[1].equals("SEROK") && responseCode == 0) {
-//            if (!GlobalState.isTestMode())
-//                System.out.println(GlobalConstant.MSG_SEARCH_NORESULT);
-//        } else if (token[1].equals("SEROK") && responseCode < 9000) {
-//            List<String> fileList = response.getFileList();
-//            if (!GlobalState.isTestMode()) {
-//                for (String aFileList : fileList) {
-//                    System.out.println(aFileList);
-//                }
-//            }
-//
-//        } else {
-//            SearchError searchError = new SearchError(responseMessage, response.getSenderNode());
-//            if (!GlobalState.isTestMode())
-//                System.out.println("Search Error: " + searchError.getErrorMessage());
-//        }
 
         try {
             GlobalState.removeResponsePendingRequest(key);
@@ -68,8 +37,6 @@ class SearchResponseHandler {
         } catch (Exception ex) {
             netLog.warning("could not remove request from pending list");
         }
-
-        //setResponse(getSearchResponse(responseCode, response.getNoOfHops(), response.getResults()));
     }
 
     public SearchResponse getResponse() {

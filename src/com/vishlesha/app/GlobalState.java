@@ -2,6 +2,7 @@ package com.vishlesha.app;
 
 import com.vishlesha.dataType.FileIpMapping;
 import com.vishlesha.dataType.Node;
+import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.network.Server;
 import com.vishlesha.request.Request;
@@ -16,25 +17,32 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.Semaphore;
+import java.util.logging.Logger;
 
 /**
  * Created by ridwan on 1/1/16.
  */
 public class GlobalState {
 
+    private static final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+
     private static String username;
     private static boolean testMode;
     private static long roundTripTime;
     private static Node localServerNode;
     private static Node bootstrapNode;
+
     private static final Map<Node, List<String>> neighbors = new Hashtable<>();
     private static final Map<Node,Integer> neighborCountList = new HashMap<>();
+
     private static final List<String> localFiles = new ArrayList<String>();
+
     private static final List<SearchRequest> searchRequestList = new Vector<>();
     private static final Map<String,SearchResponse> searchResponseList = new HashMap<>();
+    private static final Map<String, Request> responsePendingList = new Hashtable<>();
+
     private static SearchRequest currentSearchingRequest;
 
-    private static final Map<String, Request> responsePendingList = new Hashtable<>();
     private static List<Node> registeredNodeList = new ArrayList<>();
     private static Semaphore heartBeatMonitorLock = new Semaphore(1);
     private static boolean neighborUnreachable = false;
@@ -43,22 +51,19 @@ public class GlobalState {
     private static int forwardedRequestCount = 0;
     private static int answeredRequestCount = 0;
 
-    private static HeartBeatTask heartBeatTask = new HeartBeatTask();
-    private static HeartBeatMonitorTask heartBeatMonitorTask = new HeartBeatMonitorTask();
+    private static HeartBeatTask heartBeatTask;
+    private static HeartBeatMonitorTask heartBeatMonitorTask;
 
     private static DatagramSocket socket;
-
     private static Client client;
-    //private static FileIpMapping fileIpMapping = new FileIpMapping();
-
     private static Server server;
 
     public static SearchRequest getCurrentSearchingRequest() {
         return currentSearchingRequest;
     }
 
-    public static void setCurrentSearchingRequest(SearchRequest currentSearchingRequest) {
-        GlobalState.currentSearchingRequest = currentSearchingRequest;
+    public static void setCurrentSearchingRequest(SearchRequest request) {
+        GlobalState.currentSearchingRequest = request;
     }
 
     public static DatagramSocket getSocket() throws SocketException, UnknownHostException {
@@ -145,10 +150,6 @@ public class GlobalState {
         return localServerNode;
     }
 
-   /*public static FileIpMapping getFileIpMapping() {
-      return fileIpMapping;
-   }*/
-
     public static void setLocalServerNode(Node localServerNode) {
         GlobalState.localServerNode = localServerNode;
     }
@@ -206,19 +207,6 @@ public class GlobalState {
 
     }
 
-    /* private static FileIpMapping getFileIpMapping(Node node, List<String> localFiles, List<String> neighborFiles) {
-        FileIpMapping fileIpMapping = new FileIpMapping();
-        List<String> availableFiles = neighbors.get(node);
-        if (availableFiles == null) {
-           throw new IllegalStateException("Files from unknown neighbor");
-        }
-        availableFiles.addAll(neighborFiles);
-        availableFiles.addAll(localFiles);
-        for(String file : availableFiles){
-           fileIpMapping.addFile(file,node);
-        }
-        return  fileIpMapping;
-     }*/
     public static void addNeighborFiles(Node node, List<String> files) {
         List<String> availableFiles = neighbors.get(node);
         if (availableFiles == null) {
@@ -227,9 +215,6 @@ public class GlobalState {
             throw new RuntimeException("files already added");
         }
         availableFiles.addAll(files);
-        /* for(String file : availableFiles){
-            fileIpMapping.addFile(file,node);
-         }*/
     }
 
     public static Client getClient() {
@@ -283,14 +268,6 @@ public class GlobalState {
         GlobalState.bootstrapNode = bootstrapNode;
     }
 
-    public static HeartBeatTask getHeartBeatTask() {
-        return heartBeatTask;
-    }
-
-    public static HeartBeatMonitorTask getHeartBeatMonitorTask() {
-        return heartBeatMonitorTask;
-    }
-
     public static void acquireHeartBeatMonitorLock(){
         try {
             heartBeatMonitorLock.acquire();
@@ -312,7 +289,6 @@ public class GlobalState {
     }
 
     public static void addSearchResponse(SearchResponse searchResponse){
-
         if (!searchResponse.getFileList().isEmpty()){
             String fileName = searchResponse.getFileList().get(0);
 
@@ -321,7 +297,12 @@ public class GlobalState {
                 return;
             }
 
-            if (fileName.toLowerCase().contains(lastRequest.getFileName().toLowerCase())){
+            // consider as a possible response, if fileName contains all searched words
+            List<String> searchWords = Arrays.asList(lastRequest.getQuery().toLowerCase().split("_"));
+            List<String> nameWords = Arrays.asList(lastRequest.getQuery().toLowerCase().split("_"));
+
+            if (nameWords.containsAll(searchWords)){
+                // prevent duplicate responses from same node
                 if(!searchResponseList.containsKey(searchResponse.getSenderNode().getIpaddress())){
                     searchResponseList.put(searchResponse.getSenderNode().getIpaddress(),searchResponse);
                 }
@@ -335,5 +316,20 @@ public class GlobalState {
 
     public static Map<String, SearchResponse> getSearchResponseList() {
         return searchResponseList;
+    }
+
+    public static void startHeartBeat() {
+        // do only if not initialized yet
+        if (heartBeatMonitorTask == null) {
+            // start monitor
+            heartBeatMonitorTask = new HeartBeatMonitorTask();
+            new Timer().schedule(heartBeatMonitorTask, 100);
+            log.info("Heart Beat Monitor Started");
+
+            // start beat
+            heartBeatTask = new HeartBeatTask();
+            new Timer().schedule(heartBeatTask, 100);
+            log.info("Heart Beating Started");
+        }
     }
 }

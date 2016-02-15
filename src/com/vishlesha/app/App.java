@@ -19,11 +19,11 @@ import java.net.InetAddress;
 import java.util.*;
 import java.util.logging.Logger;
 
-/*
-    * Runs the interface for the client application
-    * Displays the dialog box asking for connection details and query commands
-    * Connects to server and displays the responseMessage
-*/
+/**
+ * Runs the interface for the client application
+ * Displays the dialog box asking for connection details and query commands
+ * Connects to server and displays the responseMessage
+ */
 
 class App {
 
@@ -37,7 +37,7 @@ class App {
         setup(client);
 
         Request regRequest = new RegisterRequest(GlobalState.getBootstrapNode());
-        client.sendTCPRequest(regRequest);
+        client.sendTCPRequest(regRequest, false);
 
         // TODO modify to issue multiple queries
         System.out.println("connecting to the network..........");
@@ -91,7 +91,7 @@ class App {
     private static void showNeighborTable() {
         System.out.println("\nNeighbor table:\n");
         Map<Node, Integer> neighborConnections = GlobalState.getNeighborCountList();
-        System.out.printf("%15s:%-5s  %2s  %s\n\n", "IP_ADDR", "PRT", "NC", " FILES");
+        System.out.printf("%15s:%-5s  %2s  %s\n\n", "IP_ADDRESS", "PORT", "#N", "FILES");
 
         for (Map.Entry<Node, List<String>> neighbor : GlobalState.getNeighbors().entrySet()) {
             Node node = neighbor.getKey();
@@ -126,12 +126,8 @@ class App {
         System.out.println("LOCAL IP "+GlobalState.getLocalServerNode().getIpaddress());
         ServicePublisher.publish(GlobalState.getLocalServerNode().getIpaddress(), 8888); //Server for handling incomming requests
 
-        System.out.println(GlobalState.getNeighbors().keySet());
-        //        mf.searchFile();
-
         boolean print = true;
         while (true) {
-
             if (print) {
                 System.out.println("connected to network");
                 System.out.println("\nInitiate Search\n---------------------");
@@ -159,10 +155,10 @@ class App {
         Server server;
 
         final Node bootstrapServerNode = new Node();
-        bootstrapServerNode.setIpaddress("127.0.1.1");
+        bootstrapServerNode.setIpaddress(GlobalConstant.LOCALHOST);
         try {
             String localIp = InetAddress.getLocalHost().getHostAddress();
-            if (!"127.0.1.1".equals(localIp))
+            if (!GlobalConstant.LOCALHOST.equals(localIp))
                 bootstrapServerNode.setIpaddress("172.31.23.116");
 
         } catch (Exception ex) {
@@ -179,36 +175,31 @@ class App {
             public void run() {
                 System.out.println("\nUnregistering and leaving the network");
                 Request unregRequest = new UnregisterRequest(bootstrapServerNode);
-                client.sendTCPRequest(unregRequest);
+                client.sendTCPRequest(unregRequest, true);
 
                 for (Node n : GlobalState.getNeighbors().keySet()) {
-                    client.sendUDPRequest(new LeaveRequest(n));
+                    client.sendUDPRequest(new LeaveRequest(n), false);
                 }
 
-                // TODO add reasonable blocking mechanism
-                try {
-                    Thread.sleep(1000 * GlobalState.getNeighbors().size());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 System.out.println("Ready to shut down");
                 log.info(this.getClass() + " : shutting down app");
 
                 showStats();
             }
         });
+
         try {
+//            AppLogger.setup();
 
-           AppLogger.setup();
-
-            // switch to seed-based IP addresses on 127.0.0.1 (local environment)
+            // switch to offset-based IP addresses on 127.0.0.1 (local environment)
             Node localServer = new Node();
             String localIp = InetAddress.getLocalHost().getHostAddress();
-            if ("127.0.1.1".equals(localIp)) {
-                System.out.print("Enter seed: ");
-                int seed = scanner.nextInt();
-                localServer.setIpaddress("127.0.1." + seed);
-                localServer.setPortNumber(GlobalConstant.PORT_MIN + seed);
+            if (GlobalConstant.LOCALHOST.equals(localIp)) {
+                System.out.print("Enter offset: ");
+                int offset = Integer.parseInt(scanner.nextLine());
+                String ipSegment = GlobalConstant.LOCALHOST.substring(0, GlobalConstant.LOCALHOST.lastIndexOf('.') + 1);
+                localServer.setIpaddress(ipSegment + offset);
+                localServer.setPortNumber(GlobalConstant.PORT_MIN + offset);
             } else {
                 localServer.setIpaddress(localIp);
                 localServer.setPortNumber(GlobalConstant.PORT_LISTEN);

@@ -29,7 +29,7 @@ public class RetryRequestTask extends TimerTask {
             if (request.getRetryCount() < MAX_RETRY_COUNT) {
                 request.incrementRetryCount();
                 logger.info("Resending Request: retry count " + request.getRetryCount() + " " + request.getRequestMessage() + " to " + request.getRecipientNode().toString());
-                GlobalState.getClient().sendUDPRequest(request);
+                GlobalState.getClient().sendUDPRequest(request, true);
             } else {
                 ErrorHandler errorHandler = new ErrorHandler();
                 errorHandler.handleNodeUnreachable(request);

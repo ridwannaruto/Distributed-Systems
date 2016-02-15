@@ -9,6 +9,7 @@ import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.JoinRequest;
 import com.vishlesha.response.RegisterResponse;
+import com.vishlesha.timer.task.HeartBeatMonitorTask;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -20,22 +21,17 @@ import java.util.logging.Logger;
  */
 class RegisterResponseHandler {
 
-    private final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
+    private static final Logger log = Logger.getLogger(AppLogger.APP_LOGGER_NAME);
 
     public void handle(RegisterResponse registerResponse) {
         final Random rand = new Random();
         Client client = GlobalState.getClient();
         if (!registerResponse.isFail()) {
             log.info(GlobalConstant.SUCCESS_MSG_REG);
-            try{
-                Timer timerForMonitor = new Timer();
-                timerForMonitor.schedule(GlobalState.getHeartBeatMonitorTask(), 100);
-                log.info("Heart Beat Monitor Started");
-                Timer timerForBeat = new Timer();
-                timerForBeat.schedule(GlobalState.getHeartBeatTask(),100);
-                log.info("Heart Beating Started");
 
-            }catch (Exception ex){
+            try {
+                GlobalState.startHeartBeat();
+            } catch (Exception ex){
                 ex.printStackTrace();
             }
 
@@ -44,7 +40,8 @@ class RegisterResponseHandler {
             int j, prev = -1;
             int l = registeredList.size();
 
-            /*
+/*
+            //worst-case 'bridge' topology
             j = l;
             for (int i = 0; i < 2; i++) {
                 int node = GlobalConstant.topology[l + 1][i];
@@ -53,7 +50,8 @@ class RegisterResponseHandler {
                     client.sendUDPRequest(jr);
                 }
             }
-            */
+*/
+
             for (j = 0; j < 2 && j < l; j++) {
                 int rand1;
                 if (l < 3) {
@@ -65,9 +63,8 @@ class RegisterResponseHandler {
                     } while (prev == rand1);
                 }
                 prev = rand1;
-                //System.out.println("Rand : " + rand1);
                 JoinRequest jr = new JoinRequest(registeredList.get(rand1));
-                client.sendUDPRequest(jr);
+                client.sendUDPRequest(jr, true);
             }
 
             if (j == 0) {

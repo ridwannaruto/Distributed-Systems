@@ -62,7 +62,7 @@ public class RequestHandler {
                 searchRequestHandler.handle(searchRequest);
 
             } else {
-                log.severe(this.getClass() + " : unknown message format");
+                log.severe(this.getClass() + " : unknown message format: " + requestMessage);
                 sendErrorResponse(new ErrorResponse());
             }
         }

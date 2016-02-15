@@ -48,9 +48,10 @@ public class HeartBeatMonitorTask extends TimerTask {
 
                 if (GlobalState.getNeighbors().isEmpty() && GlobalState.isNeighborUnreachable()) {
                     Request unregReq = new UnregisterRequest(GlobalState.getBootstrapNode());
-                    client.sendTCPRequest(unregReq);
+                    client.sendTCPRequest(unregReq, false);
+
                     Request regReq = new RegisterRequest(GlobalState.getBootstrapNode());
-                    client.sendTCPRequest(regReq);
+                    client.sendTCPRequest(regReq, true);
                     logger.info("Re-registering to the network");
                     GlobalState.acquireHeartBeatMonitorLock();
                 }
@@ -61,10 +62,11 @@ public class HeartBeatMonitorTask extends TimerTask {
                     logger.severe("Heart Beat Monitor Failed");
                 }
 
-                GlobalState.releaseHeartBeatMonitorLock();
-            }catch(Exception e)
-            {
+            } catch(Exception e) {
                 logger.warning(e.getMessage());
+
+            } finally {
+                GlobalState.releaseHeartBeatMonitorLock();
             }
         }
     }

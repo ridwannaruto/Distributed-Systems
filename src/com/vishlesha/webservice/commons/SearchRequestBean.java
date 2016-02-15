@@ -56,7 +56,7 @@ public class SearchRequestBean {
 		this.port = port;
 	}
 
-	public void setHops(int hopes) {
+	public void setHops(int hops) {
 		this.hops = hops;
 	}
 

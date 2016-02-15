@@ -8,8 +8,8 @@ import java.util.List;
  */
 public class GlobalConstant {
 
+    public static final String LOCALHOST = "127.0.0.1";
     public static final int PORT_LISTEN = 1234;
-    public static final int PORT_CLIENT = 1235;
 
     //Error Codes
     public static final int ERR_CODE_GENERAL = 0;

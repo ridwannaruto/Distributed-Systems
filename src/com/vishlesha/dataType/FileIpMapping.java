@@ -23,7 +23,6 @@ public class FileIpMapping {
             newlist.add(node);
             wordsMap.put(new Filename(fileNameString, wordsList), newlist);
         }
-
     }
 
     public Map<Node, List<String>> searchForFile(String query) {

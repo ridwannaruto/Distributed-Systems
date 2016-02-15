@@ -2,8 +2,6 @@ package com.vishlesha.request;
 
 import com.vishlesha.dataType.Node;
 
-import java.util.Date;
-
 /**
  * Created by ridwan on 1/1/16.
  */
@@ -21,7 +19,7 @@ public class SearchRequest extends Request {
         this.timestamp = timestamp;
     }
 
-    public String getFileName() {
+    public String getQuery() {
         return fileName;
     }
 
@@ -42,7 +40,7 @@ public class SearchRequest extends Request {
         setFileName(searchFileName);
         setNoOfHops(numberOfHops);
         setInitialNode(initiator);
-        String requestMessage = " SER " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
+        String requestMessage = " SER " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber() + " " + getQuery() + " " + getNoOfHops();
         setRequestMessage(requestMessage);
         appendMsgLength();
     }
@@ -61,7 +59,7 @@ public class SearchRequest extends Request {
     }
 
     public void updateRequestMessage() {
-        String requestMessage = " SER " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber() + " " + getFileName() + " " + getNoOfHops();
+        String requestMessage = " SER " + getInitialNode().getIpaddress() + " " + getInitialNode().getPortNumber() + " " + getQuery() + " " + getNoOfHops();
         setRequestMessage(requestMessage);
         appendMsgLength();
     }
