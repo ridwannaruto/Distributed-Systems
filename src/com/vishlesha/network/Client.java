@@ -159,7 +159,7 @@ public class Client {
                         outputStream.flush();
                         responseLine = inputStream.readLine();
                         end = System.currentTimeMillis();
-                        GlobalState.setRoundTripTime(end - start + 1000);
+                        GlobalState.setRoundTripTime(end - start + 200);
                         log.info("TCP Client Message Received: " + responseLine + " from " + request.getRecipientNode().toString());
                     }
 

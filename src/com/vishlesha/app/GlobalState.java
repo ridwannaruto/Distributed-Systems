@@ -299,7 +299,7 @@ public class GlobalState {
 
             // consider as a possible response, if fileName contains all searched words
             List<String> searchWords = Arrays.asList(lastRequest.getQuery().toLowerCase().split("_"));
-            List<String> nameWords = Arrays.asList(lastRequest.getQuery().toLowerCase().split("_"));
+            List<String> nameWords = Arrays.asList(fileName.toLowerCase().split("_"));
 
             if (nameWords.containsAll(searchWords)){
                 // prevent duplicate responses from same node
