@@ -9,15 +9,6 @@ public class SearchRequest extends Request {
 
     private String fileName;
     private int noOfHops;
-    private long timestamp;
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
 
     public String getQuery() {
         return fileName;

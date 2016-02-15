@@ -28,7 +28,8 @@ public class PrintResponseTask extends TimerTask {
             Map<String,SearchResponse> responseList = new HashMap<>();
             responseList.putAll(GlobalState.getSearchResponseList());
             for (SearchResponse response: responseList.values()){
-                System.out.println("\nResponse from " + response.getSenderNode().getIpaddress() + " hops: " + response.getNoOfHops() + " latency: "+ (response.getTimestamp() - initiatedTimeStamp));
+                System.out.println("\nResponse from " + response.getSenderNode().getIpaddress() + " hops: " +
+                        response.getNoOfHops() + " latency: "+ (response.getTimestamp() - initiatedTimeStamp) + " ms");
                 String responseMessage = response.getResponseMessage();
 
                 String[] token = responseMessage.split(" ");

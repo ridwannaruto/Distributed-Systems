@@ -18,18 +18,6 @@ public class SearchResponse extends Response {
     private final List<String> fileList = new ArrayList<>();
     private int noOfHops;
 
-
-    private long timestamp;
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-
     // decoding response sent from another node
     public SearchResponse(String responseMessage, Node senderNode) {
         super(responseMessage, senderNode);

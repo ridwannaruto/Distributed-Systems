@@ -5,6 +5,7 @@ import com.vishlesha.error.handler.ErrorHandler;
 import com.vishlesha.log.AppLogger;
 import com.vishlesha.network.Client;
 import com.vishlesha.request.Request;
+import com.vishlesha.request.SearchRequest;
 
 import java.util.TimerTask;
 import java.util.logging.Logger;
@@ -28,6 +29,10 @@ public class RetryRequestTask extends TimerTask {
         if (GlobalState.isResponsePending(request)) {
             if (request.getRetryCount() < MAX_RETRY_COUNT) {
                 request.incrementRetryCount();
+                if (request instanceof SearchRequest) {
+                    GlobalState.incrementForwardedRequestCount();
+                }
+
                 logger.info("Resending Request: retry count " + request.getRetryCount() + " " + request.getRequestMessage() + " to " + request.getRecipientNode().toString());
                 GlobalState.getClient().sendUDPRequest(request, true);
             } else {

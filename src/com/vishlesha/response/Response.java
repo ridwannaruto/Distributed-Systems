@@ -14,6 +14,7 @@ abstract public class Response {
     private int responseCode;
     private boolean fail;
     private Error error;
+    private long timestamp;
 
     public static final int KEY_MSG_LENGTH = 0;
     public static final int KEY_RESPONSE_TYPE = 1;
@@ -78,5 +79,13 @@ abstract public class Response {
 
     void setResponseMessage(String responseMessage) {
         this.responseMessage = responseMessage;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

@@ -11,6 +11,7 @@ abstract public class Request {
     private Node senderNode; // which node is sending the request
     private String requestMessage;
     private int retryCount = 0;
+    private long timestamp;
 
     public static final int KEY_MSG_LENGTH = 0;
     public static final int KEY_REQ_TYPE = 1;
@@ -54,6 +55,14 @@ abstract public class Request {
 
     public String getRequestMessage() {
         return requestMessage;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     void setRequestMessage(String requestMessage) {
