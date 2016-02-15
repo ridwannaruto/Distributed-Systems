@@ -148,6 +148,7 @@ class App {
                         GlobalState.getLocalServerNode().getPortNumber()+"",query,0);
                 try {
                     Thread.sleep(3000);
+                    SearchContext.searchHistory.clear();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

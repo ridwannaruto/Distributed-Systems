@@ -198,7 +198,6 @@ public class SearchContext {
 
             QueryMeta queryMeta = (QueryMeta) o;
 
-            if (timestamp != queryMeta.timestamp) return false;
             if (query != null ? !query.equals(queryMeta.query) : queryMeta.query != null) return false;
 
             return true;
