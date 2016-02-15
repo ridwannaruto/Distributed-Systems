@@ -35,7 +35,7 @@ public class QueuedSearchRequest {
 						}
 					}
 				},
-				5000
+				2000
 		);
 	}
 

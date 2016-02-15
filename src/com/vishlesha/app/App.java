@@ -144,7 +144,13 @@ class App {
             } else if (query.startsWith("_STATS")) {
                 showStats();
             } else {
-                SearchContext.initiateSearch(GlobalState.getLocalServerNode().getIpaddress(),GlobalState.getLocalServerNode().getPortNumber()+"",query,0);
+                SearchContext.initiateSearch(GlobalState.getLocalServerNode().getIpaddress(),
+                        GlobalState.getLocalServerNode().getPortNumber()+"",query,0);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
